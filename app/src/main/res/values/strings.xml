@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Quizzy</string>
+    <string name="decision_setting_rule"><![CDATA[Message will be shown for marks X; where low < X <= high]]></string>
 </resources>

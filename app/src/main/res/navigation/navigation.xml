@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/questionSetterFragment">
+    <fragment
+        android:id="@+id/questionSetterFragment"
+        android:name="com.example.quizzy.quizsetter.QuestionSetterFragment"
+        android:label="fragment_question_setter"
+        tools:layout="@layout/fragment_question_setter" >
+        <action
+            android:id="@+id/action_questionSetterFragment_self"
+            app:destination="@id/questionSetterFragment"
+            app:popUpTo="@id/questionSetterFragment"
+            app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_questionSetterFragment_to_decisionSetterFragment"
+            app:destination="@id/decisionSetterFragment" />
+        <argument
+            android:name="question_number"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/decisionSetterFragment"
+        android:name="com.example.quizzy.quizsetter.DecisionSetterFragment"
+        android:label="fragment_decision_setter"
+        tools:layout="@layout/fragment_decision_setter" >
+        <action
+            android:id="@+id/action_decisionSetterFragment_to_publishQuizFragment"
+            app:destination="@id/publishQuizFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/publishQuizFragment"
+        android:name="com.example.quizzy.quizsetter.PublishQuizFragment"
+        android:label="fragment_publish_quiz"
+        tools:layout="@layout/fragment_publish_quiz" >
+        <action
+            android:id="@+id/action_publishQuizFragment_to_questionSetterFragment"
+            app:destination="@id/questionSetterFragment"
+            app:popUpTo="@id/questionSetterFragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
+</navigation>

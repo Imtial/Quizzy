@@ -8,7 +8,7 @@
     tools:context=".QuizGameActivity">
 
     <TextView
-        android:id="@+id/quiz_game_title"
+        android:id="@+id/quiz_game_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingHorizontal="8dp"
@@ -21,9 +21,12 @@
 
     <fragment
         android:id="@+id/game_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/navigation"
         tools:layout="@layout/fragment_question_setter" />
 
     <LinearLayout
@@ -43,7 +46,7 @@
             android:layout_weight="1" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/button_submit"
+            android:id="@+id/button_complete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_confirm"/>
