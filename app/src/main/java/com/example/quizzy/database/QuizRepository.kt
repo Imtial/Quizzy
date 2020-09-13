@@ -1,8 +1,7 @@
 package com.example.quizzy.database
 
-import com.example.quizzy.quizsetter.Question
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import android.util.Log
+import androidx.lifecycle.LiveData
 
 
 class QuizRepository (private val database: QuizDatabase) {
@@ -18,5 +17,7 @@ class QuizRepository (private val database: QuizDatabase) {
         database.questionDao.delete(question)
     }
 
-    suspend fun getQuestion(serial: Int): Question? = database.questionDao.get(serial)
+    fun getQuestion(serial: Int): LiveData<Question> = database.questionDao.get(serial)
+
+    fun getQuestionList(): LiveData<List<Question>> = database.questionDao.getQuestionList()
 }

@@ -2,9 +2,8 @@ package com.example.quizzy
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.example.quizzy.quizsetter.*
+import com.example.quizzy.database.*
 import com.google.android.material.button.MaterialButton
 
 class MainActivity : AppCompatActivity() {

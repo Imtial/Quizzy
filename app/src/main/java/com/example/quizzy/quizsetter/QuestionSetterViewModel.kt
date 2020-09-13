@@ -2,17 +2,14 @@ package com.example.quizzy.quizsetter
 
 import android.app.Application
 import android.util.Log
-import android.widget.Toast
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.quizzy.R
-import com.example.quizzy.database.QuizDatabase
-import com.example.quizzy.database.QuizRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
+import com.example.quizzy.database.*
+import com.example.quizzy.databinding.FragmentQuestionSetterBinding
+import kotlinx.coroutines.*
 
 class QuestionSetterViewModel(private val application: Application): ViewModel() {
 
@@ -35,15 +32,8 @@ class QuestionSetterViewModel(private val application: Application): ViewModel()
     private val job = SupervisorJob()
     private val coroutineScope = CoroutineScope(Dispatchers.IO + job)
 
-    private val _question = MutableLiveData<Question?>()
-    val question: LiveData<Question?> get() = _question
-
-    fun setQuestionSerial(serial: Int) {
-//        coroutineScope.launch {
-//            _question.value = repository.getQuestion(serial)
-//        }
-        _question.value = Question(serial, "Hello", MULTIPLE, listOf("a", "b", "c"), 2F, listOf("b"))
-    }
+    var questionList = listOf<Question>()
+    val questionListLive = repository.getQuestionList()
 
     fun insert(question: Question) {
         coroutineScope.launch {

@@ -2,9 +2,6 @@ package com.example.quizzy.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.example.quizzy.quizsetter.Question
-import com.example.quizzy.quizsetter.Quiz
-import com.example.quizzy.quizsetter.Response
 
 @Dao
 interface QuizDao {
@@ -36,7 +33,7 @@ interface QuestionDao {
     suspend fun clearDB()
 
     @Query("SELECT * FROM table_question WHERE serial = :serial")
-    suspend fun get(serial: Int): Question?
+    fun get(serial: Int): LiveData<Question>
 
     @Query("SELECT SUM(marks) FROM table_question")
     suspend fun getTotalMarks(): Float
@@ -44,8 +41,8 @@ interface QuestionDao {
     @Query("SELECT COUNT(*) FROM table_question")
     suspend fun getQuestionCount() : Int
 
-    @Query("SELECT * FROM table_question")
-    fun getQuestionList(): List<Question>
+    @Query("SELECT * FROM table_question ORDER BY serial ASC")
+    fun getQuestionList(): LiveData<List<Question>>
 }
 
 @Dao

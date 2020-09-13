@@ -1,7 +1,6 @@
 package com.example.quizzy.quizsetter
 
 import android.os.Bundle
-import android.text.Editable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,13 +9,15 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.navGraphViewModels
 import com.example.quizzy.OnButtonClickListener
 import com.example.quizzy.QuizGameActivity
 import com.example.quizzy.R
 import com.example.quizzy.ViewModelFactory
+import com.example.quizzy.database.MULTIPLE
+import com.example.quizzy.database.Question
+import com.example.quizzy.database.SINGLE
+import com.example.quizzy.database.TYPED
 import com.example.quizzy.databinding.FragmentQuestionSetterBinding
-import org.jetbrains.annotations.NotNull
 import java.lang.IllegalArgumentException
 
 const val MAX_OPTIONS = 10
@@ -37,25 +38,16 @@ class QuestionSetterFragment: Fragment() {
 //    private val viewModel: QuestionSetterViewModel by navGraphViewModels(R.id.navigation)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val parentActivity = requireActivity() as QuizGameActivity
         val binding = FragmentQuestionSetterBinding.inflate(inflater, container, false)
         val viewModelFactory = ViewModelFactory(requireActivity().application)
         val viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(QuestionSetterViewModel::class.java)
 //        viewModel.setApplication(requireActivity().application)
 
-        viewModel.question.observe(viewLifecycleOwner, { question ->
-            Log.i(TAG, "Triggered")
-            if (question != null) {
-                Log.i(TAG, "Previous data exists")
-//                createViewFromData(binding, question)
-            }
+        viewModel.questionListLive.observe(viewLifecycleOwner, {
+            viewModel.questionList = it
         })
-
-        try {
-            val args = QuestionSetterFragmentArgs.fromBundle(requireArguments())
-            currentQuestionNumber = args.questionNumber
-            viewModel.setQuestionSerial(currentQuestionNumber)
-        } catch (e: IllegalArgumentException) { }
 
         binding.questionType.setOnCheckedChangeListener { radioGroup, checkButtonId ->
             viewModel.setQuestionType(checkButtonId)
@@ -70,15 +62,26 @@ class QuestionSetterFragment: Fragment() {
             }
         }
 
-        (requireActivity() as QuizGameActivity).setOnButtonClickListener(object : OnButtonClickListener {
+        parentActivity.setOnButtonClickListener(object : OnButtonClickListener {
 
             override fun nextButtonClicked() {
                 val question = viewModel.questionType.value?.let { typeViewId -> extractQuestion(binding, typeViewId) }
                 if (question == null) Toast.makeText(context, "Empty field", Toast.LENGTH_SHORT).show()
                 else {
                     viewModel.insert(question)
-                    findNavController().navigate(QuestionSetterFragmentDirections.actionQuestionSetterFragmentSelf(currentQuestionNumber+1))
+                    currentQuestionNumber++
+                    if (viewModel.questionList.size >= currentQuestionNumber) createViewFromData(binding, viewModel.questionList[currentQuestionNumber-1])
+                    else resetBinding(binding)
+                    parentActivity.setText(currentQuestionNumber.toString())
                 }
+//                val questions = listOf(Question(1, "Blood", SINGLE, listOf("O+", "O-", "A+"), 2F, listOf("O+")),
+//                        Question(2, "Milk", MULTIPLE, listOf("White", "Red", "Blue"), 2F, listOf("White", "red")))
+//                Log.i(TAG, "nextButtonClicked: ${questions[currentQuestionNumber - 1]} inserted")
+//                viewModel.insert(questions[currentQuestionNumber - 1])
+//                currentQuestionNumber++
+//                if (viewModel.questionList.size >= currentQuestionNumber) createViewFromData(binding, viewModel.questionList[currentQuestionNumber-1])
+//                else resetBinding(binding)
+//                parentActivity.setText(currentQuestionNumber.toString())
             }
 
             override fun completeButtonClicked() {
@@ -86,12 +89,23 @@ class QuestionSetterFragment: Fragment() {
             }
 
             override fun backButtonClicked() {
-                if (currentQuestionNumber > 1)
-                    findNavController().navigate(QuestionSetterFragmentDirections.actionQuestionSetterFragmentSelf(currentQuestionNumber - 1))
+                if (currentQuestionNumber > 1) {
+                    currentQuestionNumber--
+                    createViewFromData(binding, viewModel.questionList[currentQuestionNumber-1])
+                    parentActivity.setText(currentQuestionNumber.toString())
+                }
             }
         })
 
         return binding.root
+    }
+
+    private fun resetBinding(binding: FragmentQuestionSetterBinding) {
+        binding.question.text.clear()
+        binding.question.requestFocus()
+        optionViewList.clear()
+        binding.optionsContainer.removeAllViews()
+        binding.questionMarks.text.clear()
     }
 
     private fun addOptionView (group: LinearLayout, viewTypeId: Int) {
@@ -102,12 +116,12 @@ class QuestionSetterFragment: Fragment() {
         }
     }
 
-    private fun createOptionView(group: ViewGroup, layoutId: Int, text: Editable? = null, viewList: MutableList<View> = optionViewList){
+    private fun createOptionView(group: ViewGroup, layoutId: Int, text: String? = null, viewList: MutableList<View> = optionViewList){
         val optionView = LayoutInflater.from(this.context).inflate(layoutId, group, false)
         val buttonDelete = optionView.findViewById<ImageView>(R.id.option_delete)
         val optionText = optionView.findViewById<EditText>(R.id.option_text)
         text?.apply {
-            optionText.text = text
+            optionText.setText(text)
         }
         optionText.requestFocus()
 
@@ -138,20 +152,46 @@ class QuestionSetterFragment: Fragment() {
         val newOptionViewList = mutableListOf<View>()
         for (optionView in optionViewList) {
             val text = optionView.findViewById<EditText>(R.id.option_text).text
-            createOptionView(group, layoutId, text, newOptionViewList)
+            createOptionView(group, layoutId, text.toString(), newOptionViewList)
         }
         optionViewList = newOptionViewList
     }
 
     private fun createViewFromData(binding: FragmentQuestionSetterBinding, question: Question) {
-        val typeViewId = when(question.type) {
-            SINGLE -> R.id.radio_single
-            MULTIPLE -> R.id.radio_multiple
-            TYPED -> R.id.radio_typed
-            else -> throw IllegalArgumentException("Unknown RadioButton id for question type")
+        resetBinding(binding)
+        val typeViewId: Int
+        val optionLayout: Int
+        when(question.type) {
+            SINGLE -> {
+                typeViewId = R.id.radio_single
+                optionLayout = R.layout.option_radio_button
+            }
+            MULTIPLE -> {
+                typeViewId = R.id.radio_multiple
+                optionLayout = R.layout.option_checkbox
+            }
+            TYPED -> {
+                typeViewId = R.id.radio_typed
+                optionLayout = R.layout.option_textbox
+            }
+            else -> throw IllegalArgumentException("Unknown question type id for question type")
         }
+
+
         binding.questionType.check(typeViewId)
         binding.question.setText(question.description)
+        binding.questionMarks.setText(question.marks.toString())
+        var answerIndex = 0
+        for (option in question.options) {
+            createOptionView(binding.optionsContainer, optionLayout, option)
+            if (answerIndex <= question.answers.lastIndex && question.answers[answerIndex].equals(option, true)) {
+                when(optionLayout) {
+                    R.layout.option_radio_button -> optionViewList[optionViewList.lastIndex].findViewById<RadioButton>(R.id.radio_button).isChecked = true
+                    R.layout.option_checkbox -> optionViewList[optionViewList.lastIndex].findViewById<CheckBox>(R.id.checkbox).isChecked = true
+                }
+                answerIndex++
+            }
+        }
     }
 
     private fun extractQuestion(binding: FragmentQuestionSetterBinding, typeViewId: Int): Question? {
@@ -180,16 +220,15 @@ class QuestionSetterFragment: Fragment() {
 
             val isChecked: Boolean = when (typeViewId) {
                 R.id.radio_single -> view.findViewById<RadioButton>(R.id.radio_button).isChecked
-//                R.id.radio_multiple -> view.findViewById<CheckBox>(R.id.checkbox).isChecked
+                R.id.radio_multiple -> view.findViewById<CheckBox>(R.id.checkbox).isChecked
                 else -> false
             }
             if (isChecked) answers.add(option)
         }
-//        val marks = if (binding.questionMarks.text.isNullOrBlank()) binding.questionMarks.hint.toString()
-//            else binding.questionMarks.text.toString()
+        val marks = if (binding.questionMarks.text.isNullOrBlank()) binding.questionMarks.hint.toString()
+            else binding.questionMarks.text.toString()
 
-//        return null
-        return Question(currentQuestionNumber, description, type, options, /*marks.toFloat()*/ 1F, answers)
+        return Question(currentQuestionNumber, description, type, options, marks.toFloat(), answers)
     }
 
     override fun onStart() {

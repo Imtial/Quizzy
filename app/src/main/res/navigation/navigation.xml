@@ -10,11 +10,6 @@
         android:label="fragment_question_setter"
         tools:layout="@layout/fragment_question_setter" >
         <action
-            android:id="@+id/action_questionSetterFragment_self"
-            app:destination="@id/questionSetterFragment"
-            app:popUpTo="@id/questionSetterFragment"
-            app:popUpToInclusive="true"/>
-        <action
             android:id="@+id/action_questionSetterFragment_to_decisionSetterFragment"
             app:destination="@id/decisionSetterFragment" />
         <argument

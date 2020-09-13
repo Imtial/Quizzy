@@ -1,4 +1,4 @@
-package com.example.quizzy.quizsetter
+package com.example.quizzy.database
 
 import androidx.room.*
 import com.squareup.moshi.JsonAdapter
@@ -35,7 +35,7 @@ data class Question(
         val options: List<String>,
         val marks: Float,
         @TypeConverters(ListConverter::class)
-        val answers: List<String>? = null,
+        val answers: List<String> = listOf(),
         @ColumnInfo(name = "image_uri")
         val imageUri: String? = null
 )
