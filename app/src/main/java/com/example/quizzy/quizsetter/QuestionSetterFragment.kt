@@ -1,7 +1,6 @@
 package com.example.quizzy.quizsetter
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -72,7 +71,7 @@ class QuestionSetterFragment: Fragment() {
                     currentQuestionNumber++
                     if (viewModel.questionList.size >= currentQuestionNumber) createViewFromData(binding, viewModel.questionList[currentQuestionNumber-1])
                     else resetBinding(binding)
-                    parentActivity.setText(currentQuestionNumber.toString())
+                    parentActivity.setQuestionNumberOnTopBar(currentQuestionNumber.toString())
                 }
 //                val questions = listOf(Question(1, "Blood", SINGLE, listOf("O+", "O-", "A+"), 2F, listOf("O+")),
 //                        Question(2, "Milk", MULTIPLE, listOf("White", "Red", "Blue"), 2F, listOf("White", "red")))
@@ -85,6 +84,11 @@ class QuestionSetterFragment: Fragment() {
             }
 
             override fun completeButtonClicked() {
+                val question = viewModel.questionType.value?.let { typeViewId -> extractQuestion(binding, typeViewId) }
+                if (question == null) Toast.makeText(context, "Empty field", Toast.LENGTH_SHORT).show()
+                else {
+                    viewModel.insert(question)
+                }
                 findNavController().navigate(QuestionSetterFragmentDirections.actionQuestionSetterFragmentToDecisionSetterFragment())
             }
 
@@ -92,7 +96,7 @@ class QuestionSetterFragment: Fragment() {
                 if (currentQuestionNumber > 1) {
                     currentQuestionNumber--
                     createViewFromData(binding, viewModel.questionList[currentQuestionNumber-1])
-                    parentActivity.setText(currentQuestionNumber.toString())
+                    parentActivity.setQuestionNumberOnTopBar(currentQuestionNumber.toString())
                 }
             }
         })
@@ -102,7 +106,6 @@ class QuestionSetterFragment: Fragment() {
 
     private fun resetBinding(binding: FragmentQuestionSetterBinding) {
         binding.question.text.clear()
-        binding.question.requestFocus()
         optionViewList.clear()
         binding.optionsContainer.removeAllViews()
         binding.questionMarks.text.clear()
@@ -233,6 +236,6 @@ class QuestionSetterFragment: Fragment() {
 
     override fun onStart() {
         super.onStart()
-        (requireActivity() as QuizGameActivity).setText(currentQuestionNumber.toString())
+        (requireActivity() as QuizGameActivity).setQuestionNumberOnTopBar(currentQuestionNumber.toString())
     }
 }

@@ -10,7 +10,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@Database(entities = [Quiz::class, Question::class, Response::class], version = 2, exportSchema = false)
+@Database(entities = [Quiz::class, Question::class, Response::class], version = 3, exportSchema = false)
 @TypeConverters(QuestionsConverter::class, ResponsesConverter::class, ListConverter::class)
 abstract class QuizDatabase : RoomDatabase() {
     abstract val quizDao : QuizDao
@@ -39,9 +39,8 @@ abstract class QuizDatabase : RoomDatabase() {
 //                                    val question1 = Question(2, "Hello", MULTIPLE, listOf("a", "b", "c"), 2F, listOf("b"))
 //                                    val question2 = Question(3, "Bye", MULTIPLE, listOf("d", "e", "f"), 3F, listOf("d", "f"))
                                     CoroutineScope(Dispatchers.IO).launch {
-                                        INSTANCE.questionDao.clearDB()
-//                                        INSTANCE.questionDao.insert(question1)
-//                                        INSTANCE.questionDao.insert(question2)
+                                        INSTANCE.questionDao.clearTable()
+                                        INSTANCE.responseDao.clearTable()
                                     }
                                 }
                             })

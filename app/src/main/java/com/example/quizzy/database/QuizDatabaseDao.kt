@@ -6,16 +6,19 @@ import androidx.room.*
 @Dao
 interface QuizDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(quiz: Quiz)
+    suspend fun insert(quiz: Quiz)
 
     @Update
-    fun update(quiz: Quiz)
+    suspend fun update(quiz: Quiz)
 
     @Delete
-    fun delete(quiz: Quiz)
+    suspend fun delete(quiz: Quiz)
 
     @Query("SELECT * FROM table_quiz")
-    fun getQuizList(): LiveData<List<Quiz>>
+    fun getQuizList(): List<Quiz>
+
+    @Query("SELECT * FROM table_quiz")
+    fun getLiveQuizList(): LiveData<List<Quiz>>
 }
 
 @Dao
@@ -30,25 +33,28 @@ interface QuestionDao {
     suspend fun delete(question: Question)
 
     @Query("DELETE FROM table_question")
-    suspend fun clearDB()
+    suspend fun clearTable()
 
     @Query("SELECT * FROM table_question WHERE serial = :serial")
     fun get(serial: Int): LiveData<Question>
 
     @Query("SELECT SUM(marks) FROM table_question")
-    suspend fun getTotalMarks(): Float
+    fun getLiveTotalMarks(): LiveData<Float>
 
     @Query("SELECT COUNT(*) FROM table_question")
-    suspend fun getQuestionCount() : Int
+    fun getLiveQuestionCount() : LiveData<Int>
 
     @Query("SELECT * FROM table_question ORDER BY serial ASC")
-    fun getQuestionList(): LiveData<List<Question>>
+    fun getQuestionList() : List<Question>
+
+    @Query("SELECT * FROM table_question ORDER BY serial ASC")
+    fun getLiveQuestionList(): LiveData<List<Question>>
 }
 
 @Dao
 interface ResponseDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(response: Response)
+    suspend fun insert(vararg responses: Response)
 
     @Update
     fun update(response: Response)
@@ -56,8 +62,12 @@ interface ResponseDao {
     @Delete
     fun delete(response: Response)
 
-
+    @Query("DELETE FROM table_response")
+    fun clearTable()
 
     @Query("SELECT * FROM table_response")
-    fun getResponses(): LiveData<List<Response>>
+    fun getResponses() : List<Response>
+
+    @Query("SELECT * FROM table_response")
+    fun getLiveResponses(): LiveData<List<Response>>
 }

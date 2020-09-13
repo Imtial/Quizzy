@@ -39,10 +39,14 @@ class QuizGameActivity: AppCompatActivity() {
         onButtonClickListener = listener
     }
 
-    fun setText (text: String) {
+    fun setQuestionNumberOnTopBar (text: String) {
         val spannableString = SpannableString(String.format("Question #%s", text))
         spannableString.setSpan(ForegroundColorSpan(Color.parseColor("#AA00FF")), 9, 10, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         topTextView.text = spannableString
+    }
+
+    fun setTextOnTopBar (text: String) {
+        topTextView.text = text
     }
 }
 

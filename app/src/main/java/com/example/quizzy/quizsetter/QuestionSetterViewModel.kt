@@ -23,10 +23,7 @@ class QuestionSetterViewModel(private val application: Application): ViewModel()
     fun setQuestionType(typeId: Int) {
         _questionType.value = typeId
     }
-//    private lateinit var repository: QuizRepository
-//    fun setApplication(application: Application) {
-//        repository = QuizRepository(QuizDatabase.getDatabase(application))
-//    }
+
     private val database = QuizDatabase.getDatabase(application)
     private val repository = QuizRepository(database)
     private val job = SupervisorJob()

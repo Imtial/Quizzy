@@ -8,21 +8,23 @@ import com.squareup.moshi.Types
 const val SINGLE = 1
 const val MULTIPLE = 2
 const val TYPED = 3
+const val NOPASSWORD = "NO_PASSWORD"
 
 @Entity(tableName = "table_quiz")
 data class Quiz(
         @PrimaryKey(autoGenerate = true)
         val id: Long = 0,
-        val title: String = "untitled",
+        var title: String = "untitled",
         @TypeConverters(QuestionsConverter::class)
-        val questions: List<Question>,
+        var questions: List<Question> = listOf(),
         @TypeConverters(ResponsesConverter::class)
-        val responses: List<Response>,
+        var responses: List<Response> = listOf(),
         @TypeConverters(ListConverter::class)
-        val tags: List<String>,
-        val password: String? = null,
+        var tags: List<String> = listOf(),
+        var password: String = NOPASSWORD,
         @ColumnInfo(name = "start_time")
-        val startTime: Long = 0L
+        var startTime: Long = 0L,
+        var duration: Int = 0
 )
 
 @Entity(tableName = "table_question")

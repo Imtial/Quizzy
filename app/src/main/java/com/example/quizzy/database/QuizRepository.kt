@@ -17,7 +17,23 @@ class QuizRepository (private val database: QuizDatabase) {
         database.questionDao.delete(question)
     }
 
-    fun getQuestion(serial: Int): LiveData<Question> = database.questionDao.get(serial)
+    fun getQuestionList(): LiveData<List<Question>> = database.questionDao.getLiveQuestionList()
 
-    fun getQuestionList(): LiveData<List<Question>> = database.questionDao.getQuestionList()
+    fun getQuestionCount(): LiveData<Int> = database.questionDao.getLiveQuestionCount()
+
+    fun getTotalMarks(): LiveData<Float> = database.questionDao.getLiveTotalMarks()
+
+    suspend fun insertResponses(vararg responses: Response) {
+        database.responseDao.insert(*responses)
+    }
+
+    fun getResponses() : LiveData<List<Response>> = database.responseDao.getLiveResponses()
+
+    suspend fun insertQuiz(quiz: Quiz) {
+        quiz.questions = database.questionDao.getQuestionList()
+        quiz.responses = database.responseDao.getResponses()
+        database.quizDao.insert(quiz)
+        database.questionDao.clearTable()
+        database.responseDao.clearTable()
+    }
 }

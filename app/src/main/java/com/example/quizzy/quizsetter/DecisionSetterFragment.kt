@@ -1,34 +1,45 @@
 package com.example.quizzy.quizsetter
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.quizzy.OnButtonClickListener
 import com.example.quizzy.QuizGameActivity
 import com.example.quizzy.R
-import com.google.android.material.button.MaterialButton
+import com.example.quizzy.ViewModelFactory
+import com.example.quizzy.database.Response
+import com.example.quizzy.databinding.FragmentDecisionSetterBinding
 
 class DecisionSetterFragment: Fragment() {
 
     private val conditionViewList = mutableListOf<View>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = LayoutInflater.from(context).inflate(R.layout.fragment_decision_setter, container, false)
+        val parentActivity = (requireActivity() as QuizGameActivity)
+        parentActivity.setTextOnTopBar("Set Conditional Decision")
 
-        val buttonAddDecision = rootView.findViewById<MaterialButton>(R.id.button_add_condition)
-        val conditionContainerView = rootView.findViewById<LinearLayout>(R.id.condition_container)
+        val binding = FragmentDecisionSetterBinding.inflate(inflater, container, false)
+        val viewModel = ViewModelProvider(this, ViewModelFactory(requireActivity().application))
+                .get(DecisionSetterViewModel::class.java)
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = viewModel
 
-        (requireActivity() as QuizGameActivity).setOnButtonClickListener(object : OnButtonClickListener {
+        parentActivity.setOnButtonClickListener(object : OnButtonClickListener {
             override fun nextButtonClicked() {
                 TODO("Not yet implemented")
             }
 
             override fun completeButtonClicked() {
+                val responseList = extractCondition()
+                viewModel.insert(*responseList.toTypedArray())
                 findNavController().navigate(DecisionSetterFragmentDirections.actionDecisionSetterFragmentToPublishQuizFragment())
             }
 
@@ -37,11 +48,33 @@ class DecisionSetterFragment: Fragment() {
             }
         })
 
-        buttonAddDecision.setOnClickListener {
-            addConditionView(conditionContainerView)
+        binding.buttonAddCondition.setOnClickListener {
+            if(conditionViewList.isNullOrEmpty() || !isConditionBlank(conditionViewList[conditionViewList.lastIndex])) {
+                addConditionView(binding.conditionContainer)
+            }
         }
 
-        return rootView
+        return binding.root
+    }
+
+    private fun isConditionBlank(view: View) : Boolean{
+        var isBlank = false
+        val etLow = view.findViewById<EditText>(R.id.low_value)
+        val etHigh = view.findViewById<EditText>(R.id.high_value)
+        val etMessage = view.findViewById<EditText>(R.id.decision_message)
+        if (etLow.text.isNullOrBlank()) {
+            isBlank = true
+            etLow.error = "You must set a Low value!"
+        }
+        if (etHigh.text.isNullOrBlank()) {
+            isBlank = true
+            etLow.error = "You must set a High value!"
+        }
+        if (etMessage.text.isNullOrBlank()) {
+            isBlank = true
+            etLow.error = "You must set a Message!"
+        }
+        return isBlank
     }
 
     private fun addConditionView(group: LinearLayout) {
@@ -53,5 +86,17 @@ class DecisionSetterFragment: Fragment() {
         }
         conditionViewList.add(conditionView)
         group.addView(conditionView)
+    }
+
+    private fun extractCondition(): List<Response> {
+        val responses = mutableListOf<Response>()
+        for (view in conditionViewList) {
+            val etLow = conditionViewList[conditionViewList.lastIndex].findViewById<EditText>(R.id.low_value)
+            val etHigh = conditionViewList[conditionViewList.lastIndex].findViewById<EditText>(R.id.high_value)
+            val etMessage = conditionViewList[conditionViewList.lastIndex].findViewById<EditText>(R.id.decision_message)
+
+            if (!isConditionBlank(view)) responses.add(Response(etLow.text.toString().toFloat(), etHigh.text.toString().toFloat(), etMessage.text.toString()))
+        }
+        return responses
     }
 }
