@@ -12,10 +12,10 @@ import com.example.quizzy.OnButtonClickListener
 import com.example.quizzy.QuizGameActivity
 import com.example.quizzy.R
 import com.example.quizzy.ViewModelFactory
-import com.example.quizzy.database.MULTIPLE
+import com.example.quizzy.database.MCQ
 import com.example.quizzy.database.Question
 import com.example.quizzy.database.SINGLE
-import com.example.quizzy.database.TYPED
+import com.example.quizzy.database.TEXT
 import com.example.quizzy.databinding.FragmentQuestionSetterBinding
 import java.lang.IllegalArgumentException
 
@@ -169,11 +169,11 @@ class QuestionSetterFragment: Fragment() {
                 typeViewId = R.id.radio_single
                 optionLayout = R.layout.option_radio_button
             }
-            MULTIPLE -> {
+            MCQ -> {
                 typeViewId = R.id.radio_multiple
                 optionLayout = R.layout.option_checkbox
             }
-            TYPED -> {
+            TEXT -> {
                 typeViewId = R.id.radio_typed
                 optionLayout = R.layout.option_textbox
             }
@@ -210,8 +210,8 @@ class QuestionSetterFragment: Fragment() {
         val description = binding.question.text.toString()
         val type = when(typeViewId) {
             R.id.radio_single -> SINGLE
-            R.id.radio_multiple -> MULTIPLE
-            R.id.radio_typed -> TYPED
+            R.id.radio_multiple -> MCQ
+            R.id.radio_typed -> TEXT
             else -> throw IllegalStateException("Unknown Radio Button for question type")
         }
         val options = mutableListOf<String>()
@@ -236,6 +236,8 @@ class QuestionSetterFragment: Fragment() {
 
     override fun onStart() {
         super.onStart()
-        (requireActivity() as QuizGameActivity).setQuestionNumberOnTopBar(currentQuestionNumber.toString())
+        val parentActivity = (requireActivity() as QuizGameActivity)
+        parentActivity.setQuestionNumberOnTopBar(currentQuestionNumber.toString())
+        parentActivity.showButton(R.id.button_back, R.id.button_next, R.id.button_complete)
     }
 }

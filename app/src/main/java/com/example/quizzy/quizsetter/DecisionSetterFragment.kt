@@ -25,6 +25,7 @@ class DecisionSetterFragment: Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val parentActivity = (requireActivity() as QuizGameActivity)
         parentActivity.setTextOnTopBar("Set Conditional Decision")
+        parentActivity.hideButton(R.id.button_back, R.id.button_next)
 
         val binding = FragmentDecisionSetterBinding.inflate(inflater, container, false)
         val viewModel = ViewModelProvider(this, ViewModelFactory(requireActivity().application))

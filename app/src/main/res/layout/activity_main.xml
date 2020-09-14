@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
     <com.google.android.material.button.MaterialButton
@@ -12,5 +13,19 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:text="Set Quiz"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_insert_quiz"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="Insert Quiz"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_clear_db"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="CLEAR DB"/>
 
 </LinearLayout>

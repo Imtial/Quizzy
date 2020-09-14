@@ -5,10 +5,12 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 
-const val SINGLE = 1
-const val MULTIPLE = 2
-const val TYPED = 3
+const val SINGLE = "SINGLE"
+const val MCQ = "MCQ"
+const val TEXT = "TEXT"
 const val NOPASSWORD = "NO_PASSWORD"
+const val PUBLIC = "PUBLIC"
+const val PRIVATE = "PRIVATE"
 
 @Entity(tableName = "table_quiz")
 data class Quiz(
@@ -32,7 +34,7 @@ data class Question(
         @PrimaryKey(autoGenerate = false)
         val serial: Int,
         val description: String,
-        val type: Int,
+        val type: String,
         @TypeConverters(ListConverter::class)
         val options: List<String>,
         val marks: Float,
@@ -98,3 +100,26 @@ class ResponsesConverter {
         return responsesAdapter.fromJson(jsonResponses)
     }
 }
+
+@Entity(tableName = "table_quiz_item")
+data class QuizItem (
+        @PrimaryKey
+        val id: String,
+        val title: String,
+        @ColumnInfo(name = "question_count")
+        val questionCount: Int,
+        val marks: Float,
+        @ColumnInfo(name = "start_time")
+        val startTime: Long,
+        val duration: Int,
+        @ColumnInfo(name = "user_count")
+        val userCount: Int,
+        val tags: List<String>,
+        val difficulty: Float,
+        val rating: Float,
+        val access: String,
+        @ColumnInfo(name = "creator_name")
+        val creatorName: String,
+        @ColumnInfo(name = "creator_image_uri")
+        val creatorImageUri: String
+)

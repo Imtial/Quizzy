@@ -16,6 +16,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.example.quizzy.QuizGameActivity
 import com.example.quizzy.R
 import com.example.quizzy.ViewModelFactory
 import com.example.quizzy.database.Quiz
@@ -32,6 +33,9 @@ class PublishQuizFragment: Fragment() {
     private val quiz = Quiz()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val parentActivity = requireActivity() as QuizGameActivity
+        parentActivity.hideButton(R.id.button_back, R.id.button_complete, R.id.button_next)
+
         val binding = FragmentPublishQuizBinding.inflate(inflater, container, false)
         val viewModel = ViewModelProvider(this, ViewModelFactory(requireActivity().application))
                 .get(PublishQuizViewModel::class.java)
@@ -107,4 +111,5 @@ class PublishQuizFragment: Fragment() {
             else quiz.password = binding.passwordInput.text.toString().trim()
         }
     }
+
 }
