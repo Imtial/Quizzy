@@ -4,6 +4,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -21,13 +22,13 @@ fun TextView.setTotalMarks(marks: Float) {
 }
 
 @BindingAdapter("totalQuestions")
-fun TextView.setTotalMarks(count: Int) {
+fun TextView.setTotalQuestions(count: Int?) {
     val text = "You have set $count questions"
     this.text = text
 }
 
 @BindingAdapter("creatorImage")
-fun ImageView.setCreatorImage(imageUri: String) {
+fun ImageView.setCreatorImage(imageUri: String?) {
     Glide.with(this)
             .load(imageUri)
             .apply(RequestOptions()
@@ -38,17 +39,19 @@ fun ImageView.setCreatorImage(imageUri: String) {
 }
 
 @BindingAdapter("startTime")
-fun TextView.setStartTime(timeInMillis: Long) {
+fun TextView.setStartTime(timeInMillis: Long?) {
     if (timeInMillis == 0L) this.visibility = View.GONE
     else {
         val calendar = Calendar.getInstance()
-        calendar.timeInMillis = timeInMillis
-        this.text = SimpleDateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(calendar.time)
+        if (timeInMillis != null) {
+            calendar.timeInMillis = timeInMillis
+            this.text = SimpleDateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(calendar.time)
+        }
     }
 }
 
 @BindingAdapter("duration")
-fun TextView.setDuration(minute: Int) {
+fun TextView.setDuration(minute: Int?) {
     if (minute == 0) this.visibility = View.GONE
     else {
         val duration = "$minute min"
@@ -57,15 +60,17 @@ fun TextView.setDuration(minute: Int) {
 }
 
 @BindingAdapter("difficulty")
-fun TextView.setDifficulty(value: Float) {
-    var difficulty = "EASY"
-    if (value >= 3 && value < 7) difficulty = "MEDIUM"
-    else if (value in 7.0..10.0) difficulty = "HARD"
-    this.text = difficulty
+fun TextView.setDifficulty(value: Float?) {
+    value?.let {
+        var difficulty = "EASY"
+        if (value >= 3 && value < 7) difficulty = "MEDIUM"
+        else if (value in 7.0..10.0) difficulty = "HARD"
+        this.text = difficulty
+    }
 }
 
 @BindingAdapter("isPrivate")
-fun ImageView.isPrivate(access: String) {
+fun ImageView.isPrivate(access: String?) {
     when(access) {
         PRIVATE -> this.visibility = View.VISIBLE
         PUBLIC -> this.visibility = View.GONE
@@ -73,7 +78,7 @@ fun ImageView.isPrivate(access: String) {
 }
 
 @BindingAdapter("tagList")
-fun RecyclerView.setList(items: List<String>) {
+fun RecyclerView.setList(items: List<String>?) {
     val adapter = TagListAdapter(this.context)
     this.adapter = adapter
     adapter.submitList(items)

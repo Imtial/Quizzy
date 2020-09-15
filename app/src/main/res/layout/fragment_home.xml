@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    tools:context=".homepage.HomeActivity">
+    tools:context="com.example.quizzy.homepage.HomeFragment">
 
     <SearchView
         android:id="@+id/search_bar"

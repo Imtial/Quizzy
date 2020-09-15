@@ -10,8 +10,11 @@ import android.view.View
 import android.widget.Space
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.findNavController
+import androidx.navigation.ui.setupWithNavController
 import com.example.quizzy.quizsetter.QuestionSetterFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.navigation.NavigationView
 
 class QuizGameActivity: AppCompatActivity() {
     private lateinit var onButtonClickListener: OnButtonClickListener
@@ -32,6 +35,10 @@ class QuizGameActivity: AppCompatActivity() {
         spaceTwo = findViewById(R.id.space_two)
         nextButton = findViewById(R.id.button_next)
         topTextView = findViewById(R.id.quiz_game_top)
+
+        val navigationView = findViewById<NavigationView>(R.id.nav_view)
+        val navController = findNavController(R.id.game_fragment)
+        navigationView.setupWithNavController(navController)
 
         nextButton.setOnClickListener {
             onButtonClickListener.nextButtonClicked()
@@ -56,6 +63,14 @@ class QuizGameActivity: AppCompatActivity() {
 
     fun setTextOnTopBar (text: String) {
         topTextView.text = text
+    }
+
+    fun showTopTextView () {
+        topTextView.visibility = View.VISIBLE
+    }
+
+    fun hideTopTextView() {
+        topTextView.visibility = View.GONE
     }
 
     fun showButton(vararg buttonResIds: Int) {

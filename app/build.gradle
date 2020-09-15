@@ -55,10 +55,15 @@ dependencies {
 
     implementation "androidx.navigation:navigation-ui-ktx:$version_navigation"
     implementation "androidx.navigation:navigation-fragment-ktx:$version_navigation"
-    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.10.0'
+
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.10.0'
+    implementation 'com.squareup.moshi:moshi-kotlin:1.10.0'
+
     implementation 'com.github.bumptech.glide:glide:4.11.0'
+
     implementation 'androidx.room:room-runtime:2.3.0-alpha02'
     kapt 'androidx.room:room-compiler:2.3.0-alpha02'
     implementation 'androidx.room:room-ktx:2.3.0-alpha02'

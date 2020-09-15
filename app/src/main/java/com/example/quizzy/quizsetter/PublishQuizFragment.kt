@@ -15,12 +15,14 @@ import android.widget.RadioButton
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.example.quizzy.QuizGameActivity
 import com.example.quizzy.R
 import com.example.quizzy.ViewModelFactory
 import com.example.quizzy.database.Quiz
 import com.example.quizzy.databinding.FragmentPublishQuizBinding
+import com.example.quizzy.quizgame.GameResultFragmentDirections
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
@@ -81,11 +83,11 @@ class PublishQuizFragment: Fragment() {
         binding.minutePicker.minValue = 0
         binding.minutePicker.maxValue = 180
 
-        binding.buttonPublish.setOnClickListener {
+        binding.buttonPublish.setOnClickListener {button ->
             // Populate Quiz with data from views
             extractDataFromViews(binding, calendar)
-            viewModel.insert(quiz)
-            requireActivity().finish()
+            viewModel.insert(quiz) // TODO - BUG here
+            button.findNavController().navigate(PublishQuizFragmentDirections.actionPublishQuizFragmentToHomeFragment())
         }
 
         binding.buttonAddTags.setOnClickListener {

@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.quizzy.database.*
-import com.example.quizzy.homepage.HomeActivity
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -31,7 +30,7 @@ class MainActivity : AppCompatActivity() {
 //                            .insertQuizItem(QUIZZES[QUIZ_ITEM_INDEX++])
 //                }
 //            }
-            val intent = Intent(applicationContext, HomeActivity::class.java)
+            val intent = Intent(applicationContext, QuizGameActivity::class.java)
             startActivity(intent)
         }
 

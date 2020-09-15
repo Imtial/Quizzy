@@ -22,10 +22,14 @@ class PublishQuizViewModel(private val application: Application) : ViewModel() {
     private val _tagList = MutableLiveData<MutableList<String>>()
     val tagList : LiveData<MutableList<String>> get() = _tagList
 
+    private val _completionSignal = MutableLiveData<Boolean>()
+    val completionSignal: LiveData<Boolean> get() = _completionSignal
+
     fun insert(quiz: Quiz) {
         quiz.tags = _tags
         coroutineScope.launch {
             repository.insertQuiz(quiz)
+            _completionSignal.value = true
         }
     }
 
