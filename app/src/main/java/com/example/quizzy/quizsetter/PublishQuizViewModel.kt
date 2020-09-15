@@ -29,7 +29,7 @@ class PublishQuizViewModel(private val application: Application) : ViewModel() {
         quiz.tags = _tags
         coroutineScope.launch {
             repository.insertQuiz(quiz)
-            _completionSignal.value = true
+//            _completionSignal.value = true
         }
     }
 

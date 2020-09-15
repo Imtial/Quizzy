@@ -31,24 +31,24 @@ abstract class QuizDatabase : RoomDatabase() {
                             QuizDatabase::class.java,
                             "quiz_database")
                             .fallbackToDestructiveMigration()
-                            .addCallback(object : RoomDatabase.Callback(){
-                                override fun onCreate(db: SupportSQLiteDatabase) {
-                                    super.onCreate(db)
-
-                                }
-
-                                override fun onOpen(db: SupportSQLiteDatabase) {
-                                    super.onOpen(db)
-//                                    val question1 = Question(2, "Hello", MULTIPLE, listOf("a", "b", "c"), 2F, listOf("b"))
-//                                    val question2 = Question(3, "Bye", MULTIPLE, listOf("d", "e", "f"), 3F, listOf("d", "f"))
-                                    CoroutineScope(Dispatchers.IO).launch {
-                                        INSTANCE.questionDao.clearTable()
-                                        INSTANCE.responseDao.clearTable()
-                                        INSTANCE.quizItemDao.clearTable()
-                                        for (quizItem in QUIZZES) INSTANCE.quizItemDao.insert(quizItem)
-                                    }
-                                }
-                            })
+//                            .addCallback(object : RoomDatabase.Callback(){
+//                                override fun onCreate(db: SupportSQLiteDatabase) {
+//                                    super.onCreate(db)
+//
+//                                }
+//
+//                                override fun onOpen(db: SupportSQLiteDatabase) {
+//                                    super.onOpen(db)
+////                                    val question1 = Question(2, "Hello", MULTIPLE, listOf("a", "b", "c"), 2F, listOf("b"))
+////                                    val question2 = Question(3, "Bye", MULTIPLE, listOf("d", "e", "f"), 3F, listOf("d", "f"))
+//                                    CoroutineScope(Dispatchers.IO).launch {
+//                                        INSTANCE.questionDao.clearTable()
+//                                        INSTANCE.responseDao.clearTable()
+//                                        INSTANCE.quizItemDao.clearTable()
+//                                        for (quizItem in QUIZZES) INSTANCE.quizItemDao.insert(quizItem)
+//                                    }
+//                                }
+//                            })
                             .build()
                 }
             }

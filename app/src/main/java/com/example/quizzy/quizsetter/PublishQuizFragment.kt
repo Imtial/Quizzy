@@ -87,6 +87,7 @@ class PublishQuizFragment: Fragment() {
             // Populate Quiz with data from views
             extractDataFromViews(binding, calendar)
             viewModel.insert(quiz) // TODO - BUG here
+//            parentActivity.finish()
             button.findNavController().navigate(PublishQuizFragmentDirections.actionPublishQuizFragmentToHomeFragment())
         }
 

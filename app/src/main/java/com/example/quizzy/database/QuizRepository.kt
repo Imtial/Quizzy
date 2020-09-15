@@ -33,6 +33,9 @@ class QuizRepository (private val database: QuizDatabase) {
         quiz.questions = database.questionDao.getQuestionList()
         quiz.responses = database.responseDao.getResponses()
         database.quizDao.insert(quiz)
+//        database.quizDao.getQuizList().forEach {
+//            Log.i("PUBLISH", "insertQuiz: $it")
+//        }
         database.questionDao.clearTable()
         database.responseDao.clearTable()
     }

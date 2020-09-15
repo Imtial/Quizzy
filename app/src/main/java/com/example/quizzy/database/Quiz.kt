@@ -2,6 +2,7 @@ package com.example.quizzy.database
 
 import androidx.room.*
 import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 
@@ -12,6 +13,7 @@ const val NOPASSWORD = "NO_PASSWORD"
 const val PUBLIC = "PUBLIC"
 const val PRIVATE = "PRIVATE"
 
+@JsonClass(generateAdapter = true)
 @Entity(tableName = "table_quiz")
 data class Quiz(
         @PrimaryKey(autoGenerate = true)
@@ -29,6 +31,7 @@ data class Quiz(
         var duration: Int = 0
 )
 
+@JsonClass(generateAdapter = true)
 @Entity(tableName = "table_question")
 data class Question(
         @PrimaryKey(autoGenerate = false)
@@ -76,6 +79,7 @@ class ListConverter{
     }
 }
 
+@JsonClass(generateAdapter = true)
 @Entity(tableName = "table_response")
 data class Response(
         val low: Float,
