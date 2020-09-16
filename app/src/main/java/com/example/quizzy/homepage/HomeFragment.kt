@@ -24,7 +24,7 @@ class HomeFragment : Fragment() {
         val adapter = QuizListAdapter(viewLifecycleOwner, object : OnQuizItemClickListener {
             override fun onItemClicked(quizItem: QuizItem) {
                 Log.i(TAG, "onItemClicked: ${quizItem.creatorName}")
-                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToQuizGameFragment())
+                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToQuizGameFragment(quizItem.id))
             }
         })
         val quizListView = rootView.findViewById<RecyclerView>(R.id.quiz_list)

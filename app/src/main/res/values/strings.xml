@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Quizzy</string>
     <string name="decision_setting_rule"><![CDATA[Message will be shown for marks X; where low < X <= high]]></string>
+
+    <drawable name="enabled_color">#212121</drawable>
+    <drawable name="disabled_color">#343434</drawable>
 </resources>

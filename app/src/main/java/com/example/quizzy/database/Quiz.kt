@@ -1,6 +1,7 @@
 package com.example.quizzy.database
 
 import androidx.room.*
+import com.example.quizzy.keyGen
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
@@ -16,8 +17,8 @@ const val PRIVATE = "PRIVATE"
 @JsonClass(generateAdapter = true)
 @Entity(tableName = "table_quiz")
 data class Quiz(
-        @PrimaryKey(autoGenerate = true)
-        val id: Long = 0,
+        @PrimaryKey
+        val id: String = keyGen(),
         var title: String = "untitled",
         @TypeConverters(QuestionsConverter::class)
         var questions: List<Question> = listOf(),

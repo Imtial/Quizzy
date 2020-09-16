@@ -40,6 +40,8 @@ class QuizRepository (private val database: QuizDatabase) {
         database.responseDao.clearTable()
     }
 
+    fun getQuiz(quizId: String) : LiveData<Quiz> = database.quizDao.getQuiz(quizId)
+
     suspend fun insertQuizItem(quizItem: QuizItem) {
         database.quizItemDao.insert(quizItem)
     }

@@ -48,7 +48,11 @@
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_homeFragment_to_quizGameFragment"
-            app:destination="@id/game_navigation_graph" />
+            app:destination="@id/game_navigation_graph" >
+            <argument android:name="quizId"
+                app:argType="string"
+                android:defaultValue='""'/>
+        </action>
     </fragment>
     <navigation android:id="@+id/game_navigation_graph"
         app:startDestination="@id/quizGameFragment">
@@ -60,6 +64,13 @@
             <action
                 android:id="@+id/action_quizGameFragment_to_gameResultFragment"
                 app:destination="@id/gameResultFragment" />
+            <action
+                android:id="@+id/action_quizGameFragment_self"
+                app:destination="@id/quizGameFragment" />
+            <argument
+                android:name="quizId"
+                app:argType="string"
+                android:defaultValue='""' />
         </fragment>
         <fragment
             android:id="@+id/gameResultFragment"

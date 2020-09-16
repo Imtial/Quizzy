@@ -42,6 +42,7 @@ fun ImageView.setCreatorImage(imageUri: String?) {
 fun TextView.setStartTime(timeInMillis: Long?) {
     if (timeInMillis == 0L) this.visibility = View.GONE
     else {
+        this.visibility = View.VISIBLE
         val calendar = Calendar.getInstance()
         if (timeInMillis != null) {
             calendar.timeInMillis = timeInMillis
@@ -54,6 +55,7 @@ fun TextView.setStartTime(timeInMillis: Long?) {
 fun TextView.setDuration(minute: Int?) {
     if (minute == 0) this.visibility = View.GONE
     else {
+        this.visibility = View.VISIBLE
         val duration = "$minute min"
         this.text = duration
     }
@@ -82,4 +84,36 @@ fun RecyclerView.setList(items: List<String>?) {
     val adapter = TagListAdapter(this.context)
     this.adapter = adapter
     adapter.submitList(items)
+}
+
+@BindingAdapter("marks", "total")
+fun TextView.setMarks(marks: Float?, total: Float?) {
+    if (marks != null && total != null) {
+        val text = "You've got $marks out of $total"
+        this.text = text
+    }
+}
+
+@BindingAdapter("correct")
+fun TextView.setCorrectCount(correct: Int?) {
+    if (correct != null) {
+        val text = "Correct: $correct"
+        this.text = text
+    }
+}
+
+@BindingAdapter("wrong")
+fun TextView.setWrongCount(wrong: Int?) {
+    if (wrong != null) {
+        val text = "Wrong: $wrong"
+        this.text = text
+    }
+}
+
+@BindingAdapter("unanswered")
+fun TextView.setUnansweredCount(unanswered: Int?) {
+    if (unanswered != null) {
+        val text = "Unanswered: $unanswered"
+        this.text = text
+    }
 }

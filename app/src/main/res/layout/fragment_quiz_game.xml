@@ -30,16 +30,15 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
-            <Chronometer
+            <TextView
                 android:id="@+id/game_timer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:drawableStart="@drawable/ic_timer"
+                android:layout_gravity="center"
                 android:drawablePadding="4dp"
-                android:format="MM:SS"
-                android:gravity="center_vertical"
-                tools:text="10:45" />
+                android:gravity="center"
+                tools:text="10:45"
+                app:drawableStartCompat="@drawable/ic_timer" />
 
             <Space
                 android:layout_width="0dp"
@@ -47,10 +46,12 @@
                 android:layout_weight="1" />
 
             <TextView
+                android:id="@+id/unanswered_counter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                tools:text="Unanswered: 4" />
+                android:gravity="center_horizontal"
+                tools:text="Unanswered\n4" />
         </LinearLayout>
 
         <TextView
@@ -74,6 +75,7 @@
             android:id="@+id/answer_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:minHeight="96dp"
             android:layout_margin="8dp"
             android:padding="4dp"

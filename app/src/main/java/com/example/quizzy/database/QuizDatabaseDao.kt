@@ -20,8 +20,8 @@ interface QuizDao {
     @Query("SELECT * FROM table_quiz")
     fun getLiveQuizList(): LiveData<List<Quiz>>
 
-//    @Query("SELECT * FROM table_quiz WHERE id = :quizId")
-//    fun getQuiz(quizId: Long)
+    @Query("SELECT * FROM table_quiz WHERE id = :quizId")
+    fun getQuiz(quizId: String): LiveData<Quiz>
 }
 
 @Dao

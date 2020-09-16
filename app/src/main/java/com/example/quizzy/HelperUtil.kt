@@ -1,10 +1,8 @@
 package com.example.quizzy
 
-import com.example.quizzy.database.PRIVATE
-import com.example.quizzy.database.PUBLIC
-import com.example.quizzy.database.QuizItem
+import com.example.quizzy.database.*
 
-val QUIZZES = listOf(
+val QUIZITEMS = listOf(
         QuizItem("aXdEf9", "Fluid Mechanics: Chapter 4", 15, 15F, 1600662600000L, 25, 32,
                 listOf("fluid mechanics", "physics", "mechanical"), 6F, 3.5F, PRIVATE,
                 "Mir Mahathir",
@@ -23,3 +21,12 @@ val QUIZZES = listOf(
                 8F, 4.2F, PRIVATE, "Hasibul Hisham",
                 "https://scontent.fdac11-1.fna.fbcdn.net/v/t1.0-1/c48.0.320.320a/p320x320/88241758_1407765116082453_8609546447760654336_o.jpg?_nc_cat=100&_nc_sid=7206a8&_nc_ohc=2B2bffN4HTUAX--sdub&_nc_ht=scontent.fdac11-1.fna&oh=c0a8513a21c2817c264bb2a6d9186816&oe=5F86AD53")
 )
+
+val QUIZZES = listOf(
+        Quiz("aXdEf9", "Sample Quiz", listOf(Question(1, "True or False 3+3=6?", SINGLE, listOf("true", "false"), 1F, listOf("true")),
+                Question(2, "What sound does a dog make?", MCQ, listOf("Meow", "Hoo", "Oink", "Woof"), 2F, listOf("Hoo", "Woof")),
+                Question(3, "What is the full form of WHO?", TEXT, listOf(), 2F, listOf("World Health Organization"))),
+                listOf(Response(0F, 3F, "OK"), Response(3F, 5F, "Good")), listOf(), NOPASSWORD, 1600662600000L, 1)
+)
+
+fun keyGen(): String = System.currentTimeMillis().toString()
