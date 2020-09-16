@@ -35,10 +35,14 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.logInStatus.observe(this, Observer { status ->
             when(status) {
-                Status.FAILURE -> buttonSignUp.visibility = View.VISIBLE
+                Status.FAILURE -> {
+                    buttonSignUp.visibility = View.VISIBLE
+                    buttonLogIn.visibility = View.GONE
+                }
                 Status.SUCCESS -> {
                     val intent = Intent(applicationContext, QuizGameActivity::class.java)
                     startActivity(intent)
+                    finish()
                 }
             }
         })
@@ -49,7 +53,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         buttonLogIn.setOnClickListener {
-            if (emailInput.text.isNotBlank()) viewModel.userInfo.name = emailInput.text.toString().trim()
+            if (emailInput.text.isNotBlank()) viewModel.userInfo.email = emailInput.text.toString().trim()
             if (passwordInput.text.isNotBlank()) viewModel.userInfo.password = passwordInput.text.toString().trim()
             viewModel.verifyUser()
         }
@@ -73,7 +77,7 @@ class MainViewModel(private val application: Application): ViewModel() {
     val user = repository.currentUser
 
     fun verifyUser() {
-        if (userInfo.email == user.value?.name
+        if (userInfo.email == user.value?.email
                 && userInfo.password == user.value?.password) {
             _logInStatus.value = Status.SUCCESS
         } else {
