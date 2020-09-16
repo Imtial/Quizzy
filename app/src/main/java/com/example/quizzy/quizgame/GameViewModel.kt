@@ -5,7 +5,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.quizzy.database.Question
+import com.example.quizzy.domain.Question
 import com.example.quizzy.database.QuizDatabase
 import com.example.quizzy.database.QuizRepository
 

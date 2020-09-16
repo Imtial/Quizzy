@@ -3,13 +3,11 @@ package com.example.quizzy.homepage
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.quizzy.database.QuizItem
+import com.example.quizzy.domain.QuizItem
 import com.example.quizzy.databinding.QuizListItemBinding
-import com.example.quizzy.quizsetter.TagListAdapter
 
 class QuizListAdapter(private val lifecycleOwner: LifecycleOwner, private val listener: OnQuizItemClickListener)
     : ListAdapter<QuizItem, QuizListAdapter.ViewHolder>(QuizItemDiffCallback()){

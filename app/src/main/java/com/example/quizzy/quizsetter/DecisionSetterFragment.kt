@@ -1,7 +1,6 @@
 package com.example.quizzy.quizsetter
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +14,7 @@ import com.example.quizzy.OnButtonClickListener
 import com.example.quizzy.QuizGameActivity
 import com.example.quizzy.R
 import com.example.quizzy.ViewModelFactory
-import com.example.quizzy.database.Response
+import com.example.quizzy.domain.Response
 import com.example.quizzy.databinding.FragmentDecisionSetterBinding
 
 class DecisionSetterFragment: Fragment() {

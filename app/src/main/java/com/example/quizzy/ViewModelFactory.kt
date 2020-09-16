@@ -24,6 +24,8 @@ class ViewModelFactory (private val application: Application)
             return modelClass.getConstructor(Application::class.java).newInstance(application)
         } else if (modelClass.isAssignableFrom(ProfileViewModel::class.java)) {
             return modelClass.getConstructor(Application::class.java).newInstance(application)
+        } else if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
+            return modelClass.getConstructor(Application::class.java).newInstance(application)
         }
         throw IllegalArgumentException("Unknown ViewModel Class")
     }

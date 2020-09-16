@@ -1,7 +1,7 @@
 package com.example.quizzy.database
 
-import android.util.Log
 import androidx.lifecycle.LiveData
+import com.example.quizzy.domain.*
 
 
 class QuizRepository (private val database: QuizDatabase) {
@@ -51,4 +51,14 @@ class QuizRepository (private val database: QuizDatabase) {
     }
 
     fun getLiveQuizItemList() : LiveData<List<QuizItem>> = database.quizItemDao.getLiveQuizItemList()
+
+    suspend fun insertUser(userInfo: UserInfo) {
+        database.userInfoDao.insert(userInfo)
+    }
+
+    suspend fun clearUserInfoTable() {
+        database.userInfoDao.clearTable()
+    }
+
+    val currentUser = database.userInfoDao.getLiveUserInfo()
 }

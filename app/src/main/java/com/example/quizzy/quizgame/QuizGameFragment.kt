@@ -3,7 +3,6 @@ package com.example.quizzy.quizgame
 import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,12 +15,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
 import com.example.quizzy.*
-import com.example.quizzy.database.MCQ
-import com.example.quizzy.database.Question
-import com.example.quizzy.database.SINGLE
-import com.example.quizzy.database.TEXT
+import com.example.quizzy.domain.MCQ
+import com.example.quizzy.domain.Question
+import com.example.quizzy.domain.SINGLE
+import com.example.quizzy.domain.TEXT
 import com.example.quizzy.databinding.FragmentQuizGameBinding
-import java.text.SimpleDateFormat
 
 class QuizGameFragment: Fragment() {
     private val TAG = "QUIZ-GAME"

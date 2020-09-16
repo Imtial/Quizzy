@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.ViewModel
 import com.example.quizzy.database.QuizDatabase
 import com.example.quizzy.database.QuizRepository
-import com.example.quizzy.database.Response
+import com.example.quizzy.domain.Response
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

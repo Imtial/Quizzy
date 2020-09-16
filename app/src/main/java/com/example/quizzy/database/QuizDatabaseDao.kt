@@ -2,6 +2,7 @@ package com.example.quizzy.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.example.quizzy.domain.*
 
 @Dao
 interface QuizDao {
@@ -85,4 +86,16 @@ interface QuizItemDao {
 
     @Query("SELECT * FROM table_quiz_item")
     fun getLiveQuizItemList() : LiveData<List<QuizItem>>
+}
+
+@Dao
+interface UserInfoDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(userInfo: UserInfo)
+
+    @Query("DELETE FROM table_user")
+    suspend fun clearTable()
+
+    @Query("SELECT * FROM table_user LIMIT 1")
+    fun getLiveUserInfo() : LiveData<UserInfo>
 }

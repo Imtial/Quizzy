@@ -1,14 +1,12 @@
 package com.example.quizzy.quizsetter
 
 import android.app.Application
-import android.util.Log
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.quizzy.R
 import com.example.quizzy.database.*
-import com.example.quizzy.databinding.FragmentQuestionSetterBinding
+import com.example.quizzy.domain.Question
 import kotlinx.coroutines.*
 
 class QuestionSetterViewModel(private val application: Application): ViewModel() {

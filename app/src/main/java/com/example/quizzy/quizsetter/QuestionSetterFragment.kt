@@ -12,10 +12,10 @@ import com.example.quizzy.OnButtonClickListener
 import com.example.quizzy.QuizGameActivity
 import com.example.quizzy.R
 import com.example.quizzy.ViewModelFactory
-import com.example.quizzy.database.MCQ
-import com.example.quizzy.database.Question
-import com.example.quizzy.database.SINGLE
-import com.example.quizzy.database.TEXT
+import com.example.quizzy.domain.MCQ
+import com.example.quizzy.domain.Question
+import com.example.quizzy.domain.SINGLE
+import com.example.quizzy.domain.TEXT
 import com.example.quizzy.databinding.FragmentQuestionSetterBinding
 import java.lang.IllegalArgumentException
 

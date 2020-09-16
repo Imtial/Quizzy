@@ -1,4 +1,4 @@
-package com.example.quizzy.database
+package com.example.quizzy.domain
 
 import androidx.room.*
 import com.example.quizzy.keyGen
@@ -6,6 +6,7 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
+import java.util.*
 
 const val SINGLE = "SINGLE"
 const val MCQ = "MCQ"
@@ -104,6 +105,14 @@ class ResponsesConverter {
     fun toResponses(jsonResponses: String): List<Response>? {
         return responsesAdapter.fromJson(jsonResponses)
     }
+}
+
+class DateConverter {
+    @TypeConverter
+    fun fromDate(date: Date) : Long? = date.time
+
+    @TypeConverter
+    fun toDate(timeInMillis: Long) : Date? = Date(timeInMillis)
 }
 
 @Entity(tableName = "table_quiz_item")

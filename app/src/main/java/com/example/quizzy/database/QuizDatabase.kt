@@ -8,17 +8,21 @@ import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.quizzy.QUIZITEMS
 import com.example.quizzy.QUIZZES
+import com.example.quizzy.USERINFO
+import com.example.quizzy.domain.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@Database(entities = [Quiz::class, Question::class, Response::class, QuizItem::class], version = 6, exportSchema = false)
-@TypeConverters(QuestionsConverter::class, ResponsesConverter::class, ListConverter::class)
+@Database(entities = [Quiz::class, Question::class, Response::class, QuizItem::class, UserInfo::class],
+        version = 7, exportSchema = false)
+@TypeConverters(QuestionsConverter::class, ResponsesConverter::class, ListConverter::class, DateConverter::class)
 abstract class QuizDatabase : RoomDatabase() {
     abstract val quizDao : QuizDao
     abstract val questionDao : QuestionDao
     abstract val responseDao : ResponseDao
     abstract val quizItemDao : QuizItemDao
+    abstract val userInfoDao : UserInfoDao
 
     companion object {
         @Volatile
@@ -47,6 +51,7 @@ abstract class QuizDatabase : RoomDatabase() {
                                         INSTANCE.quizItemDao.clearTable()
                                         for (quizItem in QUIZITEMS) INSTANCE.quizItemDao.insert(quizItem)
                                         for (quiz in QUIZZES) INSTANCE.quizDao.insert(quiz)
+                                        INSTANCE.userInfoDao.insert(USERINFO)
                                     }
                                 }
                             })

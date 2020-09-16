@@ -4,12 +4,11 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
-import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.example.quizzy.database.PRIVATE
-import com.example.quizzy.database.PUBLIC
+import com.example.quizzy.domain.PRIVATE
+import com.example.quizzy.domain.PUBLIC
 import com.example.quizzy.quizsetter.TagListAdapter
 import java.text.DateFormat
 import java.text.SimpleDateFormat

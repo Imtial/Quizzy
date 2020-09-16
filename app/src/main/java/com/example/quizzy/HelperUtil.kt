@@ -1,6 +1,6 @@
 package com.example.quizzy
 
-import com.example.quizzy.database.*
+import com.example.quizzy.domain.*
 
 val QUIZITEMS = listOf(
         QuizItem("aXdEf9", "Fluid Mechanics: Chapter 4", 15, 15F, 1600662600000L, 25, 32,
@@ -28,5 +28,7 @@ val QUIZZES = listOf(
                 Question(3, "What is the full form of WHO?", TEXT, listOf(), 2F, listOf("World Health Organization"))),
                 listOf(Response(0F, 3F, "OK"), Response(3F, 5F, "Good")), listOf(), NOPASSWORD, 1600662600000L, 1)
 )
+
+val USERINFO = UserInfo("Asif Imtial", "aimtial@gmail.com", "jdkhfkJHFnb65156SAKjd", "123456")
 
 fun keyGen(): String = System.currentTimeMillis().toString()

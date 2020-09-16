@@ -6,7 +6,7 @@
     <data>
         <variable
             name="quizItem"
-            type="com.example.quizzy.database.QuizItem" />
+            type="com.example.quizzy.domain.QuizItem" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
