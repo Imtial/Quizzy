@@ -85,4 +85,9 @@
                 app:popEnterAnim="@anim/nav_default_enter_anim"/>
         </fragment>
     </navigation>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.quizzy.profile.ProfileFragment"
+        android:label="ProfileFragment"
+        tools:layout="@layout/fragment_profile"/>
 </navigation>

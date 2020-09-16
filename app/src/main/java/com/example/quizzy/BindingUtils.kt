@@ -79,6 +79,26 @@ fun ImageView.isPrivate(access: String?) {
     }
 }
 
+@BindingAdapter("questionCount")
+fun TextView.setQuestionCount(count: Int?) {
+    count?.let {
+        var countText = "$count "
+        countText += if (count > 1) "questions"
+        else "question"
+        this.text = countText
+    }
+}
+
+@BindingAdapter("userCount")
+fun TextView.setUserCount(count: Int?) {
+    count?.let {
+        var countText = "$count "
+        countText += if (count > 1) "users"
+        else "user"
+        this.text = countText
+    }
+}
+
 @BindingAdapter("tagList")
 fun RecyclerView.setList(items: List<String>?) {
     val adapter = TagListAdapter(this.context)

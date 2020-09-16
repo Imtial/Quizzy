@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.quizzy.homepage.HomeViewModel
+import com.example.quizzy.profile.ProfileViewModel
 import com.example.quizzy.quizgame.GameViewModel
 import com.example.quizzy.quizsetter.DecisionSetterViewModel
 import com.example.quizzy.quizsetter.PublishQuizViewModel
@@ -20,6 +21,8 @@ class ViewModelFactory (private val application: Application)
         } else if (modelClass.isAssignableFrom(PublishQuizViewModel::class.java)) {
             return modelClass.getConstructor(Application::class.java).newInstance(application)
         } else if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
+            return modelClass.getConstructor(Application::class.java).newInstance(application)
+        } else if (modelClass.isAssignableFrom(ProfileViewModel::class.java)) {
             return modelClass.getConstructor(Application::class.java).newInstance(application)
         }
         throw IllegalArgumentException("Unknown ViewModel Class")
