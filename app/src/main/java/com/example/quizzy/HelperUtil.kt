@@ -29,6 +29,6 @@ val QUIZZES = listOf(
                 listOf(Response(0F, 3F, "OK"), Response(3F, 5F, "Good")), listOf(), NOPASSWORD, 1600662600000L, 1)
 )
 
-val USERINFO = UserInfo("Asif Imtial", "aimtial@gmail.com", "jdkhfkJHFnb65156SAKjd", "123456")
+//val USERINFO = UserInfo("Asif Imtial", "aimtial@gmail.com", "jdkhfkJHFnb65156SAKjd", "123456")
 
 fun keyGen(): String = System.currentTimeMillis().toString()

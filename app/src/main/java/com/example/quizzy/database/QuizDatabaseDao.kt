@@ -91,11 +91,11 @@ interface QuizItemDao {
 @Dao
 interface UserInfoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(userInfo: UserInfo)
+    suspend fun insert(responseUser: ResponseUser)
 
     @Query("DELETE FROM table_user")
     suspend fun clearTable()
 
     @Query("SELECT * FROM table_user LIMIT 1")
-    fun getLiveUserInfo() : LiveData<UserInfo>
+    fun getLiveUserInfo() : LiveData<ResponseUser>
 }

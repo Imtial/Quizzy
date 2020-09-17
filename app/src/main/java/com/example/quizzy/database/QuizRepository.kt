@@ -1,7 +1,12 @@
 package com.example.quizzy.database
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import com.example.quizzy.domain.*
+import com.example.quizzy.network.NetworkUtil
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class QuizRepository (private val database: QuizDatabase) {
@@ -52,13 +57,22 @@ class QuizRepository (private val database: QuizDatabase) {
 
     fun getLiveQuizItemList() : LiveData<List<QuizItem>> = database.quizItemDao.getLiveQuizItemList()
 
-    suspend fun insertUser(userInfo: UserInfo) {
-        database.userInfoDao.insert(userInfo)
-    }
+//    suspend fun insertUser(userInfo: UserInfo) {
+//        database.userInfoDao.insert(userInfo)
+//    }
+//
+//    suspend fun clearUserInfoTable() {
+//        database.userInfoDao.clearTable()
+//    }
+//
+//    val currentUser = database.userInfoDao.getLiveUserInfo()
 
-    suspend fun clearUserInfoTable() {
-        database.userInfoDao.clearTable()
-    }
+    private val networkUtil = NetworkUtil()
 
-    val currentUser = database.userInfoDao.getLiveUserInfo()
+    fun logInUser(email: String, password: String) {
+        Log.i("LogIn", "logInUser: $email, $password")
+        networkUtil.handleLogin(email, password) {
+            Log.i("LogIn", "logInUser: $it")
+        }
+    }
 }

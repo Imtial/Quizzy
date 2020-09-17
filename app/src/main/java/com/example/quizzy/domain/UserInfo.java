@@ -1,82 +1,59 @@
 package com.example.quizzy.domain;
 
-import androidx.annotation.NonNull;
-import androidx.room.ColumnInfo;
-import androidx.room.Entity;
-import androidx.room.Ignore;
-import androidx.room.PrimaryKey;
-
-import org.jetbrains.annotations.NotNull;
+import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
-@Entity(tableName = "table_user")
 public class UserInfo implements Serializable {
 
-    String name;
-    String email;
-    String password;
-    @NonNull
-    @PrimaryKey
-    String _id = "kiChuMicHu";
-    @ColumnInfo(name = "created_at")
-    Date createdAt = new Date(System.currentTimeMillis());
-    @ColumnInfo(name = "updated_at")
-    Date updatedAt = new Date(System.currentTimeMillis());;
-    String token;
-
-    @Ignore
-    public UserInfo(String name, String email, String token, String password) {
+    public UserInfo(String name, String email, String _id, String createdAt, String updatedAt) {
         this.name = name;
         this.email = email;
-        this.password = password;
-        this.token = token;
+        this._id = _id;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
-    @Ignore
-    public UserInfo(String name, String email, String token) {
-        this.name = name;
-        this.email = email;
-        this.token = token;
-        this.password = "";
-    }
 
     public UserInfo() {
     }
 
+    @SerializedName("name")
+    String name;
+    @SerializedName("email")
+    String email;
+    @SerializedName("_id")
+    String _id;
+    @SerializedName("createdAt")
+    String createdAt;
+    @SerializedName("updatedAt")
+    String updatedAt;
 
-    @NotNull
     public String get_id() {
         return _id;
     }
 
-    public void set_id(@NotNull String _id) {
+    public void set_id(String _id) {
         this._id = _id;
     }
 
-    public Date getCreatedAt() {
+
+    public String getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getUpdatedAt() {
+    public String getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
+    public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
     }
 
     public String getName() {
@@ -95,12 +72,24 @@ public class UserInfo implements Serializable {
         this.email = email;
     }
 
-    public String getToken() {
-        return token;
+    public Date getCreateDate() throws Exception {
+        Date createDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(createdAt);
+        return createDate;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public Date getUpdateDate() throws Exception {
+        Date upateDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(updatedAt);
+        return upateDate;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", _id='" + _id + '\'' +
+                ", createdAt='" + createdAt + '\'' +
+                ", updatedAt='" + updatedAt + '\'' +
+                '}';
     }
 }
-
