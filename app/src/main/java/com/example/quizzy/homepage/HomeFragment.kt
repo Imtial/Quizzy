@@ -35,7 +35,7 @@ class HomeFragment : Fragment() {
                 .get(HomeViewModel::class.java)
 
         viewModel.liveQuizItemList.observe(viewLifecycleOwner, {
-            if (it != null) loadingBar.visibility = View.GONE
+            if (!it.isNullOrEmpty()) loadingBar.visibility = View.GONE
             adapter.submitList(it)
             adapter.notifyDataSetChanged()
         })

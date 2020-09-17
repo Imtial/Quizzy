@@ -10,13 +10,46 @@ public class QuizFeed extends QuizResponse {
     Double rating;
     @SerializedName("difficulty")
     Double difficulty;
-
+    @SerializedName("ownerName")
+    String ownerName;
+    @SerializedName("userCount")
+    int userCount;
+    @SerializedName("questionCount")
+    int questionCount;
     public QuizFeed(String title, String owner, double duration, String _id, String startTime,
-                    List<String> tags, String access, Double rating, Double difficulty) {
+                    List<String> tags, String access, Double rating, Double difficulty,
+                    String ownerName, int questionCount, int userCount) {
         super(title, owner, duration, _id, startTime, tags);
         this.access = access;
         this.rating = rating;
         this.difficulty = difficulty;
+        this.ownerName = ownerName;
+        this.questionCount = questionCount;
+        this.userCount = userCount;
+    }
+
+    public String getOwnerName() {
+        return ownerName;
+    }
+
+    public void setOwnerName(String ownerName) {
+        this.ownerName = ownerName;
+    }
+
+    public int getUserCount() {
+        return userCount;
+    }
+
+    public void setUserCount(int userCount) {
+        this.userCount = userCount;
+    }
+
+    public int getQuestionCount() {
+        return questionCount;
+    }
+
+    public void setQuestionCount(int questionCount) {
+        this.questionCount = questionCount;
     }
 
     public String getAccess() {
@@ -49,10 +82,13 @@ public class QuizFeed extends QuizResponse {
                 "access='" + access + '\'' +
                 ", rating=" + rating +
                 ", difficulty=" + difficulty +
+                ", ownerName='" + ownerName + '\'' +
+                ", userCount=" + userCount +
+                ", questionCount=" + questionCount +
                 ", title='" + title + '\'' +
                 ", password='" + password + '\'' +
                 ", duration=" + duration +
-                ", _id='" + quizId + '\'' +
+                ", quizId='" + quizId + '\'' +
                 ", startTime='" + startTime + '\'' +
                 ", createdAt='" + createdAt + '\'' +
                 ", updatedAt='" + updatedAt + '\'' +

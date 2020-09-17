@@ -90,9 +90,9 @@ class QuizRepository (private val database: QuizDatabase) {
             val limit = 10
             networkQuizUtil.showTopFeedQuizzes(token, queryHash, skip, limit) {feedList ->
                 val quizItems : List<QuizItem> = feedList.map { quizFeed: QuizFeed? ->
-                    QuizItem(quizFeed?.quizId!!, quizFeed.title, 10, 25F, quizFeed.startDate.time,
-                            quizFeed.duration.toInt(), 254, quizFeed.tags, quizFeed.difficulty.toFloat(), quizFeed.rating.toFloat(),
-                            quizFeed.access, "No One")
+                    QuizItem(quizFeed?.quizId!!, quizFeed.title, quizFeed.questionCount, 25F, quizFeed.startDate.time,
+                            quizFeed.duration.toInt(), quizFeed.userCount, quizFeed.tags, quizFeed.difficulty.toFloat(), quizFeed.rating.toFloat(),
+                            quizFeed.access, quizFeed.ownerName)
                 }
                 CoroutineScope(Dispatchers.IO).launch {
                     insertQuizItem(*quizItems.toTypedArray())
