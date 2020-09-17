@@ -11,6 +11,8 @@ class ProfileViewModel(private val application: Application) : ViewModel() {
 
     private val repository = QuizRepository(QuizDatabase.getDatabase(application))
 
+    val user = repository.currentUser
+
     private val _editEnabled = MutableLiveData<Boolean>()
     val editEnabled : LiveData<Boolean> get() = _editEnabled
 

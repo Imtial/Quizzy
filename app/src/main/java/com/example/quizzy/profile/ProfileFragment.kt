@@ -17,6 +17,8 @@ class ProfileFragment: Fragment() {
         val binding = FragmentProfileBinding.inflate(inflater, container, false)
         val viewModel = ViewModelProvider(this, ViewModelFactory(requireActivity().application))
                 .get(ProfileViewModel::class.java)
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = viewModel
 
         viewModel.editEnabled.observe(viewLifecycleOwner, {
             when(it) {
