@@ -7,22 +7,22 @@ import com.example.quizzy.domain.*
 @Dao
 interface QuizDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(quiz: Quiz)
+    suspend fun insert(cachedQuiz: CachedQuiz)
 
     @Update
-    suspend fun update(quiz: Quiz)
+    suspend fun update(cachedQuiz: CachedQuiz)
 
     @Delete
-    suspend fun delete(quiz: Quiz)
+    suspend fun delete(cachedQuiz: CachedQuiz)
 
     @Query("SELECT * FROM table_quiz")
-    fun getQuizList(): List<Quiz>
+    fun getQuizList(): List<CachedQuiz>
 
     @Query("SELECT * FROM table_quiz")
-    fun getLiveQuizList(): LiveData<List<Quiz>>
+    fun getLiveQuizList(): LiveData<List<CachedQuiz>>
 
     @Query("SELECT * FROM table_quiz WHERE id = :quizId")
-    fun getQuiz(quizId: String): LiveData<Quiz>
+    fun getQuiz(quizId: String): LiveData<CachedQuiz>
 }
 
 @Dao
@@ -58,28 +58,28 @@ interface QuestionDao {
 @Dao
 interface ResponseDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(vararg responses: Response)
+    suspend fun insert(vararg responses: CachedResponse)
 
     @Update
-    fun update(response: Response)
+    fun update(response: CachedResponse)
 
     @Delete
-    fun delete(response: Response)
+    fun delete(response: CachedResponse)
 
     @Query("DELETE FROM table_response")
     suspend fun clearTable()
 
     @Query("SELECT * FROM table_response")
-    fun getResponses() : List<Response>
+    fun getResponses() : List<CachedResponse>
 
     @Query("SELECT * FROM table_response")
-    fun getLiveResponses(): LiveData<List<Response>>
+    fun getLiveResponses(): LiveData<List<CachedResponse>>
 }
 
 @Dao
 interface QuizItemDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(quizItem: QuizItem)
+    suspend fun insert(vararg quizItems: QuizItem)
 
     @Query("DELETE FROM table_quiz_item")
     suspend fun clearTable()
@@ -98,4 +98,7 @@ interface UserDao {
 
     @Query("SELECT * FROM table_user LIMIT 1")
     fun getLiveCachedUser() : LiveData<CachedUser>
+
+    @Query("SELECT token FROM table_user LIMIT 1")
+    suspend fun getUserToken(): String
 }

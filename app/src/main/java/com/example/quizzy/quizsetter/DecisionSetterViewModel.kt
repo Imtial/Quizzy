@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.ViewModel
 import com.example.quizzy.database.QuizDatabase
 import com.example.quizzy.database.QuizRepository
-import com.example.quizzy.domain.Response
+import com.example.quizzy.domain.CachedResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -18,7 +18,7 @@ class DecisionSetterViewModel(private val application: Application): ViewModel()
 
     val totalMarks = repository.getTotalMarks()
 
-    fun insert(vararg responses: Response) {
+    fun insert(vararg responses: CachedResponse) {
         coroutineScope.launch {
             repository.insertResponses(*responses)
         }

@@ -8,5 +8,9 @@ import com.example.quizzy.database.QuizRepository
 class HomeViewModel(private val application: Application) : ViewModel() {
     private val repository = QuizRepository(QuizDatabase.getDatabase(application))
 
-    val liveQuizItemList = repository.getLiveQuizItemList()
+    val liveQuizItemList = repository.liveQuizItemList
+
+    fun fetchQuizList() {
+        repository.fetchQuizList()
+    }
 }

@@ -4,8 +4,8 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import com.example.quizzy.domain.ResponseUser;
-import com.example.quizzy.task.UiLoginTask;
+import com.example.quizzy.domain.UserResponse;
+import com.example.quizzy.task.LoginTask;
 
 import java.util.HashMap;
 
@@ -68,22 +68,22 @@ public class NetworkUtil {
 
 
 
-    public void handleLogin(String email, final String pass, final @Nullable UiLoginTask callBack){
+    public void handleLogin(String email, final String pass, final @Nullable LoginTask callBack){
         HashMap<String, String> hashMap = new HashMap<>();
 
         hashMap.put("email",email);
         hashMap.put("password",pass);
 
-        Call<ResponseUser> call = retrofitInterface.executeLogin(hashMap);
+        Call<UserResponse> call = retrofitInterface.executeLogin(hashMap);
 
-        call.enqueue(new Callback<ResponseUser>() {
+        call.enqueue(new Callback<UserResponse>() {
             @Override
-            public void onResponse(Call<ResponseUser> call, Response<ResponseUser> response) {
+            public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
                 //Toast.makeText(MainActivity.this,response.code()., Toast.LENGTH_LONG).show();
                 if(response.code() == 200){
                     try {
-                        ResponseUser responseUser = (ResponseUser) response.body();
-                        callBack.logIn(responseUser);
+                        UserResponse userResponse = (UserResponse) response.body();
+                        callBack.logIn(userResponse);
                     }catch (Exception e){
                         Log.d("exception ",e.getMessage());
                     }
@@ -93,7 +93,7 @@ public class NetworkUtil {
             }
 
             @Override
-            public void onFailure(Call<ResponseUser> call, Throwable t) {
+            public void onFailure(Call<UserResponse> call, Throwable t) {
                 Log.d("failure ",t.toString());
             }
         });

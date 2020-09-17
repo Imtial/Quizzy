@@ -5,13 +5,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.example.quizzy.QuizGameActivity
-import com.example.quizzy.R
-import com.example.quizzy.ViewModelFactory
+import com.example.quizzy.*
 import com.example.quizzy.domain.QuizItem
 
 class HomeFragment : Fragment() {
@@ -27,16 +26,21 @@ class HomeFragment : Fragment() {
             }
         })
         val quizListView = rootView.findViewById<RecyclerView>(R.id.quiz_list)
+        val loadingBar = rootView.findViewById<ProgressBar>(R.id.content_loading_bar)
+        loadingBar.visibility = View.VISIBLE
         quizListView.adapter = adapter
+
 
         val viewModel = ViewModelProvider(this, ViewModelFactory(requireActivity().application))
                 .get(HomeViewModel::class.java)
 
         viewModel.liveQuizItemList.observe(viewLifecycleOwner, {
+            if (it != null) loadingBar.visibility = View.GONE
             adapter.submitList(it)
             adapter.notifyDataSetChanged()
         })
 
+        viewModel.fetchQuizList()
         return rootView
     }
 

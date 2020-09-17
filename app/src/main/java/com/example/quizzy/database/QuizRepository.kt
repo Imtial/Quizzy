@@ -3,10 +3,12 @@ package com.example.quizzy.database
 import android.util.Log
 import androidx.lifecycle.LiveData
 import com.example.quizzy.domain.*
+import com.example.quizzy.network.NetworkQuizUtil
 import com.example.quizzy.network.NetworkUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class QuizRepository (private val database: QuizDatabase) {
@@ -28,16 +30,16 @@ class QuizRepository (private val database: QuizDatabase) {
 
     fun getTotalMarks(): LiveData<Float> = database.questionDao.getLiveTotalMarks()
 
-    suspend fun insertResponses(vararg responses: Response) {
+    suspend fun insertResponses(vararg responses: CachedResponse) {
         database.responseDao.insert(*responses)
     }
 
-    fun getResponses() : LiveData<List<Response>> = database.responseDao.getLiveResponses()
+    fun getResponses() : LiveData<List<CachedResponse>> = database.responseDao.getLiveResponses()
 
-    suspend fun insertQuiz(quiz: Quiz) {
-        quiz.questions = database.questionDao.getQuestionList()
-        quiz.responses = database.responseDao.getResponses()
-        database.quizDao.insert(quiz)
+    suspend fun insertQuiz(cachedQuiz: CachedQuiz) {
+        cachedQuiz.questions = database.questionDao.getQuestionList()
+        cachedQuiz.responses = database.responseDao.getResponses()
+        database.quizDao.insert(cachedQuiz)
 //        database.quizDao.getQuizList().forEach {
 //            Log.i("PUBLISH", "insertQuiz: $it")
 //        }
@@ -45,19 +47,19 @@ class QuizRepository (private val database: QuizDatabase) {
         database.responseDao.clearTable()
     }
 
-    fun getQuiz(quizId: String) : LiveData<Quiz> = database.quizDao.getQuiz(quizId)
+    fun getQuiz(quizId: String) : LiveData<CachedQuiz> = database.quizDao.getQuiz(quizId)
 
-    suspend fun insertQuizItem(quizItem: QuizItem) {
-        database.quizItemDao.insert(quizItem)
+    suspend fun insertQuizItem(vararg quizItems: QuizItem) {
+        database.quizItemDao.insert(*quizItems)
     }
 
     suspend fun clearQuizItemTable() {
         database.quizItemDao.clearTable()
     }
 
-    fun getLiveQuizItemList() : LiveData<List<QuizItem>> = database.quizItemDao.getLiveQuizItemList()
+    val liveQuizItemList = database.quizItemDao.getLiveQuizItemList()
 
-    suspend fun insertUser(user: CachedUser) {
+    private suspend fun insertUser(user: CachedUser) {
         database.userDao.insert(user)
     }
 
@@ -70,10 +72,31 @@ class QuizRepository (private val database: QuizDatabase) {
     private val networkUtil = NetworkUtil()
 
     fun logInUser(email: String, password: String) {
-        networkUtil.handleLogin(email, password) {responseUser ->
-            val user = CachedUser(responseUser.userInfo.userId, responseUser.token, responseUser.userInfo.name, responseUser.userInfo.email)
+        networkUtil.handleLogin(email, password) {userResponse ->
+            val user = CachedUser(userResponse.userInfo.userId, userResponse.token, userResponse.userInfo.name, userResponse.userInfo.email)
             CoroutineScope(Dispatchers.IO).launch {
                 insertUser(user)
+            }
+        }
+    }
+
+    private val networkQuizUtil = NetworkQuizUtil()
+
+    fun fetchQuizList() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val token = database.userDao.getUserToken()
+            val queryHash = hashMapOf<String, String>()
+            val skip = 0
+            val limit = 10
+            networkQuizUtil.showTopFeedQuizzes(token, queryHash, skip, limit) {feedList ->
+                val quizItems : List<QuizItem> = feedList.map { quizFeed: QuizFeed? ->
+                    QuizItem(quizFeed?.quizId!!, quizFeed.title, 10, 25F, quizFeed.startDate.time,
+                            quizFeed.duration.toInt(), 254, quizFeed.tags, quizFeed.difficulty.toFloat(), quizFeed.rating.toFloat(),
+                            quizFeed.access, "No One")
+                }
+                CoroutineScope(Dispatchers.IO).launch {
+                    insertQuizItem(*quizItems.toTypedArray())
+                }
             }
         }
     }

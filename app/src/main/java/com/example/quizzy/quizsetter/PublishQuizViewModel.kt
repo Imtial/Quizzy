@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.quizzy.database.*
-import com.example.quizzy.domain.Quiz
+import com.example.quizzy.domain.CachedQuiz
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -26,10 +26,10 @@ class PublishQuizViewModel(private val application: Application) : ViewModel() {
     private val _completionSignal = MutableLiveData<Boolean>()
     val completionSignal: LiveData<Boolean> get() = _completionSignal
 
-    fun insert(quiz: Quiz) {
-        quiz.tags = _tags
+    fun insert(cachedQuiz: CachedQuiz) {
+        cachedQuiz.tags = _tags
         coroutineScope.launch {
-            repository.insertQuiz(quiz)
+            repository.insertQuiz(cachedQuiz)
 //            _completionSignal.value = true
         }
     }

@@ -13,7 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@Database(entities = [Quiz::class, Question::class, Response::class, QuizItem::class, CachedUser::class],
+@Database(entities = [CachedQuiz::class, Question::class, CachedResponse::class, QuizItem::class, CachedUser::class],
         version = 7, exportSchema = false)
 @TypeConverters(QuestionsConverter::class, ResponsesConverter::class, ListConverter::class, DateConverter::class)
 abstract class QuizDatabase : RoomDatabase() {
@@ -48,7 +48,7 @@ abstract class QuizDatabase : RoomDatabase() {
                                         INSTANCE.questionDao.clearTable()
                                         INSTANCE.responseDao.clearTable()
                                         INSTANCE.quizItemDao.clearTable()
-                                        for (quizItem in QUIZITEMS) INSTANCE.quizItemDao.insert(quizItem)
+//                                        for (quizItem in QUIZITEMS) INSTANCE.quizItemDao.insert(quizItem)
                                         for (quiz in QUIZZES) INSTANCE.quizDao.insert(quiz)
                                     }
                                 }

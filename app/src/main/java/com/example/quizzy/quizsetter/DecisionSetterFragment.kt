@@ -14,7 +14,7 @@ import com.example.quizzy.OnButtonClickListener
 import com.example.quizzy.QuizGameActivity
 import com.example.quizzy.R
 import com.example.quizzy.ViewModelFactory
-import com.example.quizzy.domain.Response
+import com.example.quizzy.domain.CachedResponse
 import com.example.quizzy.databinding.FragmentDecisionSetterBinding
 
 class DecisionSetterFragment: Fragment() {
@@ -88,14 +88,14 @@ class DecisionSetterFragment: Fragment() {
         group.addView(conditionView)
     }
 
-    private fun extractCondition(): List<Response> {
-        val responses = mutableListOf<Response>()
+    private fun extractCondition(): List<CachedResponse> {
+        val responses = mutableListOf<CachedResponse>()
         for (view in conditionViewList) {
             val etLow = conditionViewList[conditionViewList.lastIndex].findViewById<EditText>(R.id.low_value)
             val etHigh = conditionViewList[conditionViewList.lastIndex].findViewById<EditText>(R.id.high_value)
             val etMessage = conditionViewList[conditionViewList.lastIndex].findViewById<EditText>(R.id.decision_message)
 
-            if (!isConditionBlank(view)) responses.add(Response(etLow.text.toString().toFloat(), etHigh.text.toString().toFloat(), etMessage.text.toString()))
+            if (!isConditionBlank(view)) responses.add(CachedResponse(etLow.text.toString().toFloat(), etHigh.text.toString().toFloat(), etMessage.text.toString()))
         }
         return responses
     }

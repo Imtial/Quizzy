@@ -12,7 +12,7 @@ import androidx.navigation.findNavController
 import com.example.quizzy.QuizGameActivity
 import com.example.quizzy.R
 import com.example.quizzy.ViewModelFactory
-import com.example.quizzy.domain.Quiz
+import com.example.quizzy.domain.CachedQuiz
 import com.example.quizzy.databinding.FragmentPublishQuizBinding
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
@@ -23,7 +23,7 @@ import java.util.*
 
 class PublishQuizFragment: Fragment() {
 
-    private val quiz = Quiz()
+    private val quiz = CachedQuiz()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val parentActivity = requireActivity() as QuizGameActivity

@@ -18,6 +18,14 @@
         android:closeIcon="@drawable/ic_wrong"
         android:iconifiedByDefault="false"/>
 
+    <ProgressBar
+        android:id="@+id/content_loading_bar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="32dp"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/quiz_list"
         android:layout_width="match_parent"
