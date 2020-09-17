@@ -8,10 +8,10 @@ import java.util.Date;
 
 public class UserInfo implements Serializable {
 
-    public UserInfo(String name, String email, String _id, String createdAt, String updatedAt) {
+    public UserInfo(String name, String email, String userId, String createdAt, String updatedAt) {
         this.name = name;
         this.email = email;
-        this._id = _id;
+        this.userId = userId;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -25,18 +25,18 @@ public class UserInfo implements Serializable {
     @SerializedName("email")
     String email;
     @SerializedName("_id")
-    String _id;
+    String userId;
     @SerializedName("createdAt")
     String createdAt;
     @SerializedName("updatedAt")
     String updatedAt;
 
-    public String get_id() {
-        return _id;
+    public String getUserId() {
+        return userId;
     }
 
-    public void set_id(String _id) {
-        this._id = _id;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
 
@@ -73,13 +73,11 @@ public class UserInfo implements Serializable {
     }
 
     public Date getCreateDate() throws Exception {
-        Date createDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(createdAt);
-        return createDate;
+        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(createdAt);
     }
 
     public Date getUpdateDate() throws Exception {
-        Date upateDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(updatedAt);
-        return upateDate;
+        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(updatedAt);
     }
 
     @Override
@@ -87,7 +85,7 @@ public class UserInfo implements Serializable {
         return "User{" +
                 "name='" + name + '\'' +
                 ", email='" + email + '\'' +
-                ", _id='" + _id + '\'' +
+                ", _id='" + userId + '\'' +
                 ", createdAt='" + createdAt + '\'' +
                 ", updatedAt='" + updatedAt + '\'' +
                 '}';

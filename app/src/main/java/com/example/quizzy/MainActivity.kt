@@ -3,8 +3,12 @@ package com.example.quizzy
 import android.app.Application
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import android.widget.EditText
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.ContentLoadingProgressBar
 import androidx.lifecycle.*
 import com.example.quizzy.database.QuizDatabase
 import com.example.quizzy.database.QuizRepository
@@ -23,12 +27,18 @@ class MainActivity : AppCompatActivity() {
         val buttonLogIn = findViewById<MaterialButton>(R.id.loginButton)
         val buttonSignUp = findViewById<MaterialButton>(R.id.signupButton)
         val buttonAppHome = findViewById<MaterialButton>(R.id.button_app_home)
+        val progressBar = findViewById<ProgressBar>(R.id.loading_progress_bar)
 
         val viewModel = ViewModelProvider(this, ViewModelFactory(application)).get(MainViewModel::class.java)
 
-//        viewModel.user.observe(this, Observer {
-//            Log.i(TAG, "onCreate: $it")
-//        })
+        viewModel.user.observe(this, Observer {user ->
+            Log.i(TAG, "onCreate: $user")
+            user?.let {
+                val intent = Intent(applicationContext, QuizGameActivity::class.java)
+                startActivity(intent)
+                progressBar.visibility = View.GONE
+            }
+        })
 //
 //        viewModel.logInStatus.observe(this, Observer { status ->
 //            when(status) {
@@ -54,6 +64,7 @@ class MainActivity : AppCompatActivity() {
             var password = ""
             if (emailInput.text.isNotBlank()) email = emailInput.text.toString().trim()
             if (passwordInput.text.isNotBlank()) password = passwordInput.text.toString().trim()
+            progressBar.visibility = View.VISIBLE
             viewModel.verifyUser(email, password)
         }
     }
@@ -71,7 +82,7 @@ class MainViewModel(private val application: Application): ViewModel() {
 //    private val _logInStatus = MutableLiveData<Status>()
 //    val logInStatus: LiveData<Status> get() = _logInStatus
 
-//    val user = repository.currentUser
+    val user = repository.currentUser
 
     fun verifyUser(email: String, password: String) {
         viewModelScope.launch {

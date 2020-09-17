@@ -68,4 +68,12 @@
         android:visibility="gone"
         android:text="App Entry"/>
 
+    <ProgressBar
+        android:id="@+id/loading_progress_bar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="8dp"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone"/>
+
 </LinearLayout>

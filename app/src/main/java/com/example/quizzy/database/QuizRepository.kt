@@ -57,22 +57,24 @@ class QuizRepository (private val database: QuizDatabase) {
 
     fun getLiveQuizItemList() : LiveData<List<QuizItem>> = database.quizItemDao.getLiveQuizItemList()
 
-//    suspend fun insertUser(userInfo: UserInfo) {
-//        database.userInfoDao.insert(userInfo)
-//    }
-//
-//    suspend fun clearUserInfoTable() {
-//        database.userInfoDao.clearTable()
-//    }
-//
-//    val currentUser = database.userInfoDao.getLiveUserInfo()
+    suspend fun insertUser(user: CachedUser) {
+        database.userDao.insert(user)
+    }
+
+    suspend fun clearUserInfoTable() {
+        database.userDao.clearTable()
+    }
+
+    val currentUser = database.userDao.getLiveCachedUser()
 
     private val networkUtil = NetworkUtil()
 
     fun logInUser(email: String, password: String) {
-        Log.i("LogIn", "logInUser: $email, $password")
-        networkUtil.handleLogin(email, password) {
-            Log.i("LogIn", "logInUser: $it")
+        networkUtil.handleLogin(email, password) {responseUser ->
+            val user = CachedUser(responseUser.userInfo.userId, responseUser.token, responseUser.userInfo.name, responseUser.userInfo.email)
+            CoroutineScope(Dispatchers.IO).launch {
+                insertUser(user)
+            }
         }
     }
 }
