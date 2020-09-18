@@ -23,9 +23,9 @@ val QUIZITEMS = listOf(
 )
 
 val QUIZZES = listOf(
-        CachedQuiz("aXdEf9", "Sample Quiz", listOf(Question(1, "True or False 3+3=6?", SINGLE, listOf("true", "false"), 1F, listOf("true")),
-                Question(2, "What sound does a dog make?", MCQ, listOf("Meow", "Hoo", "Oink", "Woof"), 2F, listOf("Hoo", "Woof")),
-                Question(3, "What is the full form of WHO?", TEXT, listOf(), 2F, listOf("World Health Organization"))),
+        CachedQuiz("aXdEf9", "Sample Quiz", listOf(Question("hjsbdhbs", "True or False 3+3=6?", SINGLE, listOf("true", "false"), 1F, listOf("true")),
+                Question("jksndkjfbsjkd", "What sound does a dog make?", MCQ, listOf("Meow", "Hoo", "Oink", "Woof"), 2F, listOf("Hoo", "Woof")),
+                Question("kjshdkjsbdjksdhfjk", "What is the full form of WHO?", TEXT, listOf(), 2F, listOf("World Health Organization"))),
                 listOf(CachedResponse(0F, 3F, "OK"), CachedResponse(3F, 5F, "Good")), listOf(), NOPASSWORD, 1600662600000L, 1)
 )
 

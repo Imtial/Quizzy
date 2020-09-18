@@ -6,7 +6,6 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.example.quizzy.QUIZITEMS
 import com.example.quizzy.QUIZZES
 import com.example.quizzy.domain.*
 import kotlinx.coroutines.CoroutineScope
@@ -14,7 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Database(entities = [CachedQuiz::class, Question::class, CachedResponse::class, QuizItem::class, CachedUser::class],
-        version = 7, exportSchema = false)
+        version = 9, exportSchema = false)
 @TypeConverters(QuestionsConverter::class, ResponsesConverter::class, ListConverter::class, DateConverter::class)
 abstract class QuizDatabase : RoomDatabase() {
     abstract val quizDao : QuizDao
@@ -48,8 +47,9 @@ abstract class QuizDatabase : RoomDatabase() {
                                         INSTANCE.questionDao.clearTable()
                                         INSTANCE.responseDao.clearTable()
                                         INSTANCE.quizItemDao.clearTable()
+                                        INSTANCE.quizDao.clearTable()
 //                                        for (quizItem in QUIZITEMS) INSTANCE.quizItemDao.insert(quizItem)
-                                        for (quiz in QUIZZES) INSTANCE.quizDao.insert(quiz)
+//                                        for (quiz in QUIZZES) INSTANCE.quizDao.insert(quiz)
                                     }
                                 }
                             })

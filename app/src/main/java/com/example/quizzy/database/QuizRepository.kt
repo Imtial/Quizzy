@@ -2,13 +2,13 @@ package com.example.quizzy.database
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.quizzy.domain.*
 import com.example.quizzy.network.NetworkQuizUtil
 import com.example.quizzy.network.NetworkUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 
 class QuizRepository (private val database: QuizDatabase) {
@@ -47,7 +47,7 @@ class QuizRepository (private val database: QuizDatabase) {
         database.responseDao.clearTable()
     }
 
-    fun getQuiz(quizId: String) : LiveData<CachedQuiz> = database.quizDao.getQuiz(quizId)
+    fun getQuiz(quizId: String) : LiveData<CachedQuiz?> = database.quizDao.getQuiz(quizId)
 
     suspend fun insertQuizItem(vararg quizItems: QuizItem) {
         database.quizItemDao.insert(*quizItems)
@@ -97,6 +97,29 @@ class QuizRepository (private val database: QuizDatabase) {
                 CoroutineScope(Dispatchers.IO).launch {
                     insertQuizItem(*quizItems.toTypedArray())
                 }
+            }
+        }
+    }
+
+    private val _fetchedQuizId = MutableLiveData<String>()
+    val fetchedQuizId: LiveData<String> get() = _fetchedQuizId
+
+    fun fetchSelectedQuiz(id: String, password: String = NOPASSWORD) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val token = database.userDao.getUserToken()
+            networkQuizUtil.getQuestionsForAQuiz(token, id, password) {questionPaper ->
+                Log.i("QPAPER", "fetchQuizById: $questionPaper")
+                val quiz = CachedQuiz(id = questionPaper._id,
+                        title = questionPaper.title,
+                        questions = questionPaper.questions,
+                        duration = questionPaper.duration.toInt(),
+                        startTime = questionPaper.startDate.time
+                )
+                Log.i("QPAPER", "fetchQuizById: $quiz")
+                CoroutineScope(Dispatchers.IO).launch {
+                    database.quizDao.insert(quiz)
+                }
+                _fetchedQuizId.value = quiz.id
             }
         }
     }

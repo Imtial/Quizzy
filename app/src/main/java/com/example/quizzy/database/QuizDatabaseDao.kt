@@ -15,6 +15,9 @@ interface QuizDao {
     @Delete
     suspend fun delete(cachedQuiz: CachedQuiz)
 
+    @Query("DELETE FROM table_quiz")
+    suspend fun clearTable()
+
     @Query("SELECT * FROM table_quiz")
     fun getQuizList(): List<CachedQuiz>
 
@@ -22,7 +25,7 @@ interface QuizDao {
     fun getLiveQuizList(): LiveData<List<CachedQuiz>>
 
     @Query("SELECT * FROM table_quiz WHERE id = :quizId")
-    fun getQuiz(quizId: String): LiveData<CachedQuiz>
+    fun getQuiz(quizId: String): LiveData<CachedQuiz?>
 }
 
 @Dao
@@ -39,8 +42,8 @@ interface QuestionDao {
     @Query("DELETE FROM table_question")
     suspend fun clearTable()
 
-    @Query("SELECT * FROM table_question WHERE serial = :serial")
-    fun get(serial: Int): LiveData<Question>
+    @Query("SELECT * FROM table_question WHERE id = :id")
+    fun get(id: String): LiveData<Question>
 
     @Query("SELECT SUM(marks) FROM table_question")
     fun getLiveTotalMarks(): LiveData<Float>
@@ -48,10 +51,10 @@ interface QuestionDao {
     @Query("SELECT COUNT(*) FROM table_question")
     fun getLiveQuestionCount() : LiveData<Int>
 
-    @Query("SELECT * FROM table_question ORDER BY serial ASC")
+    @Query("SELECT * FROM table_question")
     fun getQuestionList() : List<Question>
 
-    @Query("SELECT * FROM table_question ORDER BY serial ASC")
+    @Query("SELECT * FROM table_question")
     fun getLiveQuestionList(): LiveData<List<Question>>
 }
 

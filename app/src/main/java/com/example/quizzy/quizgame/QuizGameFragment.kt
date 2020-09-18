@@ -3,6 +3,7 @@ package com.example.quizzy.quizgame
 import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -54,26 +55,30 @@ class QuizGameFragment: Fragment() {
         })
 
         gameViewModel.quiz.observe(viewLifecycleOwner, { quiz ->
-            parentActivity.setTextOnTopBar(quiz.title)
-            gameViewModel.init()
-            if (quiz.duration == 0) binding.gameTimer.visibility = View.GONE
-            else {
-                object : CountDownTimer(quiz.duration * 60000L, 1000) {
-                    override fun onTick(millisUntilFinished: Long) {
-                        val min = (millisUntilFinished / (60000)).toString()
-                        val sec = String.format("%02d", (millisUntilFinished / 1000) % 60)
-                        val time = "$min:$sec"
-                        binding.gameTimer.text = time
-                    }
+            if (quiz != null) {
+                parentActivity.setTextOnTopBar(quiz.title)
+                gameViewModel.init()
+                if (quiz.duration == 0) binding.gameTimer.visibility = View.GONE
+                else {
+                    object : CountDownTimer(quiz.duration * 60000L, 1000) {
+                        override fun onTick(millisUntilFinished: Long) {
+                            val min = (millisUntilFinished / (60000)).toString()
+                            val sec = String.format("%02d", (millisUntilFinished / 1000) % 60)
+                            val time = "$min:$sec"
+                            binding.gameTimer.text = time
+                        }
 
-                    override fun onFinish() {
-                        val message = "Quiz Locked\nTimes Up!!!"
-                        binding.gameTimer.text = message
-                        binding.gameTimer.setTextColor(Color.RED)
-                        submitChoices(binding)
-                        gameViewModel.disableQuiz()
-                    }
-                }.start()
+                        override fun onFinish() {
+                            val message = "Quiz Locked\nTimes Up!!!"
+                            binding.gameTimer.text = message
+                            binding.gameTimer.setTextColor(Color.RED)
+                            submitChoices(binding)
+                            gameViewModel.disableQuiz()
+                        }
+                    }.start()
+                }
+            } else {
+                Log.i(TAG, "onCreateView: NULL Quiz object")
             }
         })
 
@@ -140,7 +145,7 @@ class QuizGameFragment: Fragment() {
         binding.question.text = question.description
         when(type) {
             SINGLE -> {
-                for (option in question.options) {
+                for (option in question.options!!) {
                     val radioButton = RadioButton(this.requireContext())
                     radioButton.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                     radioButton.text = option
@@ -158,7 +163,7 @@ class QuizGameFragment: Fragment() {
                 }
             }
             MCQ -> {
-                for (option in question.options) {
+                for (option in question.options!!) {
                     val checkBox = CheckBox(this.requireContext())
                     checkBox.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                     checkBox.text = option

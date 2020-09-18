@@ -136,8 +136,7 @@ public class QuizResponse {
     }
 
     public Date getStartDate() throws Exception{
-        Date startDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(startTime);
-        return startDate;
+        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(startTime);
     }
 
     public Date getCreateDate() throws Exception{

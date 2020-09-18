@@ -185,9 +185,9 @@ class QuestionSetterFragment: Fragment() {
         binding.question.setText(question.description)
         binding.questionMarks.setText(question.marks.toString())
         var answerIndex = 0
-        for (option in question.options) {
+        for (option in question.options!!) {
             createOptionView(binding.optionsContainer, optionLayout, option)
-            if (answerIndex <= question.answers.lastIndex && question.answers[answerIndex].equals(option, true)) {
+            if (answerIndex <= question.answers?.lastIndex!! && question.answers[answerIndex].equals(option, true)) {
                 when(optionLayout) {
                     R.layout.option_radio_button -> optionViewList[optionViewList.lastIndex].findViewById<RadioButton>(R.id.radio_button).isChecked = true
                     R.layout.option_checkbox -> optionViewList[optionViewList.lastIndex].findViewById<CheckBox>(R.id.checkbox).isChecked = true
@@ -231,7 +231,7 @@ class QuestionSetterFragment: Fragment() {
         val marks = if (binding.questionMarks.text.isNullOrBlank()) binding.questionMarks.hint.toString()
             else binding.questionMarks.text.toString()
 
-        return Question(currentQuestionNumber, description, type, options, marks.toFloat(), answers)
+        return Question(currentQuestionNumber.toString(), description, type, options, marks.toFloat(), answers)
     }
 
     override fun onStart() {

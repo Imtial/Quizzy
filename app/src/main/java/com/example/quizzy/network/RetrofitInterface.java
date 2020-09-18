@@ -1,5 +1,6 @@
 package com.example.quizzy.network;
 
+import com.example.quizzy.domain.QuestionPaper;
 import com.example.quizzy.domain.QuizFeed;
 import com.example.quizzy.domain.UserResponse;
 
@@ -11,6 +12,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface RetrofitInterface {
@@ -64,13 +66,13 @@ public interface RetrofitInterface {
     Call<List<QuizFeed>> executeRecentQuizSimple(@Header("Authorization") String header,
                                                  @Query("skip") int skip,@Query("limit") int limit);
 
-//    @GET("/quizzes/{id}")
-//    Call<QuestionPaper> executeQuizQuestionPrivate(@Header("Authorization") String header, @Path("id") String id,
-//                                                   @Query("pwd") String password);
-//
-//    @GET("/quizzes/{id}")
-//    Call<QuestionPaper> executeQuizQuestionPublic(@Header("Authorization") String header, @Path("id") String id);
-//
+    @GET("/quizzes/{id}")
+    Call<QuestionPaper> executeQuizQuestionPrivate(@Header("Authorization") String header, @Path("id") String id,
+                                                   @Query("pwd") String password);
+
+    @GET("/quizzes/{id}")
+    Call<QuestionPaper> executeQuizQuestionPublic(@Header("Authorization") String header, @Path("id") String id);
+
 //    @POST("/quizzes/{id}")
 //    Call<AnswerResponse> executeSubmitAnswer(@Header("Authorization") String header, @Path("id") String id,
 //                                             @Body HashMap<String, List<Submission>> hashMap);

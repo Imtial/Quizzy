@@ -95,7 +95,7 @@ class GameViewModel(private val application: Application, private val quizId: St
             var correctFlag = true
             val answers = answerMap[index]
             if (answers != null) {
-                question.answers.zip(answers) { provided, submitted ->
+                question.answers?.zip(answers) { provided, submitted ->
                     if (!provided.equals(submitted, true)) {
                         correctFlag = false
                     }

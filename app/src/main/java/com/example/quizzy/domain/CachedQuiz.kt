@@ -2,6 +2,7 @@ package com.example.quizzy.domain
 
 import androidx.room.*
 import com.example.quizzy.keyGen
+import com.google.gson.annotations.SerializedName
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
@@ -36,15 +37,21 @@ data class CachedQuiz(
 @JsonClass(generateAdapter = true)
 @Entity(tableName = "table_question")
 data class Question(
-        @PrimaryKey(autoGenerate = false)
-        val serial: Int,
+        @PrimaryKey
+        @SerializedName("_id")
+        val id: String,
+//        @SerializedName("description")
         val description: String,
+//        @SerializedName("type")
         val type: String,
         @TypeConverters(ListConverter::class)
-        val options: List<String>,
+//        @SerializedName("options")
+        val options: List<String>?,
+//        @SerializedName("marks")
         val marks: Float,
         @TypeConverters(ListConverter::class)
-        val answers: List<String> = listOf(),
+//        @SerializedName("answers")
+        val answers: List<String>? = listOf(),
         @ColumnInfo(name = "image_uri")
         val imageUri: String? = null
 )

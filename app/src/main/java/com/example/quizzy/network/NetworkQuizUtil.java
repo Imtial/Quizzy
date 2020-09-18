@@ -4,7 +4,9 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.example.quizzy.domain.QuestionPaper;
 import com.example.quizzy.domain.QuizFeed;
+import com.example.quizzy.task.QuestionsForQuizTask;
 import com.example.quizzy.task.ShowFeedTask;
 
 import java.util.HashMap;
@@ -194,52 +196,54 @@ public class NetworkQuizUtil extends NetworkUtil {
         });
 
     }
-//
-//    public void getQuestionsForAQuiz(String header, String quizId, HashMap<String, String> hashMap,
-//                                     @Nullable final QuestionsForQuizTask callBack){
-//
-//        Call<QuestionPaper> call;
-//
-//        if(hashMap.containsKey("pwd")) {
-//            call = retrofitInterface.executeQuizQuestionPrivate("Bearer "+header, quizId, hashMap.get("pwd"));
-//        }
-//        else{
-//            call = retrofitInterface.executeQuizQuestionPublic("Bearer "+header, quizId);
-//        }
-//
-//        call.enqueue(new Callback<QuestionPaper>() {
-//            @Override
-//            public void onResponse(Call<QuestionPaper> call, Response<QuestionPaper> response) {
-//                if(response.code() == 200){
-//                    try{
-//                        QuestionPaper questionPaper = (QuestionPaper) response.body();//the posted quiz is returned from the server
-//                        callBack.getQuestionsForQuiz(questionPaper);
-//
-//
-//                    }catch (Exception e){
-//                        Log.d("exception ",e.getMessage());
-//                    }
-//                }
-//                else if(response.code() == 400){
-//                    Log.d("response ","code => sth unknown went wrong "+response.code());
-//                }
-//                else if(response.code() == 401){
-//                    Log.d("response ","code => incorrect password "+response.code());
-//                }
-//                else if(response.code() == 404){
-//                    Log.d("response ","code => the id was not found "+response.code());
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<QuestionPaper> call, Throwable t) {
-//                Log.d("failure ",t.toString());
-//            }
-//        });
-//
-//    }
-//
-//
+
+
+    public void getQuestionsForAQuiz(String header, String quizId, String pwd,
+                                     @Nullable final QuestionsForQuizTask callBack){
+
+        Call<QuestionPaper> call;
+
+        if(pwd.equalsIgnoreCase("NO_PASSWORD")) {
+            call = retrofitInterface.executeQuizQuestionPublic("Bearer "+header, quizId);
+
+        }
+        else{
+            call = retrofitInterface.executeQuizQuestionPrivate("Bearer "+header, quizId, pwd);
+        }
+
+        call.enqueue(new Callback<QuestionPaper>() {
+            @Override
+            public void onResponse(Call<QuestionPaper> call, Response<QuestionPaper> response) {
+                if(response.code() == 200){
+                    try{
+                        QuestionPaper questionPaper = (QuestionPaper) response.body();//the posted quiz is returned from the server
+                        callBack.getQuestionsForQuiz(questionPaper);
+
+
+                    }catch (Exception e){
+                        Log.d("exception ",e.getMessage());
+                    }
+                }
+                else if(response.code() == 400){
+                    Log.d("response ","code => sth unknown went wrong "+response.code());
+                }
+                else if(response.code() == 401){
+                    Log.d("response ","code => incorrect password "+response.code());
+                }
+                else if(response.code() == 404){
+                    Log.d("response ","code => the id was not found "+response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<QuestionPaper> call, Throwable t) {
+                Log.d("failure ",t.toString());
+            }
+        });
+
+    }
+
+
 //    public void getAnswerScript(String header, String _id, HashMap<String, List<Submission>> hashMap,
 //                                @Nullable final GetAnswerScriptTask callBack){
 //
