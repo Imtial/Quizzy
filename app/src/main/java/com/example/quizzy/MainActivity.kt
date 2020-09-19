@@ -21,6 +21,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        val nameInput = findViewById<EditText>(R.id.nameEditText)
         val emailInput = findViewById<EditText>(R.id.emailEditText)
         val passwordInput = findViewById<EditText>(R.id.passEditText)
         val buttonLogIn = findViewById<MaterialButton>(R.id.loginButton)
@@ -66,6 +67,17 @@ class MainActivity : AppCompatActivity() {
             progressBar.visibility = View.VISIBLE
             viewModel.verifyUser(email, password)
         }
+
+        buttonSignUp.setOnClickListener {
+            var email = ""
+            var password = ""
+            var name = ""
+            if (nameInput.text.isNotBlank()) name = nameInput.text.toString().trim()
+            if (emailInput.text.isNotBlank()) email = emailInput.text.toString().trim()
+            if (passwordInput.text.isNotBlank()) password = passwordInput.text.toString().trim()
+            progressBar.visibility = View.VISIBLE
+            viewModel.signUp(name, email, password)
+        }
     }
 
 }
@@ -89,6 +101,10 @@ class MainViewModel(private val application: Application): ViewModel() {
                 repository.logInUser(email, password)
             }
         }
+    }
+
+    fun signUp(name: String, email: String, password: String) {
+        repository.signUp(name, email, password)
     }
 
 }

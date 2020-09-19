@@ -6,6 +6,7 @@ import androidx.annotation.Nullable;
 
 import com.example.quizzy.domain.UserResponse;
 import com.example.quizzy.task.LoginTask;
+import com.example.quizzy.task.SignUpTask;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -35,45 +36,49 @@ public class NetworkUtil {
 
 
 
-//    public void handleSignup(String name, String email, String pass, final @Nullable UiSingUpInterface callBack){
-//        HashMap<String,String> hashMap = new HashMap<>();
-//
-//        hashMap.put("name",name);
-//        hashMap.put("email",email);
-//        hashMap.put("password",pass);
-//
-//        Call<UserInfo> call = retrofitInterface.executeSignup(hashMap);
-//
-//        call.enqueue(new Callback<UserInfo>() {
-//            @Override
-//            public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
-//                //Toast.makeText(MainActivity.this,response.code()., Toast.LENGTH_LONG).show();
-//                if(response.code() == 201){
-//                    try {
-//                        UserInfo userInfo = (UserInfo) response.body();
-//                        Log.d("email ",userInfo.getEmail());
-//                        callBack.signUp(userInfo);
-////                        Toast.makeText(SignupActivity.this, "saved info successfully " + name +"\n"+email+ "\n"+token, Toast.LENGTH_LONG).show();
-////                        saveInfo(name, email, token);
-////                        Intent intent = new Intent(SignupActivity.this,HomeActivity.class);
-////                        intent.putExtra("MyInfo",userInfo);
-////                        startActivity(intent);
-////                        finish();
-//                    }catch (Exception e){
-//                        Log.d("exception ",e.getMessage());
-//                    }
-//                }else if(response.code() == 400){
-//                    Log.d("response ","code => "+response.code());
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<UserInfo> call, Throwable t) {
-//                Log.d("failure ",t.toString());
-//            }
-//        });
-//
-//    }
+
+    public void handleSignup(String name, String email, String pass, final @Nullable SignUpTask callBack){
+        HashMap<String,String> hashMap = new HashMap<>();
+
+        hashMap.put("name",name);
+        hashMap.put("email",email);
+        hashMap.put("password",pass);
+
+        Call<UserResponse> call = retrofitInterface.executeSignup(hashMap);
+
+        call.enqueue(new Callback<UserResponse>() {
+            @Override
+            public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                //Toast.makeText(MainActivity.this,response.code()., Toast.LENGTH_LONG).show();
+                if(response.code() == 201){
+                    try {
+                        UserResponse userResponse = (UserResponse) response.body();
+                        Log.d("email ", userResponse.getUserInfo().getEmail());
+                        callBack.signUp(userResponse);
+//                        Toast.makeText(SignupActivity.this, "saved info successfully " + name +"\n"+email+ "\n"+token, Toast.LENGTH_LONG).show();
+//                        saveInfo(name, email, token);
+//                        Intent intent = new Intent(SignupActivity.this,HomeActivity.class);
+//                        intent.putExtra("MyInfo",userResponse);
+//                        startActivity(intent);
+//                        finish();
+                    }catch (Exception e){
+                        Log.d("exception ",e.getMessage());
+                        callBack.onFailure(e.getMessage());
+                    }
+                }else if(response.code() == 400){
+                    Log.d("response ","code => "+response.code());
+                    callBack.onFailure(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserResponse> call, Throwable t) {
+                Log.d("failure ",t.toString());
+                callBack.onFailure(t.toString());
+            }
+        });
+
+    }
 
 
 

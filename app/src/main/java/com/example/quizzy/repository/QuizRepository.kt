@@ -8,12 +8,14 @@ import com.example.quizzy.domain.*
 import com.example.quizzy.network.NetworkQuizUtil
 import com.example.quizzy.network.NetworkUtil
 import com.example.quizzy.task.ShowFeedTask
+import com.example.quizzy.task.SignUpTask
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
-class QuizRepository (private val database: QuizDatabase, coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)) {
+class QuizRepository (private val database: QuizDatabase, private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)) {
     suspend fun insertQuestion(question: Question) {
         database.questionDao.insert(question)
     }
@@ -133,5 +135,23 @@ class QuizRepository (private val database: QuizDatabase, coroutineScope: Corout
                 _fetchedQuizId.value = quiz.id
             }
         }
+    }
+
+    fun signUp(name: String, email: String, password: String) {
+        networkUtil.handleSignup(name, email, password, object : SignUpTask{
+            override fun signUp(userResponse: UserResponse?) {
+                val user = CachedUser(userResponse?.userInfo?.userId!!, userResponse.token, userResponse.userInfo.name, userResponse.userInfo.email)
+                coroutineScope.launch {
+                    withContext(Dispatchers.IO) {
+                        database.userDao.clearTable()
+                        database.userDao.insert(user)
+                    }
+                }
+            }
+
+            override fun onFailure(msg: String?) {
+
+            }
+        })
     }
 }

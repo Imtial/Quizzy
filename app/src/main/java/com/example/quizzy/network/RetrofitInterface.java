@@ -19,8 +19,8 @@ import retrofit2.http.Query;
 
 public interface RetrofitInterface {
 
-//    @POST("/users")
-//    Call<UserInfo> executeSignup (@Body HashMap<String,String> hashMap);
+    @POST("/users")
+    Call<UserResponse> executeSignup (@Body HashMap<String,String> hashMap);
 
     @POST("/users/login")
     Call<UserResponse> executeLogin (@Body HashMap<String,String> hashMap);
