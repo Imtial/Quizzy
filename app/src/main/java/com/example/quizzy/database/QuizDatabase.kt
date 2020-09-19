@@ -11,8 +11,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@Database(entities = [CachedQuiz::class, Question::class, CachedResponse::class, QuizItem::class, CachedUser::class],
-        version = 11, exportSchema = false)
+@Database(entities = [CachedQuiz::class, Question::class, Response::class, QuizItem::class, CachedUser::class],
+        version = 12, exportSchema = false)
 @TypeConverters(QuestionsConverter::class, ResponsesConverter::class, ListConverter::class, DateConverter::class)
 abstract class QuizDatabase : RoomDatabase() {
     abstract val quizDao : QuizDao

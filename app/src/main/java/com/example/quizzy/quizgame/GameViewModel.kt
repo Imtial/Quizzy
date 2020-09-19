@@ -106,7 +106,7 @@ class GameViewModel(private val application: Application, private val quizId: St
                 } else wrongCounter++
             }
         }
-        for (response in quiz.value?.responses!!) {
+        for (response in quiz.value?.respons!!) {
             if (marks > response.low && marks <= response.high) _message.value = response.message
         }
         _correct.value = correctCounter

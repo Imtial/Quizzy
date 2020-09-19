@@ -25,7 +25,7 @@ data class CachedQuiz(
         @TypeConverters(QuestionsConverter::class)
         var questions: List<Question> = listOf(),
         @TypeConverters(ResponsesConverter::class)
-        var responses: List<CachedResponse> = listOf(),
+        var respons: List<Response> = listOf(),
         @TypeConverters(ListConverter::class)
         var tags: List<String> = listOf(),
         var password: String = NOPASSWORD,
@@ -84,7 +84,7 @@ class ListConverter{
 
 @JsonClass(generateAdapter = true)
 @Entity(tableName = "table_response", primaryKeys = ["low", "high"])
-data class CachedResponse(
+data class Response(
         val low: Float,
         val high: Float,
         val message: String,
@@ -94,15 +94,15 @@ data class CachedResponse(
 
 class ResponsesConverter {
     private val moshi = Moshi.Builder().build()
-    private val type = Types.newParameterizedType(List::class.java, CachedResponse::class.java)
-    private val responsesAdapter: JsonAdapter<List<CachedResponse>> = moshi.adapter(type)
+    private val type = Types.newParameterizedType(List::class.java, Response::class.java)
+    private val responsesAdapter: JsonAdapter<List<Response>> = moshi.adapter(type)
 
     @TypeConverter
-    fun fromResponses(responses: List<CachedResponse>): String? {
-        return responsesAdapter.toJson(responses)
+    fun fromResponses(respons: List<Response>): String? {
+        return responsesAdapter.toJson(respons)
     }
     @TypeConverter
-    fun toResponses(jsonResponses: String): List<CachedResponse>? {
+    fun toResponses(jsonResponses: String): List<Response>? {
         return responsesAdapter.fromJson(jsonResponses)
     }
 }

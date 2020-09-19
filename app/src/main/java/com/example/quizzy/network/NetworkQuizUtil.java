@@ -5,7 +5,10 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 
 import com.example.quizzy.domain.QuestionPaper;
+import com.example.quizzy.domain.Quiz;
 import com.example.quizzy.domain.QuizFeed;
+import com.example.quizzy.domain.QuizResponse;
+import com.example.quizzy.task.CreateQuizTask;
 import com.example.quizzy.task.QuestionsForQuizTask;
 import com.example.quizzy.task.ShowFeedTask;
 
@@ -21,41 +24,42 @@ public class NetworkQuizUtil extends NetworkUtil {
     public NetworkQuizUtil() {
         super();
     }
-//
-//    public void postMyQuiz(String header, Quiz quiz, @Nullable final CreateQuizTask callBack){
-//        Log.d("post quiz pre response", "let's see'");
-//        Call<QuizResponse> call = retrofitInterface.executeCreateQuiz("Bearer "+header, quiz);
-//        Log.d("post quiz pre response", "let's see again");
-//        call.enqueue(new Callback<QuizResponse>() {
-//            @Override
-//            public void onResponse(Call<QuizResponse> call, Response<QuizResponse> response) {
-//                if(response.code() == 201){
-//                    try{
-//                        Log.d("post quiz pre response", "title");
-//
-//                        QuizResponse quizObject = (QuizResponse) response.body();//the posted quiz is returned from the server
-////                        showDataTextView.setText("ekhaaneeeee");
-//                        Log.d("post quiz response", quizObject.getTitle());
-//                        callBack.createQuiz(quizObject);
-//                        Log.d("post quiz response", "leaving callBack");
-//
-//                        //show whatever you want,you have the quizObject
-//                    }catch (Exception e){
-//                        Log.d("exception ",e.getMessage());
-//                    }
-//                }
-//                else if(response.code() == 400){
-//                    Log.d("response ","code => "+response.code());
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<QuizResponse> call, Throwable t) {
-//                Log.d("failure ",t.toString());
-//            }
-//        });
-//    }
-//
+
+    public void postMyQuiz(String header, Quiz quiz, @Nullable final CreateQuizTask callBack){
+        Log.d("post quiz pre response", "let's see'");
+        Call<QuizResponse> call = retrofitInterface.executeCreateQuiz("Bearer "+header, quiz);
+        Log.d("post quiz pre response", "let's see again");
+        call.enqueue(new Callback<QuizResponse>() {
+            @Override
+            public void onResponse(Call<QuizResponse> call, Response<QuizResponse> response) {
+                if(response.code() == 201){
+                    try{
+                        Log.d("post quiz pre response", "title");
+                        QuizResponse quizObject = (QuizResponse) response.body();//the posted quiz is returned from the server
+//                        showDataTextView.setText("ekhaaneeeee");
+                        Log.d("post quiz response", quizObject.getTitle());
+                        callBack.createQuiz(quizObject);
+                        Log.d("post quiz response", "leaving callBack");
+
+                        //show whatever you want,you have the quizObject
+                    }catch (Exception e){
+                        Log.d("exception ",e.getMessage());
+                        callBack.onFailure(e.getMessage());
+                    }
+                }
+                else if(response.code() == 400){
+                    Log.d("response ","code => "+response.code());
+                    callBack.onFailure(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<QuizResponse> call, Throwable t) {
+                callBack.onFailure(t.toString());
+                Log.d("failure ",t.toString());
+            }
+        });
+    }
 //    public void deleteQuiz(String header, String id, @Nullable final DeleteQuizTask callBack){
 //        Call<Void> call = retrofitInterface.executeDeleteQuiz("Bearer "+header, id);
 //

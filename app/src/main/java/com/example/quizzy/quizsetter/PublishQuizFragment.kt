@@ -15,6 +15,7 @@ import com.example.quizzy.R
 import com.example.quizzy.ViewModelFactory
 import com.example.quizzy.domain.CachedQuiz
 import com.example.quizzy.databinding.FragmentPublishQuizBinding
+import com.example.quizzy.domain.Quiz
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
@@ -24,7 +25,7 @@ import java.util.*
 
 class PublishQuizFragment: Fragment() {
 
-    private val quiz = CachedQuiz()
+    private val quiz = Quiz()
     private val viewModel: QuizSetterViewModel by navGraphViewModels(R.id.navigation) {
         ViewModelFactory(requireActivity().application)
     }
@@ -101,8 +102,8 @@ class PublishQuizFragment: Fragment() {
 
     private fun extractDataFromViews(binding: FragmentPublishQuizBinding, calendar: Calendar) {
         if (binding.quizTitle.text.isNotBlank()) quiz.title = binding.quizTitle.text.toString().trim()
-        quiz.startTime = calendar.timeInMillis
-        quiz.duration = binding.minutePicker.value
+        quiz.startTime = calendar.timeInMillis / 1000
+        quiz.duration = binding.minutePicker.value.toDouble()
         if (binding.radioPrivate.isChecked) {
             if (binding.passwordInput.text.isNullOrBlank()) binding.passwordInput.error = "Private Question must have password"
             else quiz.password = binding.passwordInput.text.toString().trim()

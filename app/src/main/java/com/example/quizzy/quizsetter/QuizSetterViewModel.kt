@@ -1,6 +1,7 @@
 package com.example.quizzy.quizsetter
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,8 +9,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.quizzy.R
 import com.example.quizzy.database.QuizDatabase
 import com.example.quizzy.domain.CachedQuiz
-import com.example.quizzy.domain.CachedResponse
+import com.example.quizzy.domain.Response
 import com.example.quizzy.domain.Question
+import com.example.quizzy.domain.Quiz
 import com.example.quizzy.repository.QuizSetterRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -45,9 +47,9 @@ class QuizSetterViewModel(private val application: Application): ViewModel() {
     fun getTotalQuestions(): Int = questionList?.size!!
     fun getTotalMarks(): Float = questionList?.toList()?.map { it.marks }?.sum() ?: 0F
 
-    private var _responseList = listOf<CachedResponse>()
-    fun setResponses(responses: List<CachedResponse>) {
-        _responseList = responses
+    private var _responseList = listOf<Response>()
+    fun setResponses(respons: List<Response>) {
+        _responseList = respons
     }
 
     private val _tags = mutableListOf<String>()
@@ -59,9 +61,11 @@ class QuizSetterViewModel(private val application: Application): ViewModel() {
         _tagList.value = _tags
     }
 
-    fun insert(quiz: CachedQuiz) {
+    fun insert(quiz: Quiz) {
         quiz.responses = _responseList
         quiz.questions = questionList!!
+        quiz.tags = _tags
+        Log.i("POST-QUIZ", "insert: $quiz")
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 repository.insertQuiz(quiz)

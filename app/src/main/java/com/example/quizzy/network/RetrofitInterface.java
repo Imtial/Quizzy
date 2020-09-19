@@ -1,7 +1,9 @@
 package com.example.quizzy.network;
 
 import com.example.quizzy.domain.QuestionPaper;
+import com.example.quizzy.domain.Quiz;
 import com.example.quizzy.domain.QuizFeed;
+import com.example.quizzy.domain.QuizResponse;
 import com.example.quizzy.domain.UserResponse;
 
 import java.util.HashMap;
@@ -37,9 +39,9 @@ public interface RetrofitInterface {
 //
 //    @PATCH("/users/me")
 //    Call<User> executeEditMyAccount (@Header("Authorization") String header, @Body HashMap<String,String> hashMap);
-//
-//    @POST("/quizzes")
-//    Call<QuizResponse> executeCreateQuiz (@Header("Authorization") String header, @Body Quiz quiz);
+
+    @POST("/quizzes")
+    Call<QuizResponse> executeCreateQuiz (@Header("Authorization") String header, @Body Quiz quiz);
 //
 //    @GET("/quizzes/me")
 //    Call<List<QuizResponse>> executeGetMyQuiz(@Header("Authorization") String header);

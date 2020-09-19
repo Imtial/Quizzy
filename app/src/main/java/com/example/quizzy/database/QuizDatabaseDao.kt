@@ -58,22 +58,22 @@ interface QuestionDao {
 @Dao
 interface ResponseDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(vararg responses: CachedResponse)
+    suspend fun insert(vararg respons: Response)
 
     @Update
-    fun update(response: CachedResponse)
+    fun update(response: Response)
 
     @Delete
-    fun delete(response: CachedResponse)
+    fun delete(response: Response)
 
     @Query("DELETE FROM table_response")
     suspend fun clearTable()
 
     @Query("SELECT * FROM table_response")
-    fun getResponses() : List<CachedResponse>
+    fun getResponses() : List<Response>
 
     @Query("SELECT * FROM table_response")
-    fun getLiveResponses(): LiveData<List<CachedResponse>>
+    fun getLiveResponses(): LiveData<List<Response>>
 }
 
 @Dao

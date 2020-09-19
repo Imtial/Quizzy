@@ -32,15 +32,15 @@ class QuizRepository (private val database: QuizDatabase, coroutineScope: Corout
 
     fun getTotalMarks(): LiveData<Float> = database.questionDao.getLiveTotalMarks()
 
-    suspend fun insertResponses(vararg responses: CachedResponse) {
-        database.responseDao.insert(*responses)
+    suspend fun insertResponses(vararg respons: Response) {
+        database.responseDao.insert(*respons)
     }
 
-    fun getResponses() : LiveData<List<CachedResponse>> = database.responseDao.getLiveResponses()
+    fun getResponses() : LiveData<List<Response>> = database.responseDao.getLiveResponses()
 
     suspend fun insertQuiz(cachedQuiz: CachedQuiz) {
         cachedQuiz.questions = database.questionDao.getQuestionList()
-        cachedQuiz.responses = database.responseDao.getResponses()
+        cachedQuiz.respons = database.responseDao.getResponses()
         database.quizDao.insert(cachedQuiz)
         database.questionDao.clearTable()
         database.responseDao.clearTable()
