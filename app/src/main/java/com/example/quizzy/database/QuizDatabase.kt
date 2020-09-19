@@ -46,7 +46,7 @@ abstract class QuizDatabase : RoomDatabase() {
                                     CoroutineScope(Dispatchers.IO).launch {
                                         INSTANCE.questionDao.clearTable()
                                         INSTANCE.responseDao.clearTable()
-                                        INSTANCE.quizItemDao.clearTable()
+//                                        INSTANCE.quizItemDao.clearTable()
                                         INSTANCE.quizDao.clearTable()
 //                                        for (quizItem in QUIZITEMS) INSTANCE.quizItemDao.insert(quizItem)
 //                                        for (quiz in QUIZZES) INSTANCE.quizDao.insert(quiz)

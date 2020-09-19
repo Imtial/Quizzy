@@ -11,7 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-class QuizRepository (private val database: QuizDatabase) {
+class QuizRepository (private val database: QuizDatabase, coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)) {
     suspend fun insertQuestion(question: Question) {
         database.questionDao.insert(question)
     }
@@ -82,11 +82,10 @@ class QuizRepository (private val database: QuizDatabase) {
 
     private val networkQuizUtil = NetworkQuizUtil()
 
-    fun fetchQuizList() {
+    fun fetchQuizList(skip: Int = 0) {
         CoroutineScope(Dispatchers.IO).launch {
             val token = database.userDao.getUserToken()
             val queryHash = hashMapOf<String, String>()
-            val skip = 0
             val limit = 10
             networkQuizUtil.showTopFeedQuizzes(token, queryHash, skip, limit) {feedList ->
                 val quizItems : List<QuizItem> = feedList.map { quizFeed: QuizFeed? ->

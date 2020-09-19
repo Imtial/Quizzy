@@ -89,6 +89,9 @@ interface QuizItemDao {
 
     @Query("SELECT * FROM table_quiz_item")
     fun getLiveQuizItemList() : LiveData<List<QuizItem>>
+
+    @Query("SELECT COUNT(*) FROM table_quiz_item")
+    fun getLiveCount() : LiveData<Int>
 }
 
 @Dao

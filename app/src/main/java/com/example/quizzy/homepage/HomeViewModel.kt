@@ -4,17 +4,19 @@ import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.quizzy.database.QuizDatabase
 import com.example.quizzy.database.QuizRepository
 import com.example.quizzy.domain.QuizItem
 
 class HomeViewModel(private val application: Application) : ViewModel() {
-    private val repository = QuizRepository(QuizDatabase.getDatabase(application))
+    private val repository = QuizRepository(QuizDatabase.getDatabase(application), viewModelScope)
 
     val liveQuizItemList = repository.liveQuizItemList
 
+    private var fetchCount = 0
     fun fetchQuizList() {
-        repository.fetchQuizList()
+        repository.fetchQuizList(fetchCount++)
     }
 
     private val _selectedQuizItem = MutableLiveData<QuizItem>()
@@ -28,7 +30,6 @@ class HomeViewModel(private val application: Application) : ViewModel() {
 
     var navigateToQuizGame = true
 
-    // TODO - password needed
     fun fetchSelectedQuiz(id: String, password: String) {
         repository.fetchSelectedQuiz(id, password)
     }
