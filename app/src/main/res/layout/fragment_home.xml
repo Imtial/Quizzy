@@ -9,15 +9,6 @@
     android:focusableInTouchMode="true"
     tools:context="com.example.quizzy.homepage.HomeFragment">
 
-    <SearchView
-        android:id="@+id/search_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="8dp"
-        android:queryHint="Search Quiz by title or tag"
-        android:closeIcon="@drawable/ic_wrong"
-        android:iconifiedByDefault="false"/>
-
     <ProgressBar
         android:id="@+id/content_loading_bar"
         android:layout_width="48dp"

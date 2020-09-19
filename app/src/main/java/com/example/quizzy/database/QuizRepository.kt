@@ -79,7 +79,11 @@ class QuizRepository (private val database: QuizDatabase, coroutineScope: Corout
             }
         }
     }
-
+    private fun generateImageUrl(id: String): String {
+        val baseUrl = "https://contest-quiz-app.herokuapp.com/users/"
+        val queryKey = "/avatar"
+        return baseUrl+id+queryKey
+    }
     private val networkQuizUtil = NetworkQuizUtil()
 
     fun fetchQuizList(skip: Int = 0) {
@@ -91,7 +95,7 @@ class QuizRepository (private val database: QuizDatabase, coroutineScope: Corout
                 val quizItems : List<QuizItem> = feedList.map { quizFeed: QuizFeed? ->
                     QuizItem(quizFeed?.quizId!!, quizFeed.title, quizFeed.questionCount, 25F, quizFeed.startDate.time,
                             quizFeed.duration.toInt(), quizFeed.userCount, quizFeed.tags, quizFeed.difficulty.toFloat(), quizFeed.rating.toFloat(),
-                            quizFeed.access, quizFeed.ownerName)
+                            quizFeed.access, quizFeed.ownerName, generateImageUrl(quizFeed.owner))
                 }
                 CoroutineScope(Dispatchers.IO).launch {
                     insertQuizItem(*quizItems.toTypedArray())

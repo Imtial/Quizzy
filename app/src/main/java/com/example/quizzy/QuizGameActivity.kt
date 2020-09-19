@@ -1,16 +1,24 @@
 package com.example.quizzy
 
 import android.app.Application
+import android.app.SearchManager
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
+import android.util.Log
+import android.view.Menu
 import android.view.View
 import android.widget.Space
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
+import androidx.appcompat.widget.Toolbar
 import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.quizzy.quizsetter.QuestionSetterFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -29,6 +37,9 @@ class QuizGameActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quiz_game)
 
+        val toolbar = findViewById<Toolbar>(R.id.quiz_toolbar)
+        setSupportActionBar(toolbar)
+
         backButton = findViewById(R.id.button_back)
         spaceOne = findViewById(R.id.space_one)
         completeButton = findViewById(R.id.button_complete)
@@ -39,6 +50,9 @@ class QuizGameActivity: AppCompatActivity() {
         val navigationView = findViewById<NavigationView>(R.id.nav_view)
         val navController = findNavController(R.id.game_fragment)
         navigationView.setupWithNavController(navController)
+        val appBarConfiguration = AppBarConfiguration(navController.graph)
+        toolbar.setupWithNavController(navController, findViewById(R.id.nav_drawer))
+//        setupActionBarWithNavController(navController, appBarConfiguration)
 
         nextButton.setOnClickListener {
             onButtonClickListener.nextButtonClicked()
@@ -95,6 +109,27 @@ class QuizGameActivity: AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        val manager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        val searchItem = menu?.findItem(R.id.search)
+        val searchView = searchItem?.actionView as SearchView
+
+        searchView.setSearchableInfo(manager.getSearchableInfo(componentName))
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                Log.i("SEARCH", "onQueryTextSubmit: $query")
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return false
+            }
+        })
+        return true
     }
 }
 
