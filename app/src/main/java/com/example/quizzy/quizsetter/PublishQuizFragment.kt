@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import androidx.navigation.navGraphViewModels
 import com.example.quizzy.QuizGameActivity
 import com.example.quizzy.R
 import com.example.quizzy.ViewModelFactory
@@ -24,14 +25,16 @@ import java.util.*
 class PublishQuizFragment: Fragment() {
 
     private val quiz = CachedQuiz()
+    private val viewModel: QuizSetterViewModel by navGraphViewModels(R.id.navigation) {
+        ViewModelFactory(requireActivity().application)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val parentActivity = requireActivity() as QuizGameActivity
         parentActivity.hideButton(R.id.button_back, R.id.button_complete, R.id.button_next)
 
         val binding = FragmentPublishQuizBinding.inflate(inflater, container, false)
-        val viewModel = ViewModelProvider(this, ViewModelFactory(requireActivity().application))
-                .get(PublishQuizViewModel::class.java)
+
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 

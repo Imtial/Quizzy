@@ -1,11 +1,13 @@
-package com.example.quizzy.database
+package com.example.quizzy.repository
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.quizzy.database.QuizDatabase
 import com.example.quizzy.domain.*
 import com.example.quizzy.network.NetworkQuizUtil
 import com.example.quizzy.network.NetworkUtil
+import com.example.quizzy.task.ShowFeedTask
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -40,9 +42,6 @@ class QuizRepository (private val database: QuizDatabase, coroutineScope: Corout
         cachedQuiz.questions = database.questionDao.getQuestionList()
         cachedQuiz.responses = database.responseDao.getResponses()
         database.quizDao.insert(cachedQuiz)
-//        database.quizDao.getQuizList().forEach {
-//            Log.i("PUBLISH", "insertQuiz: $it")
-//        }
         database.questionDao.clearTable()
         database.responseDao.clearTable()
     }
@@ -87,20 +86,29 @@ class QuizRepository (private val database: QuizDatabase, coroutineScope: Corout
     private val networkQuizUtil = NetworkQuizUtil()
 
     fun fetchQuizList(skip: Int = 0) {
+        Log.i("FETCH-QUIZ", "fetchQuizList: enter")
         CoroutineScope(Dispatchers.IO).launch {
             val token = database.userDao.getUserToken()
             val queryHash = hashMapOf<String, String>()
-            val limit = 10
-            networkQuizUtil.showTopFeedQuizzes(token, queryHash, skip, limit) {feedList ->
-                val quizItems : List<QuizItem> = feedList.map { quizFeed: QuizFeed? ->
-                    QuizItem(quizFeed?.quizId!!, quizFeed.title, quizFeed.questionCount, 25F, quizFeed.startDate.time,
-                            quizFeed.duration.toInt(), quizFeed.userCount, quizFeed.tags, quizFeed.difficulty.toFloat(), quizFeed.rating.toFloat(),
-                            quizFeed.access, quizFeed.ownerName, generateImageUrl(quizFeed.owner))
+            val limit = 5
+            Log.i("FETCH-QUIZ", "fetchQuizList: coroutine 1")
+            networkQuizUtil.showTopFeedQuizzes(token, queryHash, skip, limit, object : ShowFeedTask {
+                override fun showTopFeedQuizzes(feedList: MutableList<QuizFeed>) {
+                    Log.i("FETCH-QUIZ", "showTopFeedQuizzes: $feedList")
+                    val quizItems: List<QuizItem> = feedList.map {
+                        QuizItem(it.quizId, it.title, it.questionCount, 0F, it.startDate.time, it.duration.toInt(),
+                                it.userCount, it.tags, it.difficulty.toFloat(), it.rating.toFloat(), it.access, it.ownerName)
+                    }
+                    Log.i("FETCH-QUIZ", "fetchQuizList: $quizItems")
+                    CoroutineScope(Dispatchers.IO).launch {
+                        insertQuizItem(*quizItems.toTypedArray())
+                    }
                 }
-                CoroutineScope(Dispatchers.IO).launch {
-                    insertQuizItem(*quizItems.toTypedArray())
+
+                override fun onFailure(msg: String?) {
+                    Log.i("FETCH-QUIZ", "onFailure: $msg")
                 }
-            }
+            })
         }
     }
 

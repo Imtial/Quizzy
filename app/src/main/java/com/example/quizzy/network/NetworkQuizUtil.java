@@ -181,10 +181,12 @@ public class NetworkQuizUtil extends NetworkUtil {
 
                     }catch (Exception e){
                         Log.d("exception ",e.getMessage());
+                        callBack.onFailure(e.getMessage());
                     }
                 }
                 else if(response.code() == 500){
                     Log.d("response ","code => "+response.code());
+                    callBack.onFailure(response.message());
                 }
 
             }
@@ -192,10 +194,12 @@ public class NetworkQuizUtil extends NetworkUtil {
             @Override
             public void onFailure(Call<List<QuizFeed>> call, Throwable t) {
                 Log.d("failure ",t.toString());
+                callBack.onFailure(t.toString());
             }
         });
 
     }
+
 
 
     public void getQuestionsForAQuiz(String header, String quizId, String pwd,

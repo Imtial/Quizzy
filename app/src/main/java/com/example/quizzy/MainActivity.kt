@@ -8,10 +8,9 @@ import android.view.View
 import android.widget.EditText
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.ContentLoadingProgressBar
 import androidx.lifecycle.*
 import com.example.quizzy.database.QuizDatabase
-import com.example.quizzy.database.QuizRepository
+import com.example.quizzy.repository.QuizRepository
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

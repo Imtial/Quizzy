@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.quizzy.database.QuizDatabase
-import com.example.quizzy.database.QuizRepository
+import com.example.quizzy.repository.QuizRepository
 import com.example.quizzy.domain.QuizItem
 
 class HomeViewModel(private val application: Application) : ViewModel() {
@@ -14,7 +14,7 @@ class HomeViewModel(private val application: Application) : ViewModel() {
 
     val liveQuizItemList = repository.liveQuizItemList
 
-    private var fetchCount = 0
+    private var fetchCount = 1
     fun fetchQuizList() {
         repository.fetchQuizList(fetchCount++)
     }

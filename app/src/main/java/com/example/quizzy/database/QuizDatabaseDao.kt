@@ -42,9 +42,6 @@ interface QuestionDao {
     @Query("DELETE FROM table_question")
     suspend fun clearTable()
 
-    @Query("SELECT * FROM table_question WHERE id = :id")
-    fun get(id: String): LiveData<Question>
-
     @Query("SELECT SUM(marks) FROM table_question")
     fun getLiveTotalMarks(): LiveData<Float>
 
@@ -60,7 +57,7 @@ interface QuestionDao {
 
 @Dao
 interface ResponseDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(vararg responses: CachedResponse)
 
     @Update
@@ -107,4 +104,7 @@ interface UserDao {
 
     @Query("SELECT token FROM table_user LIMIT 1")
     suspend fun getUserToken(): String
+
+    @Query("SELECT token FROM table_user LIMIT 1")
+    fun getLiveToken(): LiveData<String>
 }

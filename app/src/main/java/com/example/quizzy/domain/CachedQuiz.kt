@@ -38,22 +38,16 @@ data class CachedQuiz(
 @Entity(tableName = "table_question")
 data class Question(
         @PrimaryKey
-        @SerializedName("_id")
-        val id: String,
-//        @SerializedName("description")
+//        val id: String,
         val description: String,
-//        @SerializedName("type")
         val type: String,
         @TypeConverters(ListConverter::class)
-//        @SerializedName("options")
         val options: List<String>?,
-//        @SerializedName("marks")
         val marks: Float,
         @TypeConverters(ListConverter::class)
-//        @SerializedName("answers")
         val answers: List<String>? = listOf(),
-        @ColumnInfo(name = "image_uri")
-        val imageUri: String? = null
+//        @ColumnInfo(name = "image_uri")
+//        val imageUri: String? = null
 )
 
 class QuestionsConverter {
@@ -89,14 +83,13 @@ class ListConverter{
 }
 
 @JsonClass(generateAdapter = true)
-@Entity(tableName = "table_response")
+@Entity(tableName = "table_response", primaryKeys = ["low", "high"])
 data class CachedResponse(
         val low: Float,
         val high: Float,
         val message: String,
-        val imageUri: String? = null,
-        @PrimaryKey(autoGenerate = true)
-        val id: Long = 0L
+        @SerializedName("_id")
+        val id: String? = null
 )
 
 class ResponsesConverter {

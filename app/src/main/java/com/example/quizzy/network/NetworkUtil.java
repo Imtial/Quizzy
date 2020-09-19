@@ -6,6 +6,8 @@ import androidx.annotation.Nullable;
 
 import com.example.quizzy.domain.UserResponse;
 import com.example.quizzy.task.LoginTask;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.HashMap;
 
@@ -21,9 +23,16 @@ public class NetworkUtil {
     String BaseUrl = "https://contest-quiz-app.herokuapp.com/";
 
     public NetworkUtil(){
-        retrofit = new Retrofit.Builder().baseUrl(BaseUrl).addConverterFactory(GsonConverterFactory.create()).build();
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+        retrofit = new Retrofit.Builder()
+                .baseUrl(BaseUrl)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
         retrofitInterface = retrofit.create(RetrofitInterface.class);
     }
+
 
 
 //    public void handleSignup(String name, String email, String pass, final @Nullable UiSingUpInterface callBack){

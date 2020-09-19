@@ -6,25 +6,19 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.quizzy.homepage.HomeViewModel
 import com.example.quizzy.profile.ProfileViewModel
 import com.example.quizzy.quizgame.GameViewModel
-import com.example.quizzy.quizsetter.DecisionSetterViewModel
-import com.example.quizzy.quizsetter.PublishQuizViewModel
-import com.example.quizzy.quizsetter.QuestionSetterViewModel
+import com.example.quizzy.quizsetter.QuizSetterViewModel
 
 
 class ViewModelFactory (private val application: Application)
     : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(QuestionSetterViewModel::class.java)) {
-            return modelClass.getConstructor(Application::class.java).newInstance(application)
-        } else if (modelClass.isAssignableFrom(DecisionSetterViewModel::class.java)) {
-            return modelClass.getConstructor(Application::class.java).newInstance(application)
-        } else if (modelClass.isAssignableFrom(PublishQuizViewModel::class.java)) {
-            return modelClass.getConstructor(Application::class.java).newInstance(application)
-        } else if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
             return modelClass.getConstructor(Application::class.java).newInstance(application)
         } else if (modelClass.isAssignableFrom(ProfileViewModel::class.java)) {
             return modelClass.getConstructor(Application::class.java).newInstance(application)
         } else if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
+            return modelClass.getConstructor(Application::class.java).newInstance(application)
+        } else if (modelClass.isAssignableFrom(QuizSetterViewModel::class.java)) {
             return modelClass.getConstructor(Application::class.java).newInstance(application)
         }
         throw IllegalArgumentException("Unknown ViewModel Class")

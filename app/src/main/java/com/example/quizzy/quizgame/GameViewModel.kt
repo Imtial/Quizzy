@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.quizzy.domain.Question
 import com.example.quizzy.database.QuizDatabase
-import com.example.quizzy.database.QuizRepository
+import com.example.quizzy.repository.QuizRepository
 
 class GameViewModel(private val application: Application, private val quizId: String) : ViewModel() {
 

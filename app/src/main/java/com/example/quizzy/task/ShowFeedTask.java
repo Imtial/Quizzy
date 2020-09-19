@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface ShowFeedTask {
     void showTopFeedQuizzes(List<QuizFeed> quizzes);
+    void onFailure(String msg);
 }

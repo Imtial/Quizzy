@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import com.example.quizzy.OnButtonClickListener
 import com.example.quizzy.QuizGameActivity
 import com.example.quizzy.R
@@ -25,7 +25,7 @@ class QuestionSetterFragment: Fragment() {
     private val TAG = "SETTING-QUESTION"
 
     private var optionViewList = mutableListOf<View>()
-    private var currentQuestionNumber = 1
+    private var currentQuestionIndex = 0
 
     private val onClickListener = View.OnClickListener {it: View ->
         val checkButton = it as RadioButton
@@ -34,19 +34,13 @@ class QuestionSetterFragment: Fragment() {
             if (radioButton != checkButton && radioButton.isChecked) radioButton.isChecked = false
         }
     }
-//    private val viewModel: QuestionSetterViewModel by navGraphViewModels(R.id.navigation)
+    private val viewModel: QuizSetterViewModel by navGraphViewModels(R.id.navigation) {
+        ViewModelFactory(requireActivity().application)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val parentActivity = requireActivity() as QuizGameActivity
         val binding = FragmentQuestionSetterBinding.inflate(inflater, container, false)
-        val viewModelFactory = ViewModelFactory(requireActivity().application)
-        val viewModel = ViewModelProvider(this, viewModelFactory)
-                .get(QuestionSetterViewModel::class.java)
-//        viewModel.setApplication(requireActivity().application)
-
-        viewModel.questionListLive.observe(viewLifecycleOwner, {
-            viewModel.questionList = it
-        })
 
         binding.questionType.setOnCheckedChangeListener { radioGroup, checkButtonId ->
             viewModel.setQuestionType(checkButtonId)
@@ -67,36 +61,30 @@ class QuestionSetterFragment: Fragment() {
                 val question = viewModel.questionType.value?.let { typeViewId -> extractQuestion(binding, typeViewId) }
                 if (question == null) Toast.makeText(context, "Empty field", Toast.LENGTH_SHORT).show()
                 else {
-                    viewModel.insert(question)
-                    currentQuestionNumber++
-                    if (viewModel.questionList.size >= currentQuestionNumber) createViewFromData(binding, viewModel.questionList[currentQuestionNumber-1])
+                    viewModel.setQuestion(currentQuestionIndex, question)
+                    currentQuestionIndex++
+                    if (viewModel.questionList?.size!! > currentQuestionIndex) createViewFromData(binding, viewModel.questionList!![currentQuestionIndex])
                     else resetBinding(binding)
-                    parentActivity.setQuestionNumberOnTopBar(currentQuestionNumber.toString())
+                    parentActivity.setQuestionNumberOnTopBar(currentQuestionIndex.toString())
                 }
-//                val questions = listOf(Question(1, "Blood", SINGLE, listOf("O+", "O-", "A+"), 2F, listOf("O+")),
-//                        Question(2, "Milk", MULTIPLE, listOf("White", "Red", "Blue"), 2F, listOf("White", "red")))
-//                Log.i(TAG, "nextButtonClicked: ${questions[currentQuestionNumber - 1]} inserted")
-//                viewModel.insert(questions[currentQuestionNumber - 1])
-//                currentQuestionNumber++
-//                if (viewModel.questionList.size >= currentQuestionNumber) createViewFromData(binding, viewModel.questionList[currentQuestionNumber-1])
-//                else resetBinding(binding)
-//                parentActivity.setText(currentQuestionNumber.toString())
             }
 
             override fun completeButtonClicked() {
                 val question = viewModel.questionType.value?.let { typeViewId -> extractQuestion(binding, typeViewId) }
                 if (question == null) Toast.makeText(context, "Empty field", Toast.LENGTH_SHORT).show()
                 else {
-                    viewModel.insert(question)
+                    viewModel.setQuestion(currentQuestionIndex, question)
                 }
                 findNavController().navigate(QuestionSetterFragmentDirections.actionQuestionSetterFragmentToDecisionSetterFragment())
             }
 
             override fun backButtonClicked() {
-                if (currentQuestionNumber > 1) {
-                    currentQuestionNumber--
-                    createViewFromData(binding, viewModel.questionList[currentQuestionNumber-1])
-                    parentActivity.setQuestionNumberOnTopBar(currentQuestionNumber.toString())
+                if (currentQuestionIndex > 0) {
+                    val question = viewModel.questionType.value?.let { typeViewId -> extractQuestion(binding, typeViewId) }
+                    question?.let { viewModel.setQuestion(currentQuestionIndex, it) }
+                    currentQuestionIndex--
+                    createViewFromData(binding, viewModel.questionList!![currentQuestionIndex])
+                    parentActivity.setQuestionNumberOnTopBar(currentQuestionIndex.toString())
                 }
             }
         })
@@ -228,16 +216,16 @@ class QuestionSetterFragment: Fragment() {
             }
             if (isChecked) answers.add(option)
         }
-        val marks = if (binding.questionMarks.text.isNullOrBlank()) binding.questionMarks.hint.toString()
-            else binding.questionMarks.text.toString()
+        val marks = if (binding.questionMarks.text.isNullOrBlank()) binding.questionMarks.hint.toString().toFloat()
+            else binding.questionMarks.text.toString().toFloat()
 
-        return Question(currentQuestionNumber.toString(), description, type, options, marks.toFloat(), answers)
+        return Question(description, type, options, marks, answers)
     }
 
     override fun onStart() {
         super.onStart()
         val parentActivity = (requireActivity() as QuizGameActivity)
-        parentActivity.setQuestionNumberOnTopBar(currentQuestionNumber.toString())
+        parentActivity.setQuestionNumberOnTopBar(currentQuestionIndex.toString())
         parentActivity.showButton(R.id.button_back, R.id.button_next, R.id.button_complete)
     }
 }

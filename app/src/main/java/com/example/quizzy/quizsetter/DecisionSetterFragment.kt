@@ -8,8 +8,8 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import com.example.quizzy.OnButtonClickListener
 import com.example.quizzy.QuizGameActivity
 import com.example.quizzy.R
@@ -21,14 +21,17 @@ class DecisionSetterFragment: Fragment() {
 
     private val conditionViewList = mutableListOf<View>()
 
+    private val viewModel: QuizSetterViewModel by navGraphViewModels(R.id.navigation) {
+        ViewModelFactory(requireActivity().application)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val parentActivity = (requireActivity() as QuizGameActivity)
         parentActivity.setTextOnTopBar("Set Conditional Decision")
         parentActivity.hideButton(R.id.button_back, R.id.button_next)
 
         val binding = FragmentDecisionSetterBinding.inflate(inflater, container, false)
-        val viewModel = ViewModelProvider(this, ViewModelFactory(requireActivity().application))
-                .get(DecisionSetterViewModel::class.java)
+
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
@@ -39,7 +42,7 @@ class DecisionSetterFragment: Fragment() {
 
             override fun completeButtonClicked() {
                 val responseList = extractCondition()
-                viewModel.insert(*responseList.toTypedArray())
+                viewModel.setResponses(responseList)
                 findNavController().navigate(DecisionSetterFragmentDirections.actionDecisionSetterFragmentToPublishQuizFragment())
             }
 

@@ -6,14 +6,13 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.example.quizzy.QUIZZES
 import com.example.quizzy.domain.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Database(entities = [CachedQuiz::class, Question::class, CachedResponse::class, QuizItem::class, CachedUser::class],
-        version = 9, exportSchema = false)
+        version = 11, exportSchema = false)
 @TypeConverters(QuestionsConverter::class, ResponsesConverter::class, ListConverter::class, DateConverter::class)
 abstract class QuizDatabase : RoomDatabase() {
     abstract val quizDao : QuizDao
