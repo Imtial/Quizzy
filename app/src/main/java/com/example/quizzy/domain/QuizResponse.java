@@ -148,5 +148,21 @@ public class QuizResponse {
         Date updateDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(updatedAt);
         return updateDate;
     }
+
+    @Override
+    public String toString() {
+        return "QuizResponse{" +
+                "title='" + title + '\'' +
+                ", password='" + password + '\'' +
+                ", duration=" + duration +
+                ", quizId='" + quizId + '\'' +
+                ", startTime='" + startTime + '\'' +
+                ", createdAt='" + createdAt + '\'' +
+                ", updatedAt='" + updatedAt + '\'' +
+                ", owner='" + owner + '\'' +
+                ", questions=" + questions +
+                ", tags=" + tags +
+                '}';
+    }
 }
 

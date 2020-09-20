@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.quizzy.R
 import com.example.quizzy.database.QuizDatabase
-import com.example.quizzy.domain.CachedQuiz
 import com.example.quizzy.domain.Response
 import com.example.quizzy.domain.Question
 import com.example.quizzy.domain.Quiz
@@ -48,8 +47,8 @@ class QuizSetterViewModel(private val application: Application): ViewModel() {
     fun getTotalMarks(): Float = questionList?.toList()?.map { it.marks }?.sum() ?: 0F
 
     private var _responseList = listOf<Response>()
-    fun setResponses(respons: List<Response>) {
-        _responseList = respons
+    fun setResponses(response: List<Response>) {
+        _responseList = response
     }
 
     private val _tags = mutableListOf<String>()
@@ -65,6 +64,7 @@ class QuizSetterViewModel(private val application: Application): ViewModel() {
         quiz.responses = _responseList
         quiz.questions = questionList!!
         quiz.tags = _tags
+        quiz.startTime -= 3600*6
         Log.i("POST-QUIZ", "insert: $quiz")
         viewModelScope.launch {
             withContext(Dispatchers.IO) {

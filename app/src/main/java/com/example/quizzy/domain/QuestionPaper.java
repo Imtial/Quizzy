@@ -17,9 +17,9 @@ public class QuestionPaper {
     String startTime;
 
     @SerializedName("questions")
-    List<Question> questions;
+    List<QuestionResponse> questions;
 
-    public QuestionPaper(String title, double duration, String _id, String startTime, List<Question> questions) {
+    public QuestionPaper(String title, double duration, String _id, String startTime, List<QuestionResponse> questions) {
         this.title = title;
         this.duration = duration;
         this._id = _id;
@@ -59,11 +59,11 @@ public class QuestionPaper {
         this.startTime = startTime;
     }
 
-    public List<Question> getQuestions() {
+    public List<QuestionResponse> getQuestions() {
         return questions;
     }
 
-    public void setQuestions(List<Question> questions) {
+    public void setQuestions(List<QuestionResponse> questions) {
         this.questions = questions;
     }
 

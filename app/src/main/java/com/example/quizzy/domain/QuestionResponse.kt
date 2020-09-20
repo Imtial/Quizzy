@@ -1,82 +1,44 @@
-package com.example.quizzy.domain;
-import com.google.gson.annotations.SerializedName;
+package com.example.quizzy.domain
 
-import java.util.List;
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import com.example.quizzy.keyGen
+import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.JsonClass
 
-public class QuestionResponse {
+
+@JsonClass(generateAdapter = true)
+class QuestionResponse() : Question() {
     @SerializedName("_id")
-    String questionId;
-    @SerializedName("description")
-    String description;
-    @SerializedName("answers")
-    List<String> answers;
-    @SerializedName("options")
-    List<String> options;
-    @SerializedName("type")
-    String type;
-    @SerializedName("marks")
-    double marks;
+    var questionId: String = keyGen()
 
-    public double getMarks() {
-        return marks;
+//    constructor(description: String?, type: String?, options: List<String>?, answers: List<String>?) : this() {
+//        this.description = description
+//        this.type = type
+//        this.options = options
+//        this.answers = answers
+//    }
+
+    constructor(questionId: String, description: String, type: String?, options: List<String>?, marks: Float, answers: List<String>?)
+            : this() {
+        this.questionId = questionId
+        this.description = description
+        this.type = type
+        this.options = options
+        this.marks = marks
+        this.answers = answers
     }
 
-    public void setMarks(double marks) {
-        this.marks = marks;
+    constructor(questionId: String, question: Question): this() {
+        this.questionId = questionId
+        this.description = question.description
+        this.type = question.type
+        this.options = question.options
+        this.marks = question.marks
+        this.answers = question.answers
     }
 
-    public QuestionResponse() {
-    }
-
-    public QuestionResponse(String description, List<String> answers, List<String> options, String type) {
-        this.description = description;
-        this.answers = answers;
-        this.options = options;
-        this.type = type;
-    }
-
-    public String getQuestionId() {
-        return questionId;
-    }
-
-    public void setQuestionId(String questionId) {
-        this.questionId = questionId;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public List<String> getAnswers() {
-        return answers;
-    }
-
-    public void setAnswers(List<String> answers) {
-        this.answers = answers;
-    }
-
-    public List<String> getOptions() {
-        return options;
-    }
-
-    public void setOptions(List<String> options) {
-        this.options = options;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    @Override
-    public String toString() {
+    override fun toString(): String {
         return "QuestionResponse{" +
                 "_id='" + questionId + '\'' +
                 ", description='" + description + '\'' +
@@ -84,6 +46,6 @@ public class QuestionResponse {
                 ", options=" + options +
                 ", type='" + type + '\'' +
                 ", marks=" + marks +
-                '}';
+                '}'
     }
 }

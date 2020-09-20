@@ -6,13 +6,10 @@ import androidx.lifecycle.MutableLiveData
 import com.example.quizzy.database.QuizDatabase
 import com.example.quizzy.domain.*
 import com.example.quizzy.network.NetworkQuizUtil
-import com.example.quizzy.network.NetworkUtil
 import com.example.quizzy.task.ShowFeedTask
-import com.example.quizzy.task.SignUpTask
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 
 class QuizRepository (private val database: QuizDatabase, private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)) {
@@ -40,13 +37,13 @@ class QuizRepository (private val database: QuizDatabase, private val coroutineS
 
     fun getResponses() : LiveData<List<Response>> = database.responseDao.getLiveResponses()
 
-    suspend fun insertQuiz(cachedQuiz: CachedQuiz) {
-        cachedQuiz.questions = database.questionDao.getQuestionList()
-        cachedQuiz.respons = database.responseDao.getResponses()
-        database.quizDao.insert(cachedQuiz)
-        database.questionDao.clearTable()
-        database.responseDao.clearTable()
-    }
+//    suspend fun insertQuiz(cachedQuiz: CachedQuiz) {
+//        cachedQuiz.questionResponses = database.questionDao.getQuestionList()
+//        cachedQuiz.respons = database.responseDao.getResponses()
+//        database.quizDao.insert(cachedQuiz)
+//        database.questionDao.clearTable()
+//        database.responseDao.clearTable()
+//    }
 
     fun getQuiz(quizId: String) : LiveData<CachedQuiz?> = database.quizDao.getQuiz(quizId)
 
@@ -114,7 +111,7 @@ class QuizRepository (private val database: QuizDatabase, private val coroutineS
                 Log.i("QPAPER", "fetchQuizById: $questionPaper")
                 val quiz = CachedQuiz(id = questionPaper._id,
                         title = questionPaper.title,
-                        questions = questionPaper.questions,
+                        questionResponses = questionPaper.questions,
                         duration = questionPaper.duration.toInt(),
                         startTime = questionPaper.startDate.time
                 )

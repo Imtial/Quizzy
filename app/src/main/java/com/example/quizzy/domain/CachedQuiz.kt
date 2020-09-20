@@ -22,8 +22,8 @@ data class CachedQuiz(
         @PrimaryKey
         val id: String = keyGen(),
         var title: String = "untitled",
-        @TypeConverters(QuestionsConverter::class)
-        var questions: List<Question> = listOf(),
+        @TypeConverters(QuestionResponsesConverter::class)
+        var questionResponses: List<QuestionResponse> = listOf(),
         @TypeConverters(ResponsesConverter::class)
         var respons: List<Response> = listOf(),
         @TypeConverters(ListConverter::class)
@@ -34,36 +34,49 @@ data class CachedQuiz(
         var duration: Int = 0
 )
 
-@JsonClass(generateAdapter = true)
 @Entity(tableName = "table_question")
-data class Question(
-        @PrimaryKey
-//        val id: String,
-        val description: String,
-        val type: String,
+open class Question() {
+
+    @PrimaryKey var description: String = ""
+        var type: String? = PUBLIC
         @TypeConverters(ListConverter::class)
-        val options: List<String>?,
-        val marks: Float,
+        var options: List<String>? = listOf()
+        var marks: Float = 0F
         @TypeConverters(ListConverter::class)
-        val answers: List<String>? = listOf(),
+        var answers: List<String>? = listOf()
 //        @ColumnInfo(name = "image_uri")
 //        val imageUri: String? = null
-)
 
-class QuestionsConverter {
+
+    constructor(description: String, type: String?, options: List<String>?, marks: Float, answers: List<String>?) : this() {
+        this.description = description
+        this.type = type
+        this.options = options
+        this.marks = marks
+        this.answers = answers
+    }
+
+    override fun toString(): String {
+        return "Question(description=$description, type=$type, options=$options, marks=$marks, answers=$answers)"
+    }
+
+
+}
+
+class QuestionResponsesConverter {
 
     private val moshi = Moshi.Builder().build()
-    private val type = Types.newParameterizedType(List::class.java, Question::class.java)
-    private val questionAdapter: JsonAdapter<List<Question>> = moshi.adapter(type)
+    private val type = Types.newParameterizedType(List::class.java, QuestionResponse::class.java)
+    private val questionResponseAdapter: JsonAdapter<List<QuestionResponse>> = moshi.adapter(type)
 
     @TypeConverter
-    fun fromQuestions(questions: List<Question>?): String? {
-        return questionAdapter.toJson(questions)
+    fun fromQuestions(questionResponses: List<QuestionResponse>?): String? {
+        return questionResponseAdapter.toJson(questionResponses)
     }
 
     @TypeConverter
-    fun toQuestions(jsonQuestions: String?): List<Question>? {
-        return jsonQuestions?.let {  questionAdapter.fromJson(jsonQuestions) }
+    fun toQuestions(jsonQuestionResponses: String?): List<QuestionResponse>? {
+        return jsonQuestionResponses?.let {  questionResponseAdapter.fromJson(jsonQuestionResponses) }
     }
 }
 

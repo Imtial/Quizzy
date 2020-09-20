@@ -1,17 +1,17 @@
 package com.example.quizzy.domain;
 
-import androidx.annotation.NonNull;
-
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
+
+import static com.example.quizzy.domain.CachedQuizKt.NOPASSWORD;
 
 public class Quiz {
 
     @SerializedName("title")
     String title;
     @SerializedName("password")
-    String password;
+    String password = NOPASSWORD;
     @SerializedName("duration")
     double duration;
     @SerializedName("startTime")

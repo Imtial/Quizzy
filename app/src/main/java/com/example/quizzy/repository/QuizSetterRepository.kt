@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.quizzy.database.QuizDatabase
 import com.example.quizzy.domain.CachedQuiz
 import com.example.quizzy.domain.Quiz
+import com.example.quizzy.domain.QuizItem
 import com.example.quizzy.domain.QuizResponse
 import com.example.quizzy.network.NetworkQuizUtil
 import com.example.quizzy.task.CreateQuizTask

@@ -83,7 +83,7 @@ class QuizGameFragment: Fragment() {
         })
 
         gameViewModel.question.observe(viewLifecycleOwner, {
-            type = it.type
+            type = it.type!!
             val questionCounter = "${gameViewModel.questionSerial+1}/${gameViewModel.totalQuestions}"
             binding.questionCounter.text = questionCounter
             val unanswered = "Unanswered\n${gameViewModel.totalQuestions - gameViewModel.answerMap.size}"

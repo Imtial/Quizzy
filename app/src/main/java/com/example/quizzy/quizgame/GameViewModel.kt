@@ -29,8 +29,8 @@ class GameViewModel(private val application: Application, private val quizId: St
     var totalQuestions = 0
     var questionSerial = 0
     fun init() {
-        totalQuestions = quiz.value?.questions?.size!!
-        _question.value = quiz.value?.questions!![questionSerial]
+        totalQuestions = quiz.value?.questionResponses?.size!!
+        _question.value = quiz.value?.questionResponses!![questionSerial]
     }
 
     private val _lastQuestion = MutableLiveData<Boolean>()
@@ -38,7 +38,7 @@ class GameViewModel(private val application: Application, private val quizId: St
 
     fun triggerNextQuestion() {
         if (questionSerial+1 < totalQuestions) {
-            _question.value = quiz.value?.questions!![++questionSerial]
+            _question.value = quiz.value?.questionResponses!![++questionSerial]
         }
         // Next button pressed & last question is reached
         if (questionSerial+1 == totalQuestions) {
@@ -52,7 +52,7 @@ class GameViewModel(private val application: Application, private val quizId: St
             _lastQuestion.value = false
         }
         if (questionSerial > 0) {
-            _question.value = quiz.value?.questions!![--questionSerial]
+            _question.value = quiz.value?.questionResponses!![--questionSerial]
         }
     }
 
@@ -61,7 +61,7 @@ class GameViewModel(private val application: Application, private val quizId: St
 
     fun disableQuiz() {
         _enabled.value = false
-        _question.value = quiz.value?.questions!![questionSerial]
+        _question.value = quiz.value?.questionResponses!![questionSerial]
     }
 
     private val _correct = MutableLiveData<Int>()
@@ -90,7 +90,7 @@ class GameViewModel(private val application: Application, private val quizId: St
         var wrongCounter = 0
         var marks = 0F
         var totalMarks = 0F
-        for ((index, question) in quiz.value?.questions!!.withIndex()) {
+        for ((index, question) in quiz.value?.questionResponses!!.withIndex()) {
             totalMarks  += question.marks
             var correctFlag = true
             val answers = answerMap[index]
