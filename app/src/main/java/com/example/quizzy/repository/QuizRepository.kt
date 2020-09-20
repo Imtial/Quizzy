@@ -72,14 +72,14 @@ class QuizRepository (private val database: QuizDatabase, private val coroutineS
 
     private val networkUtil = NetworkUtil()
 
-    fun logInUser(email: String, password: String) {
-        networkUtil.handleLogin(email, password) {userResponse ->
-            val user = CachedUser(userResponse.userInfo.userId, userResponse.token, userResponse.userInfo.name, userResponse.userInfo.email)
-            CoroutineScope(Dispatchers.IO).launch {
-                insertUser(user)
-            }
-        }
-    }
+//    fun logInUser(email: String, password: String) {
+//        networkUtil.handleLogin(email, password) {userResponse ->
+//            val user = CachedUser(userResponse.userInfo.userId, userResponse.token, userResponse.userInfo.name, userResponse.userInfo.email)
+//            CoroutineScope(Dispatchers.IO).launch {
+//                insertUser(user)
+//            }
+//        }
+//    }
     private fun generateImageUrl(id: String): String {
         val baseUrl = "https://contest-quiz-app.herokuapp.com/users/"
         val queryKey = "/avatar"

@@ -29,8 +29,9 @@
             android:background="@drawable/textbox_selector"
             android:gravity="center"
             android:hint="User Name"
-            android:inputType="textEmailAddress"
-            android:padding="8dp" />
+            android:inputType="text"
+            android:padding="8dp"
+            android:visibility="gone"/>
 
         <EditText
             android:id="@+id/emailEditText"
@@ -66,14 +67,24 @@
             android:id="@+id/loginButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginVertical="2dp"
             android:text="Log In" />
 
+        <TextView
+            android:id="@+id/textview_or"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="OR"
+            android:layout_marginVertical="2dp"/>
+
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_app_home"
+            android:id="@+id/button_create_account"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginVertical="2dp"
             android:text="Create New Account"
             android:visibility="visible" />
 
@@ -81,9 +92,10 @@
             android:id="@+id/signupButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginVertical="2dp"
             android:text="Sign Up"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
 
         <ProgressBar

@@ -100,15 +100,18 @@ public class NetworkUtil {
                         callBack.logIn(userResponse);
                     }catch (Exception e){
                         Log.d("exception ",e.getMessage());
+                        callBack.onFailure(e.getMessage());
                     }
                 }else if(response.code() == 400){
                     Log.d("response ","code => "+response.code());
+                    callBack.onFailure(response.message());
                 }
             }
 
             @Override
             public void onFailure(Call<UserResponse> call, Throwable t) {
                 Log.d("failure ",t.toString());
+                callBack.onFailure(t.toString());
             }
         });
 
