@@ -47,7 +47,7 @@ abstract class QuizDatabase : RoomDatabase() {
                                         INSTANCE.responseDao.clearTable()
 //                                        INSTANCE.quizItemDao.clearTable()
                                         INSTANCE.quizDao.clearTable()
-                                        INSTANCE.userDao.clearTable()
+//                                        INSTANCE.userDao.clearTable()
 //                                        for (quizItem in QUIZITEMS) INSTANCE.quizItemDao.insert(quizItem)
 //                                        for (quiz in QUIZZES) INSTANCE.quizDao.insert(quiz)
                                     }

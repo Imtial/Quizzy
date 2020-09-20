@@ -70,16 +70,6 @@ class QuizRepository (private val database: QuizDatabase, private val coroutineS
 
     val currentUser = database.userDao.getLiveCachedUser()
 
-    private val networkUtil = NetworkUtil()
-
-//    fun logInUser(email: String, password: String) {
-//        networkUtil.handleLogin(email, password) {userResponse ->
-//            val user = CachedUser(userResponse.userInfo.userId, userResponse.token, userResponse.userInfo.name, userResponse.userInfo.email)
-//            CoroutineScope(Dispatchers.IO).launch {
-//                insertUser(user)
-//            }
-//        }
-//    }
     private fun generateImageUrl(id: String): String {
         val baseUrl = "https://contest-quiz-app.herokuapp.com/users/"
         val queryKey = "/avatar"
@@ -99,7 +89,7 @@ class QuizRepository (private val database: QuizDatabase, private val coroutineS
                     Log.i("FETCH-QUIZ", "showTopFeedQuizzes: $feedList")
                     val quizItems: List<QuizItem> = feedList.map {
                         QuizItem(it.quizId, it.title, it.questionCount, 0F, it.startDate.time, it.duration.toInt(),
-                                it.userCount, it.tags, it.difficulty.toFloat(), it.rating.toFloat(), it.access, it.ownerName)
+                                it.userCount, it.tags, it.difficulty.toFloat(), it.rating.toFloat(), it.access, it.ownerName, generateImageUrl(it.owner))
                     }
                     Log.i("FETCH-QUIZ", "fetchQuizList: $quizItems")
                     CoroutineScope(Dispatchers.IO).launch {
@@ -137,21 +127,4 @@ class QuizRepository (private val database: QuizDatabase, private val coroutineS
         }
     }
 
-    fun signUp(name: String, email: String, password: String) {
-        networkUtil.handleSignup(name, email, password, object : SignUpTask{
-            override fun signUp(userResponse: UserResponse?) {
-                val user = CachedUser(userResponse?.userInfo?.userId!!, userResponse.token, userResponse.userInfo.name, userResponse.userInfo.email)
-                coroutineScope.launch {
-                    withContext(Dispatchers.IO) {
-                        database.userDao.clearTable()
-                        database.userDao.insert(user)
-                    }
-                }
-            }
-
-            override fun onFailure(msg: String?) {
-
-            }
-        })
-    }
 }

@@ -3,6 +3,7 @@ package com.example.quizzy
 import android.app.Application
 import android.app.SearchManager
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Spannable
@@ -16,11 +17,17 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.quizzy.database.QuizDatabase
 import com.example.quizzy.quizsetter.QuestionSetterFragment
+import com.example.quizzy.repository.UserRepository
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 
@@ -32,6 +39,7 @@ class QuizGameActivity: AppCompatActivity() {
     private lateinit var nextButton: FloatingActionButton
     private lateinit var spaceOne: Space
     private lateinit var spaceTwo: Space
+    private lateinit var navDrawer: DrawerLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +48,7 @@ class QuizGameActivity: AppCompatActivity() {
         val toolbar = findViewById<Toolbar>(R.id.quiz_toolbar)
         setSupportActionBar(toolbar)
 
+        navDrawer = findViewById(R.id.nav_drawer)
         backButton = findViewById(R.id.button_back)
         spaceOne = findViewById(R.id.space_one)
         completeButton = findViewById(R.id.button_complete)
@@ -51,8 +60,30 @@ class QuizGameActivity: AppCompatActivity() {
         val navController = findNavController(R.id.game_fragment)
         navigationView.setupWithNavController(navController)
         val appBarConfiguration = AppBarConfiguration(navController.graph)
-        toolbar.setupWithNavController(navController, findViewById(R.id.nav_drawer))
-//        setupActionBarWithNavController(navController, appBarConfiguration)
+        toolbar.setupWithNavController(navController, navDrawer)
+
+        val repository = UserRepository(QuizDatabase.getDatabase(applicationContext))
+
+        repository.currentUser.observe(this, {
+            if (it == null) {
+                Log.i("LOGOUT", "onCreate: logout successful")
+                val intent = Intent(applicationContext, MainActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
+            else Log.i("LOGOUT", "onCreate: $it")
+        })
+
+        navigationView.setNavigationItemSelectedListener {menuItem ->
+            when(menuItem.itemId) {
+                R.id.logout -> repository.logOut()
+            }
+            //This is for maintaining the behavior of the Navigation view
+            NavigationUI.onNavDestinationSelected(menuItem,navController);
+            //This is for closing the drawer after acting on it
+            navDrawer.closeDrawer(GravityCompat.START);
+            true
+        }
 
         nextButton.setOnClickListener {
             onButtonClickListener.nextButtonClicked()

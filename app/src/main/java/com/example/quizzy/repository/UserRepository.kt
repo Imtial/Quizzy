@@ -8,6 +8,7 @@ import com.example.quizzy.domain.CachedUser
 import com.example.quizzy.domain.UserResponse
 import com.example.quizzy.network.NetworkUtil
 import com.example.quizzy.network.Status
+import com.example.quizzy.task.LogOutTask
 import com.example.quizzy.task.LoginTask
 import com.example.quizzy.task.SignUpTask
 import kotlinx.coroutines.CoroutineScope
@@ -62,4 +63,31 @@ class UserRepository(private val database: QuizDatabase, private val coroutineSc
             }
         })
     }
+
+    private val _logOutStatus = MutableLiveData<Status>()
+    val logOutStatus : LiveData<Status> get() = _logOutStatus
+
+    fun logOut() {
+        coroutineScope.launch {
+            withContext(Dispatchers.IO) {
+                val token = database.userDao.getUserToken()
+                networkUtil.logOut(token, object : LogOutTask {
+                    override fun logOut() {
+                        coroutineScope.launch {
+                            withContext(Dispatchers.IO) {
+                                database.userDao.clearTable()
+                                _logOutStatus.value = Status.SUCCESS
+                            }
+                        }
+                    }
+
+                    override fun onFailure(msg: String?) {
+                        Log.i("LOGOUT", "onFailure: $msg")
+                        _logOutStatus.value = Status.FAILURE
+                    }
+                })
+            }
+        }
+    }
+
 }

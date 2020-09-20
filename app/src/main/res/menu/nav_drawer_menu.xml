@@ -4,6 +4,6 @@
         android:title="Create Quiz"/>
     <item android:id="@+id/profileFragment"
         android:title="Profile"/>
-    <item android:id="@+id/about_quizzy"
-        android:title="About" />
+    <item android:id="@+id/logout"
+        android:title="Logout" />
 </menu>

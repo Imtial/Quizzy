@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 
 import com.example.quizzy.domain.UserResponse;
+import com.example.quizzy.task.LogOutTask;
 import com.example.quizzy.task.LoginTask;
 import com.example.quizzy.task.SignUpTask;
 import com.google.gson.Gson;
@@ -118,36 +119,33 @@ public class NetworkUtil {
     }
 
 
-//    public void logOut(String header, @Nullable final UiLogOutTask callBack){
-//        Call<Void> call = retrofitInterface.executeLogout("Bearer "+header);
-////        Toast.makeText(HomeActivity.this,"inside this method",Toast.LENGTH_LONG).show();
-//        call.enqueue(new Callback<Void>() {
-//            @Override
-//            public void onResponse(Call<Void> call, Response<Void> response) {
-//                //Toast.makeText(MainActivity.this,response.code()., Toast.LENGTH_LONG).show();
-//                if(response.code() == 200){
-//                    try {
-//                        callBack.logOut();
-////                        Toast.makeText(HomeActivity.this, "logged out successfully ", Toast.LENGTH_LONG).show();
-////                        removeInfo();
-////                        Intent intent = new Intent(HomeActivity.this,MainActivity.class);
-////                        startActivity(intent);
-////                        finish();
-//                    }catch (Exception e){
-//                        Log.d("exception ",e.getMessage());
-//                    }
-//                }else if(response.code() == 400){
-//                    Log.d("response ","code => "+response.code());
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Void> call, Throwable t) {
-//                Log.d("failure ",t.toString());
-//            }
-//        });
-//
-//    }
+    public void logOut(String header, @Nullable final LogOutTask callBack){
+        Call<Void> call = retrofitInterface.executeLogout("Bearer "+header);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+
+                if(response.code() == 200){
+                    try {
+                        callBack.logOut();
+                    }catch (Exception e){
+                        Log.d("exception ",e.getMessage());
+                        callBack.onFailure(e.getMessage());
+                    }
+                }else if(response.code() == 400){
+                    Log.d("response ","code => "+response.code());
+                    callBack.onFailure(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                callBack.onFailure(t.toString());
+                Log.d("failure ",t.toString());
+            }
+        });
+
+    }
 
 //    public void logoutAllDevice(String header, @Nullable final UiLogOutTask callBack){
 //        //format of the header is : header-name "Authorization", header-value "Bearer <token>"

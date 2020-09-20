@@ -28,8 +28,8 @@ public interface RetrofitInterface {
 //    @GET("/users/me")
 //    Call<User> executeGetMyProfile (@Header("Authorization") String header);
 //
-//    @POST("/users/logout")
-//    Call<Void> executeLogout (@Header("Authorization") String header);
+    @POST("/users/logout")
+    Call<Void> executeLogout (@Header("Authorization") String header);
 //
 //    @POST("/users/logoutAll")
 //    Call<Void> executeLogoutAll (@Header("Authorization") String header);
