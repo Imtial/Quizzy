@@ -1,6 +1,7 @@
 package com.example.quizzy.homepage
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.quizzy.*
 import com.example.quizzy.domain.QuizItem
 import com.google.android.material.button.MaterialButton
@@ -32,17 +34,21 @@ class HomeFragment : Fragment() {
             override fun onItemClicked(quizItem: QuizItem) {
                 viewModel.selectQuiz(quizItem)
                 quizDialog()
-//                Log.i(TAG, "onItemClicked: ${quizItem.creatorName} ${quizItem.id}")
-//                viewModel.fetchQuizById(quizItem.id)
-//                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToQuizGameFragment(quizItem.id))
             }
         })
+        val swipeContainer = rootView.findViewById<SwipeRefreshLayout>(R.id.swipe_container)
         val quizListView = rootView.findViewById<RecyclerView>(R.id.quiz_list)
         val loadingBar = rootView.findViewById<ProgressBar>(R.id.content_loading_bar)
         loadingBar.visibility = View.VISIBLE
         quizListView.adapter = adapter
-
         setOnScrollListener(quizListView)
+
+        swipeContainer.setOnRefreshListener {
+            isReloadable = true
+            viewModel.fetchCount = 0
+            viewModel.fetchQuizList()
+            adapter.submitList(null)
+        }
 
         viewModel.endOfQuizList.observe(viewLifecycleOwner, {
             isReloadable = when(it) {
@@ -55,7 +61,10 @@ class HomeFragment : Fragment() {
         })
 
         viewModel.liveQuizItemList.observe(viewLifecycleOwner, {
-            if (!it.isNullOrEmpty()) loadingBar.visibility = View.GONE
+            if (!it.isNullOrEmpty()) {
+                loadingBar.visibility = View.GONE
+                swipeContainer.isRefreshing = false
+            }
             adapter.submitList(it)
             adapter.notifyDataSetChanged()
         })
@@ -74,13 +83,14 @@ class HomeFragment : Fragment() {
     private fun setOnScrollListener(recyclerView: RecyclerView) {
         val layoutManager = recyclerView.layoutManager as LinearLayoutManager
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+
                 val totalItemCount = layoutManager.itemCount
                 val visibleItemCount = layoutManager.childCount
                 val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
-
-                if (visibleItemCount + lastVisibleItem + 5 >= totalItemCount) {
+                if (lastVisibleItem + visibleItemCount + 5 >= totalItemCount) {
                     if (isReloadable) viewModel.fetchQuizList()
                 }
             }
