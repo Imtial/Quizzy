@@ -1,9 +1,11 @@
 package com.example.quizzy.network;
 
+import com.example.quizzy.domain.AnswerResponse;
 import com.example.quizzy.domain.QuestionPaper;
 import com.example.quizzy.domain.Quiz;
 import com.example.quizzy.domain.QuizFeed;
 import com.example.quizzy.domain.QuizResponse;
+import com.example.quizzy.domain.Submission;
 import com.example.quizzy.domain.UserResponse;
 
 import java.util.HashMap;
@@ -75,10 +77,10 @@ public interface RetrofitInterface {
     @GET("/quizzes/{id}")
     Call<QuestionPaper> executeQuizQuestionPublic(@Header("Authorization") String header, @Path("id") String id);
 
-//    @POST("/quizzes/{id}")
-//    Call<AnswerResponse> executeSubmitAnswer(@Header("Authorization") String header, @Path("id") String id,
-//                                             @Body HashMap<String, List<Submission>> hashMap);
-//
+    @POST("/quizzes/{id}")
+    Call<AnswerResponse> executeSubmitAnswer(@Header("Authorization") String header, @Path("id") String id,
+                                             @Body HashMap<String, List<Submission>> hashMap);
+
 //    @POST("/quizzes/review/:id")
 //    Call<AnswerReview> executePostRating(@Header("Authorization") String header, @Path("id") String id,
 //                                         @Body HashMap<String, Double> hashMap);

@@ -25,7 +25,7 @@ data class CachedQuiz(
         @TypeConverters(QuestionResponsesConverter::class)
         var questionResponses: List<QuestionResponse> = listOf(),
         @TypeConverters(ResponsesConverter::class)
-        var respons: List<Response> = listOf(),
+        var response: List<Response> = listOf(),
         @TypeConverters(ListConverter::class)
         var tags: List<String> = listOf(),
         var password: String = NOPASSWORD,

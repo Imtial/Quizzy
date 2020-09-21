@@ -41,12 +41,20 @@ class QuizGameFragment: Fragment() {
                 gameViewModel.triggerNextQuestion()
             }
             override fun completeButtonClicked() {
-                gameViewModel.finishQuiz()
-                findNavController().navigate(QuizGameFragmentDirections.actionQuizGameFragmentToGameResultFragment())
+                binding.resultLoadingBar.visibility = View.VISIBLE
+                gameViewModel.fetchAnswers()
             }
             override fun backButtonClicked() {
                 submitChoices(binding)
                 gameViewModel.triggerPrevQuestion()
+            }
+        })
+
+        gameViewModel.answerResponse.observe(viewLifecycleOwner, {
+            if (it != null) {
+                binding.resultLoadingBar.visibility = View.GONE
+                gameViewModel.calculateResult(it)
+                findNavController().navigate(QuizGameFragmentDirections.actionQuizGameFragmentToGameResultFragment())
             }
         })
 

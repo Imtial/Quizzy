@@ -4,11 +4,14 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.example.quizzy.domain.AnswerResponse;
 import com.example.quizzy.domain.QuestionPaper;
 import com.example.quizzy.domain.Quiz;
 import com.example.quizzy.domain.QuizFeed;
 import com.example.quizzy.domain.QuizResponse;
+import com.example.quizzy.domain.Submission;
 import com.example.quizzy.task.CreateQuizTask;
+import com.example.quizzy.task.GetAnswerScriptTask;
 import com.example.quizzy.task.QuestionsForQuizTask;
 import com.example.quizzy.task.ShowFeedTask;
 
@@ -251,43 +254,42 @@ public class NetworkQuizUtil extends NetworkUtil {
 
     }
 
+    public void getAnswerScript(String header, String _id, List<Submission> submissions,
+                                @Nullable final GetAnswerScriptTask callBack){
 
-//    public void getAnswerScript(String header, String _id, HashMap<String, List<Submission>> hashMap,
-//                                @Nullable final GetAnswerScriptTask callBack){
-//
-//        Call<AnswerResponse> call = retrofitInterface.executeSubmitAnswer("Bearer "+header, _id,
-//                hashMap);
-//
-//
-//        call.enqueue(new Callback<AnswerResponse>() {
-//            @Override
-//            public void onResponse(Call<AnswerResponse> call, Response<AnswerResponse> response) {
-//                if(response.code() == 201){
-//                    try{
-//                        AnswerResponse answerResponse = (AnswerResponse) response.body();//the posted quiz is returned from the server
-//                        callBack.getAnswerScript(answerResponse);
-//
-//
-////                            showDataTextView.setText(quizAnswerResponse.getResponses().get(0).getMessage());//just showing the first response
-//
-//
-//                    }catch (Exception e){
-//                        Log.d("exception ",e.getMessage());
-//                    }
-//                }
-//                else if(response.code() == 500){
-//                    Log.d("response ","code => sth unknown went wrong "+response.code());
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<AnswerResponse> call, Throwable t) {
-//                Log.d("failure ",t.toString());
-//            }
-//        });
-//
-//    }
-//
+        HashMap<String, List<Submission>> hashMap = new HashMap<>();
+        hashMap.put("userSubmissions", submissions);
+
+        Call<AnswerResponse> call = retrofitInterface.executeSubmitAnswer("Bearer "+header, _id,
+                hashMap);
+
+        call.enqueue(new Callback<AnswerResponse>() {
+            @Override
+            public void onResponse(Call<AnswerResponse> call, Response<AnswerResponse> response) {
+                if(response.code() == 201){
+                    try{
+                        AnswerResponse answerResponse = (AnswerResponse) response.body();//the posted quiz is returned from the server
+                        callBack.getAnswerScript(answerResponse);
+
+                    }catch (Exception e){
+                        Log.d("exception ",e.getMessage());
+                        callBack.onFailure(e.getMessage());
+                    }
+                }
+                else if(response.code() == 500){
+                    Log.d("response ","code => sth unknown went wrong "+response.code());
+                    callBack.onFailure(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AnswerResponse> call, Throwable t) {
+                Log.d("failure ",t.toString());
+                callBack.onFailure(t.toString());
+            }
+        });
+
+    }
 //
 //    public void postRating(String header, String _id, HashMap<String, Double> hashMap,
 //                           @Nullable final PostReviewTask callBack){

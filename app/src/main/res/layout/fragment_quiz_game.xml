@@ -83,5 +83,12 @@
             android:background="@drawable/textbox_gray"
             android:hint="Write your answer here"/>
 
+        <ProgressBar
+            android:id="@+id/result_loading_bar"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_horizontal"
+            android:visibility="gone"/>
+
     </LinearLayout>
 </layout>
