@@ -5,10 +5,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.quizzy.database.QuizDatabase
 import com.example.quizzy.domain.AnswerResponse
+import com.example.quizzy.domain.AnswerReview
 import com.example.quizzy.domain.CachedQuiz
 import com.example.quizzy.domain.Submission
 import com.example.quizzy.network.NetworkQuizUtil
 import com.example.quizzy.task.GetAnswerScriptTask
+import com.example.quizzy.task.PostReviewTask
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -36,6 +38,23 @@ class GameRepository(private val database: QuizDatabase, private val coroutineSc
 
                     override fun onFailure(msg: String?) {
                         Log.i("FETCH-ANSWER", "onFailure: $msg")
+                    }
+                })
+            }
+        }
+    }
+
+    fun submitRating(answerId: String, rating: Float) {
+        coroutineScope.launch {
+            withContext(Dispatchers.IO) {
+                val token = database.userDao.getUserToken()
+                networkQuizUtil.postRating(token, answerId, rating.toDouble(), object : PostReviewTask {
+                    override fun postRating(answerReview: AnswerReview?) {
+                        Log.i("RATING", "postRating: $answerReview")
+                    }
+
+                    override fun onFailure(msg: String?) {
+                        Log.i("RATING", "onFailure: $msg")
                     }
                 })
             }

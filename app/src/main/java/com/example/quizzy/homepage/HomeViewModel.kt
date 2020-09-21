@@ -13,8 +13,9 @@ class HomeViewModel(private val application: Application) : ViewModel() {
     private val repository = QuizRepository(QuizDatabase.getDatabase(application), viewModelScope)
 
     val liveQuizItemList = repository.liveQuizItemList
+    val endOfQuizList = repository.endOfQuizList
 
-    private var fetchCount = 0
+    var fetchCount = 0
     fun fetchQuizList() {
         repository.fetchQuizList(fetchCount++)
     }

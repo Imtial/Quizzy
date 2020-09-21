@@ -74,16 +74,23 @@ class QuizRepository (private val database: QuizDatabase, private val coroutineS
     }
     private val networkQuizUtil = NetworkQuizUtil()
 
+    private val _endOfQuizList = MutableLiveData<Boolean>()
+    val endOfQuizList: LiveData<Boolean> get() = _endOfQuizList
+
     fun fetchQuizList(skip: Int = 0) {
         Log.i("FETCH-QUIZ", "fetchQuizList: enter")
         CoroutineScope(Dispatchers.IO).launch {
             val token = database.userDao.getUserToken()
             val queryHash = hashMapOf<String, String>()
             val limit = 5
-            Log.i("FETCH-QUIZ", "fetchQuizList: coroutine 1")
-            networkQuizUtil.showTopFeedQuizzes(token, queryHash, skip, limit, object : ShowFeedTask {
+            val page = skip * limit
+            networkQuizUtil.showTopFeedQuizzes(token, queryHash, page, limit, object : ShowFeedTask {
                 override fun showTopFeedQuizzes(feedList: MutableList<QuizFeed>) {
                     Log.i("FETCH-QUIZ", "showTopFeedQuizzes: $feedList")
+                    if (feedList.isEmpty()) {
+                        _endOfQuizList.value = true
+                        return
+                    }
                     val quizItems: List<QuizItem> = feedList.map {
                         QuizItem(it.quizId, it.title, it.questionCount, 0F, it.startDate.time, it.duration.toInt(),
                                 it.userCount, it.tags, it.difficulty.toFloat(), it.rating.toFloat(), it.access, it.ownerName, generateImageUrl(it.owner))

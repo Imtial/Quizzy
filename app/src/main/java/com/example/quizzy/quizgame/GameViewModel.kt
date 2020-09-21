@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.quizzy.domain.Question
 import com.example.quizzy.database.QuizDatabase
 import com.example.quizzy.domain.AnswerResponse
+import com.example.quizzy.domain.Response
 import com.example.quizzy.domain.Submission
 import com.example.quizzy.repository.GameRepository
 import com.example.quizzy.repository.QuizRepository
@@ -104,13 +105,19 @@ class GameViewModel(private val application: Application, private val quizId: St
         _unanswered.value = quiz.value?.questionResponses?.size?.minus(_correct.value!!)?.minus(_wrong.value!!)
         _marks.value = answerResponse.marks?.toFloat()
         _totalMarks.value = quiz.value?.questionResponses?.map { it.marks }?.sum()
-        _message.value = "PLACEHOLDER"
+        _message.value = retrieveMessage(_marks.value!!, answerResponse.responses)
+    }
+
+    private fun retrieveMessage(marks: Float, responses: List<Response>?): String {
+        return responses?.find { marks > it.low && marks <= it.high }?.message ?: ""
     }
 
     private var _rating = 0F
     fun submit(rating: Float) {
         _rating = rating
-        Log.i("QUIZ-GAME", "submit: $rating")
+        if (answerResponse.value != null) {
+            repository.submitRating(answerResponse.value!!.answerId!!, rating)
+        }
     }
 
 }

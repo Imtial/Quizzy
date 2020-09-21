@@ -23,6 +23,8 @@ class HomeFragment : Fragment() {
             ownerProducer = {this}, factoryProducer = {ViewModelFactory(requireActivity().application)}
     )
 
+    private var isReloadable = true
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_home, container, false)
 
@@ -42,6 +44,16 @@ class HomeFragment : Fragment() {
 
         setOnScrollListener(quizListView)
 
+        viewModel.endOfQuizList.observe(viewLifecycleOwner, {
+            isReloadable = when(it) {
+                true -> {
+                    viewModel.fetchCount = 0
+                    false
+                }
+                else -> true
+            }
+        })
+
         viewModel.liveQuizItemList.observe(viewLifecycleOwner, {
             if (!it.isNullOrEmpty()) loadingBar.visibility = View.GONE
             adapter.submitList(it)
@@ -55,7 +67,7 @@ class HomeFragment : Fragment() {
             }
         })
 
-        viewModel.fetchQuizList()
+        if (isReloadable) viewModel.fetchQuizList()
         return rootView
     }
 
@@ -69,7 +81,7 @@ class HomeFragment : Fragment() {
                 val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
 
                 if (visibleItemCount + lastVisibleItem + 5 >= totalItemCount) {
-                    viewModel.fetchQuizList()
+                    if (isReloadable) viewModel.fetchQuizList()
                 }
             }
         })

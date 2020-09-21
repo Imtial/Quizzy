@@ -3,7 +3,7 @@ package com.example.quizzy.domain
 import com.google.gson.annotations.SerializedName
 
 
-class AnswerResponse() {
+open class AnswerResponse() {
     @SerializedName("submissions")
     var submissions: List<Submission>? = null
 
@@ -24,6 +24,21 @@ class AnswerResponse() {
 
     @SerializedName("marks")
     var marks: Double? = null
+
+    @SerializedName("responses")
+    var responses: List<Response>? = null
+
+    constructor(submissions: List<Submission>?, incorrect: List<String>?, correct: List<String>?,
+                answerId: String?, quizId: String?, userId: String?, marks: Double?, responses: List<Response>?): this() {
+        this.submissions = submissions
+        this.incorrect = incorrect
+        this.correct = correct
+        this.answerId = answerId
+        this.quizId = quizId
+        this.userId = userId
+        this.marks = marks
+        this.responses = responses
+    }
 
     constructor(submissions: List<Submission>?, incorrect: List<String>?, correct: List<String>?,
                 answerId: String?, quizId: String?, userId: String?, marks: Double?): this() {

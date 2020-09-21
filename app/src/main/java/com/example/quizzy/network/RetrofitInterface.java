@@ -1,6 +1,7 @@
 package com.example.quizzy.network;
 
 import com.example.quizzy.domain.AnswerResponse;
+import com.example.quizzy.domain.AnswerReview;
 import com.example.quizzy.domain.QuestionPaper;
 import com.example.quizzy.domain.Quiz;
 import com.example.quizzy.domain.QuizFeed;
@@ -81,10 +82,10 @@ public interface RetrofitInterface {
     Call<AnswerResponse> executeSubmitAnswer(@Header("Authorization") String header, @Path("id") String id,
                                              @Body HashMap<String, List<Submission>> hashMap);
 
-//    @POST("/quizzes/review/:id")
-//    Call<AnswerReview> executePostRating(@Header("Authorization") String header, @Path("id") String id,
-//                                         @Body HashMap<String, Double> hashMap);
-//
+    @POST("/quizzes/review/{id}")
+    Call<AnswerReview> executePostRating(@Header("Authorization") String header, @Path("id") String id,
+                                         @Body HashMap<String, Double> hashMap);
+
 ////some are yet to add
 //
 //
