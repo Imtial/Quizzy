@@ -1,13 +1,15 @@
-package com.example.quizzy
+package com.example.quizzy.utils
 
 import android.view.View
 import android.widget.ImageView
-import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.signature.ObjectKey
+import com.example.quizzy.R
 import com.example.quizzy.domain.PRIVATE
 import com.example.quizzy.domain.PUBLIC
 import com.example.quizzy.quizsetter.TagListAdapter
@@ -31,10 +33,12 @@ fun TextView.setTotalQuestions(count: Int?) {
 fun ImageView.setCreatorImage(imageUri: String?) {
     Glide.with(this)
             .load(imageUri)
+            .signature(ObjectKey(imageUri + System.currentTimeMillis().toString()))
             .apply(RequestOptions()
                     .placeholder(R.drawable.loading_animation)
                     .error(R.drawable.ic_player))
             .centerCrop()
+            .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
             .into(this)
 }
 

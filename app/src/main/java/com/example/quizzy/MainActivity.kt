@@ -116,6 +116,7 @@ class MainActivity : AppCompatActivity() {
         isSignUpScreen = false
         nameInput.visibility = View.GONE
         buttonSignUp.visibility = View.GONE
+        buttonLogIn.visibility = View.VISIBLE
         buttonCreateAccount.visibility = View.VISIBLE
         textOr.visibility = View.VISIBLE
     }

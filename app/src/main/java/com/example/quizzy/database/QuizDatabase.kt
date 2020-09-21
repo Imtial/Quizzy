@@ -12,7 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Database(entities = [CachedQuiz::class, Question::class, Response::class, QuizItem::class, CachedUser::class],
-        version = 14, exportSchema = false)
+        version = 15, exportSchema = false)
 @TypeConverters(QuestionResponsesConverter::class, ResponsesConverter::class, ListConverter::class, DateConverter::class)
 abstract class QuizDatabase : RoomDatabase() {
     abstract val quizDao : QuizDao
@@ -40,16 +40,12 @@ abstract class QuizDatabase : RoomDatabase() {
 
                                 override fun onOpen(db: SupportSQLiteDatabase) {
                                     super.onOpen(db)
-//                                    val question1 = Question(2, "Hello", MULTIPLE, listOf("a", "b", "c"), 2F, listOf("b"))
-//                                    val question2 = Question(3, "Bye", MULTIPLE, listOf("d", "e", "f"), 3F, listOf("d", "f"))
                                     CoroutineScope(Dispatchers.IO).launch {
                                         INSTANCE.questionDao.clearTable()
                                         INSTANCE.responseDao.clearTable()
-//                                        INSTANCE.quizItemDao.clearTable()
+                                        INSTANCE.quizItemDao.clearTable()
                                         INSTANCE.quizDao.clearTable()
 //                                        INSTANCE.userDao.clearTable()
-//                                        for (quizItem in QUIZITEMS) INSTANCE.quizItemDao.insert(quizItem)
-//                                        for (quiz in QUIZZES) INSTANCE.quizDao.insert(quiz)
                                     }
                                 }
                             })

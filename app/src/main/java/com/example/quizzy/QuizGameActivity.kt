@@ -14,6 +14,7 @@ import android.view.Menu
 import android.view.View
 import android.widget.Space
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
@@ -26,6 +27,7 @@ import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.quizzy.database.QuizDatabase
+import com.example.quizzy.network.Status
 import com.example.quizzy.quizsetter.QuestionSetterFragment
 import com.example.quizzy.repository.UserRepository
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -64,14 +66,20 @@ class QuizGameActivity: AppCompatActivity() {
 
         val repository = UserRepository(QuizDatabase.getDatabase(applicationContext))
 
-        repository.currentUser.observe(this, {
-            if (it == null) {
-                Log.i("LOGOUT", "onCreate: logout successful")
-                val intent = Intent(applicationContext, MainActivity::class.java)
-                startActivity(intent)
-                finish()
+        repository.logOutStatus.observe(this, {
+            it?.let {
+                when(it) {
+                    Status.SUCCESS -> {
+                        Toast.makeText(applicationContext, "Log out successful", Toast.LENGTH_SHORT).show()
+                        val intent = Intent(applicationContext, MainActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
+                    Status.FAILURE -> {
+                        Toast.makeText(applicationContext, "Log out failed. Try again later.", Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
-            else Log.i("LOGOUT", "onCreate: $it")
         })
 
         navigationView.setNavigationItemSelectedListener {menuItem ->

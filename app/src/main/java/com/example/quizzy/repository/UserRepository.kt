@@ -6,15 +6,18 @@ import androidx.lifecycle.MutableLiveData
 import com.example.quizzy.database.QuizDatabase
 import com.example.quizzy.domain.CachedUser
 import com.example.quizzy.domain.UserResponse
+import com.example.quizzy.network.NetworkAccountUtil
 import com.example.quizzy.network.NetworkUtil
 import com.example.quizzy.network.Status
 import com.example.quizzy.task.LogOutTask
 import com.example.quizzy.task.LoginTask
 import com.example.quizzy.task.SignUpTask
+import com.example.quizzy.task.UploadProfilePictureTask
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.MultipartBody
 
 class UserRepository(private val database: QuizDatabase, private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)) {
     private val networkUtil = NetworkUtil()
@@ -84,6 +87,30 @@ class UserRepository(private val database: QuizDatabase, private val coroutineSc
                     override fun onFailure(msg: String?) {
                         Log.i("LOGOUT", "onFailure: $msg")
                         _logOutStatus.value = Status.FAILURE
+                    }
+                })
+            }
+        }
+    }
+
+    private val networkAccountUtil = NetworkAccountUtil()
+
+    private val _updateStatus = MutableLiveData<Status>()
+    val updateStatus: LiveData<Status> get() = _updateStatus
+
+    fun postImage(body : MultipartBody.Part) {
+        coroutineScope.launch {
+            withContext(Dispatchers.IO) {
+                val token = database.userDao.getUserToken()
+                networkAccountUtil.uploadProfilePicture(token, body, object : UploadProfilePictureTask {
+                    override fun uploadProfilePicture() {
+                        Log.i("IMAGE", "uploadProfilePicture: SUCCESS")
+                        _updateStatus.value = Status.SUCCESS
+                    }
+
+                    override fun onFailure(msg: String?) {
+                        Log.i("IMAGE", "onFailure: $msg")
+                        _updateStatus.value = Status.FAILURE
                     }
                 })
             }

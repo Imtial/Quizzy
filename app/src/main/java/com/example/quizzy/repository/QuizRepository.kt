@@ -5,11 +5,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.quizzy.database.QuizDatabase
 import com.example.quizzy.domain.*
+import com.example.quizzy.network.NetworkAccountUtil
 import com.example.quizzy.network.NetworkQuizUtil
 import com.example.quizzy.task.ShowFeedTask
+import com.example.quizzy.task.UploadProfilePictureTask
+import com.example.quizzy.utils.ImageUtil.generateImageUrl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.MultipartBody
 
 
 class QuizRepository (private val database: QuizDatabase, private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)) {
@@ -67,11 +72,6 @@ class QuizRepository (private val database: QuizDatabase, private val coroutineS
 
     val currentUser = database.userDao.getLiveCachedUser()
 
-    private fun generateImageUrl(id: String): String {
-        val baseUrl = "https://contest-quiz-app.herokuapp.com/users/"
-        val queryKey = "/avatar"
-        return baseUrl+id+queryKey
-    }
     private val networkQuizUtil = NetworkQuizUtil()
 
     private val _endOfQuizList = MutableLiveData<Boolean>()
