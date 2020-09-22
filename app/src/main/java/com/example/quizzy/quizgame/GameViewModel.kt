@@ -42,6 +42,10 @@ class GameViewModel(private val application: Application, private val quizId: St
     fun init() {
         totalQuestions = quiz.value?.questionResponses?.size!!
         _question.value = quiz.value?.questionResponses!![questionSerial]
+
+        if (questionSerial+1 == totalQuestions) {
+            _lastQuestion.value = true
+        }
     }
 
     private val _lastQuestion = MutableLiveData<Boolean>()

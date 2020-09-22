@@ -17,6 +17,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.quizzy.*
 import com.example.quizzy.domain.NOPASSWORD
 import com.example.quizzy.domain.PRIVATE
+import com.example.quizzy.domain.PUBLIC
 import com.example.quizzy.domain.QuizItem
 import com.google.android.material.button.MaterialButton
 import java.util.*
@@ -29,6 +30,7 @@ class HomeFragment : Fragment() {
     )
 
     private var isReloadable = true
+    private var currentAccessLevel = PUBLIC
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_home, container, false)
@@ -44,6 +46,9 @@ class HomeFragment : Fragment() {
                 }
             }
         })
+
+        parentActivity.supportActionBar?.title = "${currentAccessLevel.toLowerCase(Locale.ENGLISH).capitalize(Locale.ENGLISH)} Quizzes"
+
         val swipeContainer = rootView.findViewById<SwipeRefreshLayout>(R.id.swipe_container)
         val quizListView = rootView.findViewById<RecyclerView>(R.id.quiz_list)
         quizListView.adapter = adapter
@@ -77,6 +82,7 @@ class HomeFragment : Fragment() {
 
         parentActivity.setOnAccessChangeListener(object : OnAccessChangeListener {
             override fun accessChanged(access: String) {
+                currentAccessLevel = access
                 viewModel.setQuizItemAccessType(access)
                 parentActivity.supportActionBar?.title = "${access.toLowerCase(Locale.ENGLISH).capitalize(Locale.ENGLISH)} Quizzes"
             }
