@@ -65,7 +65,7 @@ class QuestionSetterFragment: Fragment() {
                     currentQuestionIndex++
                     if (viewModel.questionList?.size!! > currentQuestionIndex) createViewFromData(binding, viewModel.questionList!![currentQuestionIndex])
                     else resetBinding(binding)
-                    parentActivity.setQuestionNumberOnTopBar(currentQuestionIndex.toString())
+                    parentActivity.setQuestionNumberOnTopBar((currentQuestionIndex+1).toString())
                 }
             }
 
@@ -84,7 +84,7 @@ class QuestionSetterFragment: Fragment() {
                     question?.let { viewModel.setQuestion(currentQuestionIndex, it) }
                     currentQuestionIndex--
                     createViewFromData(binding, viewModel.questionList!![currentQuestionIndex])
-                    parentActivity.setQuestionNumberOnTopBar(currentQuestionIndex.toString())
+                    parentActivity.setQuestionNumberOnTopBar((currentQuestionIndex+1).toString())
                 }
             }
         })
@@ -225,7 +225,7 @@ class QuestionSetterFragment: Fragment() {
     override fun onStart() {
         super.onStart()
         val parentActivity = (requireActivity() as QuizGameActivity)
-        parentActivity.setQuestionNumberOnTopBar(currentQuestionIndex.toString())
+        parentActivity.setQuestionNumberOnTopBar((currentQuestionIndex+1).toString())
         parentActivity.showButton(R.id.button_back, R.id.button_next, R.id.button_complete)
         parentActivity.showTopTextView()
         parentActivity.supportActionBar?.hide()
