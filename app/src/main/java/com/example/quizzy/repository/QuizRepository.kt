@@ -70,7 +70,8 @@ class QuizRepository (private val database: QuizDatabase, private val coroutineS
                         return
                     }
                     val quizItems: List<QuizItem> = feedList.map {
-                        QuizItem(it.quizId, it.title, it.questionCount, 0F, it.startDate.time, it.duration.toInt(),
+                        val startTime = if (it.startTime != null) it.startDate.time else 0L
+                        QuizItem(it.quizId, it.title, it.questionCount, 0F, startTime, it.duration.toInt(),
                                 it.userCount, it.tags, it.difficulty.toFloat(), it.rating.toFloat(), it.access, it.ownerName, generateImageUrl(it.owner))
                     }
                     Log.i("FETCH-QUIZ", "fetchQuizList: $quizItems")
@@ -94,11 +95,12 @@ class QuizRepository (private val database: QuizDatabase, private val coroutineS
             val token = database.userDao.getUserToken()
             networkQuizUtil.getQuestionsForAQuiz(token, id, password) {questionPaper ->
                 Log.i("QPAPER", "fetchQuizById: $questionPaper")
+                val startTime = if (questionPaper.startTime != null) questionPaper.startDate.time else 0L
                 val quiz = CachedQuiz(id = questionPaper._id,
                         title = questionPaper.title,
                         questionResponses = questionPaper.questions,
                         duration = questionPaper.duration.toInt(),
-                        startTime = questionPaper.startDate.time
+                        startTime = startTime
                 )
                 Log.i("QPAPER", "fetchQuizById: $quiz")
                 CoroutineScope(Dispatchers.IO).launch {

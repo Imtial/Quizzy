@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.CompoundButton
 import android.widget.RadioButton
+import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -21,6 +22,7 @@ import com.example.quizzy.domain.Question
 import com.example.quizzy.domain.SINGLE
 import com.example.quizzy.domain.TEXT
 import com.example.quizzy.databinding.FragmentQuizGameBinding
+import com.example.quizzy.network.Status
 
 class QuizGameFragment: Fragment() {
     private val TAG = "QUIZ-GAME"
@@ -42,6 +44,7 @@ class QuizGameFragment: Fragment() {
                 gameViewModel.triggerNextQuestion()
             }
             override fun completeButtonClicked() {
+                gameViewModel.disableQuiz()
                 binding.resultLoadingBar.visibility = View.VISIBLE
                 gameViewModel.fetchAnswers()
             }
@@ -59,11 +62,21 @@ class QuizGameFragment: Fragment() {
             }
         })
 
+        gameViewModel.submissionStatus.observe(viewLifecycleOwner, {
+            it?.let {
+                if (it == Status.FAILURE) {
+                    binding.resultLoadingBar.visibility = View.GONE
+                    Toast.makeText(requireContext(), "Submission failed", Toast.LENGTH_LONG).show()
+                }
+            }
+        })
+
         gameViewModel.enabled.observe(viewLifecycleOwner, {
             if (it != null) enabled = it
         })
 
         gameViewModel.quiz.observe(viewLifecycleOwner, { quiz ->
+            Log.i(TAG, "onCreateView: $quiz")
             if (quiz != null) {
                 parentActivity.setTextOnTopBar(quiz.title)
                 gameViewModel.init()

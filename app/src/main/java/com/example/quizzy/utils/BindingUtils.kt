@@ -44,14 +44,12 @@ fun ImageView.setCreatorImage(imageUri: String?) {
 
 @BindingAdapter("startTime")
 fun TextView.setStartTime(timeInMillis: Long?) {
-    if (timeInMillis == 0L) this.visibility = View.GONE
+    if (timeInMillis == null || timeInMillis == 0L) this.visibility = View.GONE
     else {
         this.visibility = View.VISIBLE
         val calendar = Calendar.getInstance()
-        if (timeInMillis != null) {
-            calendar.timeInMillis = timeInMillis
-            this.text = SimpleDateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(calendar.time)
-        }
+        calendar.timeInMillis = timeInMillis
+        this.text = SimpleDateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(calendar.time)
     }
 }
 

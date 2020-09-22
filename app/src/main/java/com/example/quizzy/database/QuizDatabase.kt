@@ -40,13 +40,13 @@ abstract class QuizDatabase : RoomDatabase() {
 
                                 override fun onOpen(db: SupportSQLiteDatabase) {
                                     super.onOpen(db)
-                                    CoroutineScope(Dispatchers.IO).launch {
-                                        INSTANCE.questionDao.clearTable()
-                                        INSTANCE.responseDao.clearTable()
-                                        INSTANCE.quizItemDao.clearTable()
-                                        INSTANCE.quizDao.clearTable()
+//                                    CoroutineScope(Dispatchers.IO).launch {
+//                                        INSTANCE.questionDao.clearTable()
+//                                        INSTANCE.responseDao.clearTable()
+//                                        INSTANCE.quizItemDao.clearTable()
+//                                        INSTANCE.quizDao.clearTable()
 //                                        INSTANCE.userDao.clearTable()
-                                    }
+//                                    }
                                 }
                             })
                             .build()

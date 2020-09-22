@@ -54,6 +54,7 @@ class MainActivity : AppCompatActivity() {
                 val intent = Intent(applicationContext, QuizGameActivity::class.java)
                 startActivity(intent)
                 progressBar.visibility = View.GONE
+                finish()
             }
         })
 

@@ -21,6 +21,8 @@ class GameViewModel(private val application: Application, private val quizId: St
 
     val answerResponse = repository.answerResponse
 
+    val submissionStatus = repository.submissionStatus
+
     private val _question = MutableLiveData<Question>()
     val question: LiveData<Question> get() = _question
 

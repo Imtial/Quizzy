@@ -28,6 +28,15 @@
                 android:paddingVertical="8dp"
                 android:textSize="24sp" />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="8dp"
+                android:layout_marginTop="4dp"
+                android:textSize="14sp"
+                android:textColor="@color/red"
+                android:text="Don't pick a time if your quiz need to be always accessible!\nYou must select a time in future."/>
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_start_time"
                 android:layout_width="match_parent"
@@ -35,6 +44,7 @@
                 android:layout_marginHorizontal="8dp"
                 android:layout_marginVertical="4dp"
                 android:text="Pick Quiz Start time"/>
+
 
             <LinearLayout android:orientation="horizontal"
                 android:layout_width="match_parent"

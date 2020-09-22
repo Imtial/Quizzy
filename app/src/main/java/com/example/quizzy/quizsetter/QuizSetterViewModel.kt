@@ -64,7 +64,7 @@ class QuizSetterViewModel(private val application: Application): ViewModel() {
         quiz.responses = _responseList
         quiz.questions = questionList!!
         quiz.tags = _tags
-        quiz.startTime -= 3600*6
+        if (quiz.startTime != null) quiz.startTime -= 3600*6
         Log.i("POST-QUIZ", "insert: $quiz")
         viewModelScope.launch {
             withContext(Dispatchers.IO) {

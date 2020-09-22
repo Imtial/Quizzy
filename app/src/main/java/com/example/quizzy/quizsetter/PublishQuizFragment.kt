@@ -55,8 +55,12 @@ class PublishQuizFragment: Fragment() {
         val timeSetListener = TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
             calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
             calendar.set(Calendar.MINUTE, minute)
-            binding.buttonStartTime.text = SimpleDateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT)
-                    .format(calendar.time)
+            var buttonText = "Pick time in future!!!"
+            if (calendar.timeInMillis > System.currentTimeMillis() + 10*60000) {
+                buttonText = SimpleDateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT)
+                        .format(calendar.time)
+            }
+            binding.buttonStartTime.text = buttonText
         }
         val dateSetListener = DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
             val hourOfDay = calendar.get(Calendar.HOUR_OF_DAY)
@@ -81,7 +85,7 @@ class PublishQuizFragment: Fragment() {
         binding.buttonPublish.setOnClickListener {button ->
             // Populate Quiz with data from views
             extractDataFromViews(binding, calendar)
-            viewModel.insert(quiz) // TODO - BUG here
+            viewModel.insert(quiz)
 //            parentActivity.finish()
             button.findNavController().navigate(PublishQuizFragmentDirections.actionPublishQuizFragmentToHomeFragment())
         }
@@ -102,7 +106,7 @@ class PublishQuizFragment: Fragment() {
 
     private fun extractDataFromViews(binding: FragmentPublishQuizBinding, calendar: Calendar) {
         if (binding.quizTitle.text.isNotBlank()) quiz.title = binding.quizTitle.text.toString().trim()
-        quiz.startTime = calendar.timeInMillis / 1000
+        quiz.startTime = if (calendar.timeInMillis > System.currentTimeMillis() + 10 * 60000) calendar.timeInMillis / 1000 else null
         quiz.duration = binding.minutePicker.value.toDouble()
         if (binding.radioPrivate.isChecked) {
             if (binding.passwordInput.text.isNullOrBlank()) binding.passwordInput.error = "Private Question must have password"

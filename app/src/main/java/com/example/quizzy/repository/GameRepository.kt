@@ -9,6 +9,7 @@ import com.example.quizzy.domain.AnswerReview
 import com.example.quizzy.domain.CachedQuiz
 import com.example.quizzy.domain.Submission
 import com.example.quizzy.network.NetworkQuizUtil
+import com.example.quizzy.network.Status
 import com.example.quizzy.task.GetAnswerScriptTask
 import com.example.quizzy.task.PostReviewTask
 import kotlinx.coroutines.CoroutineScope
@@ -26,6 +27,9 @@ class GameRepository(private val database: QuizDatabase, private val coroutineSc
     private val _answerResponse = MutableLiveData<AnswerResponse>()
     val answerResponse : LiveData<AnswerResponse> get() = _answerResponse
 
+    private val _submissionStatus = MutableLiveData<Status>()
+    val submissionStatus : LiveData<Status> get() = _submissionStatus
+
     fun submitAndRequestForResult(quizId: String, submissions: List<Submission>) {
         coroutineScope.launch {
             withContext(Dispatchers.IO) {
@@ -38,6 +42,7 @@ class GameRepository(private val database: QuizDatabase, private val coroutineSc
 
                     override fun onFailure(msg: String?) {
                         Log.i("FETCH-ANSWER", "onFailure: $msg")
+                        _submissionStatus.value = Status.FAILURE
                     }
                 })
             }

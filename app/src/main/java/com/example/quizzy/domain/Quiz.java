@@ -9,13 +9,13 @@ import static com.example.quizzy.domain.CachedQuizKt.NOPASSWORD;
 public class Quiz {
 
     @SerializedName("title")
-    String title;
+    String title = "untitled";
     @SerializedName("password")
     String password = NOPASSWORD;
     @SerializedName("duration")
     double duration;
     @SerializedName("startTime")
-    long startTime;
+    Long startTime;
 
     @SerializedName("tags")
     List<String> tags;
@@ -24,7 +24,7 @@ public class Quiz {
     @SerializedName("responses")
     List<Response> responses;
 
-    public Quiz(String title, String password, double duration, long startTime,
+    public Quiz(String title, String password, double duration, Long startTime,
                 List<String> tags, List<Question> questions, List<Response> responses) {
         this.title = title;
         this.password = password;
@@ -62,11 +62,11 @@ public class Quiz {
         this.duration = duration;
     }
 
-    public long getStartTime() {
+    public Long getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(long startTime) {
+    public void setStartTime(Long startTime) {
         this.startTime = startTime;
     }
 

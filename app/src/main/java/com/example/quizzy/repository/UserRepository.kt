@@ -76,10 +76,10 @@ class UserRepository(private val database: QuizDatabase, private val coroutineSc
                 val token = database.userDao.getUserToken()
                 networkUtil.logOut(token, object : LogOutTask {
                     override fun logOut() {
+                        _logOutStatus.value = Status.SUCCESS
                         coroutineScope.launch {
                             withContext(Dispatchers.IO) {
                                 database.userDao.clearTable()
-                                _logOutStatus.value = Status.SUCCESS
                             }
                         }
                     }
