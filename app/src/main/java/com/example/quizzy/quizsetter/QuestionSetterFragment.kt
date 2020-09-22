@@ -227,5 +227,7 @@ class QuestionSetterFragment: Fragment() {
         val parentActivity = (requireActivity() as QuizGameActivity)
         parentActivity.setQuestionNumberOnTopBar(currentQuestionIndex.toString())
         parentActivity.showButton(R.id.button_back, R.id.button_next, R.id.button_complete)
+        parentActivity.showTopTextView()
+        parentActivity.supportActionBar?.hide()
     }
 }

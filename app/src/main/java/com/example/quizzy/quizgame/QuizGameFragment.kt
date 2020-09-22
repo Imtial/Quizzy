@@ -35,6 +35,7 @@ class QuizGameFragment: Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = FragmentQuizGameBinding.inflate(inflater, container, false)
         val parentActivity = requireActivity() as QuizGameActivity
+        parentActivity.supportActionBar?.hide()
         parentActivity.setOnButtonClickListener(object : OnButtonClickListener {
             override fun nextButtonClicked() {
                 submitChoices(binding)

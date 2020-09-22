@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.quizzy.*
+import com.example.quizzy.domain.NOPASSWORD
+import com.example.quizzy.domain.PRIVATE
 import com.example.quizzy.domain.QuizItem
 import com.google.android.material.button.MaterialButton
 
@@ -33,16 +35,19 @@ class HomeFragment : Fragment() {
         val adapter = QuizListAdapter(viewLifecycleOwner, object : OnQuizItemClickListener {
             override fun onItemClicked(quizItem: QuizItem) {
                 viewModel.selectQuiz(quizItem)
-                quizDialog()
+                if(quizItem.access == PRIVATE) quizDialog()
+                else {
+                    viewModel.navigateToQuizGame = true
+                    viewModel.fetchSelectedQuiz(quizItem.id, NOPASSWORD)
+                }
             }
         })
         val swipeContainer = rootView.findViewById<SwipeRefreshLayout>(R.id.swipe_container)
         val quizListView = rootView.findViewById<RecyclerView>(R.id.quiz_list)
-        val loadingBar = rootView.findViewById<ProgressBar>(R.id.content_loading_bar)
-        loadingBar.visibility = View.VISIBLE
         quizListView.adapter = adapter
         setOnScrollListener(quizListView)
 
+        swipeContainer.isRefreshing = true
         swipeContainer.setOnRefreshListener {
             isReloadable = true
             viewModel.fetchCount = 0
@@ -62,7 +67,6 @@ class HomeFragment : Fragment() {
 
         viewModel.liveQuizItemList.observe(viewLifecycleOwner, {
             if (!it.isNullOrEmpty()) {
-                loadingBar.visibility = View.GONE
                 swipeContainer.isRefreshing = false
             }
             adapter.submitList(it)
@@ -113,6 +117,7 @@ class HomeFragment : Fragment() {
         val parentActivity = requireActivity() as QuizGameActivity
         parentActivity.hideTopTextView()
         parentActivity.hideButton(R.id.button_back, R.id.button_complete, R.id.button_next)
+        parentActivity.supportActionBar?.show()
     }
 }
 

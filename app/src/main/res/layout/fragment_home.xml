@@ -9,14 +9,6 @@
     android:focusableInTouchMode="true"
     tools:context="com.example.quizzy.homepage.HomeFragment">
 
-    <ProgressBar
-        android:id="@+id/content_loading_bar"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_margin="32dp"
-        android:layout_gravity="center"
-        android:visibility="visible"/>
-
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_container"
         android:layout_width="match_parent"
