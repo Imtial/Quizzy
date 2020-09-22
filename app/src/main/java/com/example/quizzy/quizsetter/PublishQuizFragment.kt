@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.navGraphViewModels
@@ -14,6 +15,7 @@ import com.example.quizzy.R
 import com.example.quizzy.ViewModelFactory
 import com.example.quizzy.databinding.FragmentPublishQuizBinding
 import com.example.quizzy.domain.Quiz
+import com.example.quizzy.network.Status
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
@@ -24,7 +26,7 @@ import java.util.*
 class PublishQuizFragment: Fragment() {
 
     private val quiz = Quiz()
-    private val viewModel: QuizSetterViewModel by navGraphViewModels(R.id.navigation) {
+    private val viewModel: QuizSetterViewModel by navGraphViewModels(R.id.quiz_setter_navigation_graph) {
         ViewModelFactory(requireActivity().application)
     }
 
@@ -85,8 +87,21 @@ class PublishQuizFragment: Fragment() {
             extractDataFromViews(binding, calendar)
             viewModel.insert(quiz)
 //            parentActivity.finish()
-            button.findNavController().navigate(PublishQuizFragmentDirections.actionPublishQuizFragmentToHomeFragment())
+//            button.findNavController().navigate(PublishQuizFragmentDirections.actionPublishQuizFragmentToHomeFragment())
         }
+
+        viewModel.postStatus.observe(viewLifecycleOwner, {
+            when(it) {
+                Status.FAILURE -> {
+                    Toast.makeText(requireContext(), "Quiz upload failed", Toast.LENGTH_LONG).show()
+//                    binding.buttonPublish.findNavController().navigate(PublishQuizFragmentDirections.actionPublishQuizFragmentToHomeFragment())
+                }
+                Status.SUCCESS -> {
+                    Toast.makeText(requireContext(), "Quiz upload Successful", Toast.LENGTH_LONG).show()
+                    binding.buttonPublish.findNavController().navigate(PublishQuizFragmentDirections.actionPublishQuizFragmentToHomeFragment())
+                }
+            }
+        })
 
         binding.buttonAddTags.setOnClickListener {
             val tags = binding.tagInput.text.toString().trim().toLowerCase(Locale.ENGLISH).split(",")

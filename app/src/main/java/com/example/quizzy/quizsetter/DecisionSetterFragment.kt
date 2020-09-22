@@ -21,7 +21,7 @@ class DecisionSetterFragment: Fragment() {
 
     private val conditionViewList = mutableListOf<View>()
 
-    private val viewModel: QuizSetterViewModel by navGraphViewModels(R.id.navigation) {
+    private val viewModel: QuizSetterViewModel by navGraphViewModels(R.id.quiz_setter_navigation_graph) {
         ViewModelFactory(requireActivity().application)
     }
 

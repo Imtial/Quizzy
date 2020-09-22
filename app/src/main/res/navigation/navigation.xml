@@ -5,43 +5,6 @@
     android:id="@+id/navigation"
     app:startDestination="@id/homeFragment">
     <fragment
-        android:id="@+id/questionSetterFragment"
-        android:name="com.example.quizzy.quizsetter.QuestionSetterFragment"
-        android:label="Set Question"
-        tools:layout="@layout/fragment_question_setter" >
-        <action
-            android:id="@+id/action_questionSetterFragment_to_decisionSetterFragment"
-            app:destination="@id/decisionSetterFragment" />
-        <argument
-            android:name="question_number"
-            app:argType="integer" />
-    </fragment>
-    <fragment
-        android:id="@+id/decisionSetterFragment"
-        android:name="com.example.quizzy.quizsetter.DecisionSetterFragment"
-        android:label="Set Response"
-        tools:layout="@layout/fragment_decision_setter" >
-        <action
-            android:id="@+id/action_decisionSetterFragment_to_publishQuizFragment"
-            app:destination="@id/publishQuizFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/publishQuizFragment"
-        android:name="com.example.quizzy.quizsetter.PublishQuizFragment"
-        android:label="Publish Quiz"
-        tools:layout="@layout/fragment_publish_quiz" >
-        <action
-            android:id="@+id/action_publishQuizFragment_to_questionSetterFragment"
-            app:destination="@id/questionSetterFragment"
-            app:popUpTo="@id/questionSetterFragment"
-            app:popUpToInclusive="true"/>
-        <action
-            android:id="@+id/action_publishQuizFragment_to_homeFragment"
-            app:destination="@id/homeFragment"
-            app:popUpTo="@id/homeFragment"
-            app:popUpToInclusive="true"/>
-    </fragment>
-    <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.quizzy.homepage.HomeFragment"
         android:label="fragment_home"
@@ -90,4 +53,39 @@
         android:name="com.example.quizzy.profile.ProfileFragment"
         android:label="Profile"
         tools:layout="@layout/fragment_profile"/>
+    <navigation android:id="@+id/quiz_setter_navigation_graph"
+        app:startDestination="@id/questionSetterFragment">
+        <fragment
+            android:id="@+id/questionSetterFragment"
+            android:name="com.example.quizzy.quizsetter.QuestionSetterFragment"
+            android:label="Set Question"
+            tools:layout="@layout/fragment_question_setter">
+            <action
+                android:id="@+id/action_questionSetterFragment_to_decisionSetterFragment"
+                app:destination="@id/decisionSetterFragment" />
+            <argument
+                android:name="question_number"
+                app:argType="integer" />
+        </fragment>
+        <fragment
+            android:id="@+id/decisionSetterFragment"
+            android:name="com.example.quizzy.quizsetter.DecisionSetterFragment"
+            android:label="Set Response"
+            tools:layout="@layout/fragment_decision_setter">
+            <action
+                android:id="@+id/action_decisionSetterFragment_to_publishQuizFragment"
+                app:destination="@id/publishQuizFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/publishQuizFragment"
+            android:name="com.example.quizzy.quizsetter.PublishQuizFragment"
+            android:label="Publish Quiz"
+            tools:layout="@layout/fragment_publish_quiz">
+            <action
+                android:id="@+id/action_publishQuizFragment_to_homeFragment"
+                app:destination="@id/homeFragment"
+                app:popUpTo="@id/homeFragment"
+                app:popUpToInclusive="true" />
+        </fragment>
+    </navigation>
 </navigation>

@@ -73,4 +73,6 @@ class QuizSetterViewModel(private val application: Application): ViewModel() {
             }
         }
     }
+
+    val postStatus = repository.postStatus
 }
