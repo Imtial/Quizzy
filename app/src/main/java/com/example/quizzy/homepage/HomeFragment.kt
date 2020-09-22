@@ -31,6 +31,7 @@ class HomeFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_home, container, false)
+        val parentActivity = requireActivity() as QuizGameActivity
 
         val adapter = QuizListAdapter(viewLifecycleOwner, object : OnQuizItemClickListener {
             override fun onItemClicked(quizItem: QuizItem) {
@@ -71,6 +72,12 @@ class HomeFragment : Fragment() {
             }
             adapter.submitList(it)
             adapter.notifyDataSetChanged()
+        })
+
+        parentActivity.setOnAccessChangeListener(object : OnAccessChangeListener {
+            override fun accessChanged(access: String) {
+                viewModel.setQuizItemAccessType(access)
+            }
         })
 
         viewModel.fetchedQuizId.observe(viewLifecycleOwner, {id ->

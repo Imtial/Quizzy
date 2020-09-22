@@ -34,4 +34,8 @@ class HomeViewModel(private val application: Application) : ViewModel() {
     fun fetchSelectedQuiz(id: String, password: String) {
         repository.fetchSelectedQuiz(id, password)
     }
+
+    fun setQuizItemAccessType(access: String) {
+        repository.setQuizItemAccessType(access)
+    }
 }

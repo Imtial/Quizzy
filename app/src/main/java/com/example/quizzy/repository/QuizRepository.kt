@@ -2,55 +2,19 @@ package com.example.quizzy.repository
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.quizzy.database.QuizDatabase
 import com.example.quizzy.domain.*
-import com.example.quizzy.network.NetworkAccountUtil
 import com.example.quizzy.network.NetworkQuizUtil
 import com.example.quizzy.task.ShowFeedTask
-import com.example.quizzy.task.UploadProfilePictureTask
 import com.example.quizzy.utils.ImageUtil.generateImageUrl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import okhttp3.MultipartBody
 
 
 class QuizRepository (private val database: QuizDatabase, private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)) {
-    suspend fun insertQuestion(question: Question) {
-        database.questionDao.insert(question)
-    }
-
-    suspend fun updateQuestion(question: Question) {
-        database.questionDao.update(question)
-    }
-
-    suspend fun deleteQuestion(question: Question) {
-        database.questionDao.delete(question)
-    }
-
-    fun getQuestionList(): LiveData<List<Question>> = database.questionDao.getLiveQuestionList()
-
-    fun getQuestionCount(): LiveData<Int> = database.questionDao.getLiveQuestionCount()
-
-    fun getTotalMarks(): LiveData<Float> = database.questionDao.getLiveTotalMarks()
-
-    suspend fun insertResponses(vararg respons: Response) {
-        database.responseDao.insert(*respons)
-    }
-
-    fun getResponses() : LiveData<List<Response>> = database.responseDao.getLiveResponses()
-
-//    suspend fun insertQuiz(cachedQuiz: CachedQuiz) {
-//        cachedQuiz.questionResponses = database.questionDao.getQuestionList()
-//        cachedQuiz.respons = database.responseDao.getResponses()
-//        database.quizDao.insert(cachedQuiz)
-//        database.questionDao.clearTable()
-//        database.responseDao.clearTable()
-//    }
-
-    fun getQuiz(quizId: String) : LiveData<CachedQuiz?> = database.quizDao.getQuiz(quizId)
 
     suspend fun insertQuizItem(vararg quizItems: QuizItem) {
         database.quizItemDao.insert(*quizItems)
@@ -60,17 +24,31 @@ class QuizRepository (private val database: QuizDatabase, private val coroutineS
         database.quizItemDao.clearTable()
     }
 
-    val liveQuizItemList = database.quizItemDao.getLiveQuizItemList()
+//    val liveQuizItemList = database.quizItemDao.getLiveQuizItemList()
 
-    private suspend fun insertUser(user: CachedUser) {
-        database.userDao.insert(user)
+    private val livePublicQuizItemList = database.quizItemDao.getLivePublicQuizItemList()
+    private val livePrivateQuizItemList = database.quizItemDao.getLivePrivateQuizItemList()
+
+    private var currentAccess = PUBLIC
+    val liveQuizItemList = MediatorLiveData<List<QuizItem>>()
+    
+    init {
+        liveQuizItemList.addSource(livePublicQuizItemList) {
+            if (currentAccess == PUBLIC) it?.let { liveQuizItemList.value = it }
+        }
+        liveQuizItemList.addSource(livePrivateQuizItemList) {
+            if (currentAccess == PRIVATE) it?.let { liveQuizItemList.value = it }
+        }
     }
 
-    suspend fun clearUserInfoTable() {
-        database.userDao.clearTable()
+    fun setQuizItemAccessType(access: String) {
+        currentAccess = access
+        when(access) {
+            PUBLIC -> livePublicQuizItemList.value?.let { liveQuizItemList.value = it }
+            PRIVATE -> livePrivateQuizItemList.value?.let { liveQuizItemList.value = it }
+            else -> throw IllegalArgumentException("Undefined access type")
+        }
     }
-
-    val currentUser = database.userDao.getLiveCachedUser()
 
     private val networkQuizUtil = NetworkQuizUtil()
 

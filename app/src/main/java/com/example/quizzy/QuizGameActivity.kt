@@ -11,7 +11,9 @@ import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import android.widget.CompoundButton
 import android.widget.Space
 import android.widget.TextView
 import android.widget.Toast
@@ -27,14 +29,18 @@ import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.quizzy.database.QuizDatabase
+import com.example.quizzy.domain.PRIVATE
+import com.example.quizzy.domain.PUBLIC
 import com.example.quizzy.network.Status
 import com.example.quizzy.quizsetter.QuestionSetterFragment
 import com.example.quizzy.repository.UserRepository
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.switchmaterial.SwitchMaterial
 
 class QuizGameActivity: AppCompatActivity() {
     private lateinit var onButtonClickListener: OnButtonClickListener
+    private lateinit var onAccessChangeListener: OnAccessChangeListener
     private lateinit var topTextView: TextView
     private lateinit var backButton: FloatingActionButton
     private lateinit var completeButton: FloatingActionButton
@@ -58,7 +64,7 @@ class QuizGameActivity: AppCompatActivity() {
         nextButton = findViewById(R.id.button_next)
         topTextView = findViewById(R.id.quiz_game_top)
 
-        val navigationView = findViewById<NavigationView>(R.id.nav_view)
+        val navigationView: NavigationView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.game_fragment)
         navigationView.setupWithNavController(navController)
         val appBarConfiguration = AppBarConfiguration(navController.graph)
@@ -81,6 +87,15 @@ class QuizGameActivity: AppCompatActivity() {
                 }
             }
         })
+
+        val onCheckedChangeListener = CompoundButton.OnCheckedChangeListener { view, isChecked ->
+            if (isChecked) onAccessChangeListener.accessChanged(PRIVATE)
+            else onAccessChangeListener.accessChanged(PUBLIC)
+        }
+
+        val accessMenuItem = navigationView.menu.findItem(R.id.toggle_access)
+        val switch = accessMenuItem.actionView.findViewById<SwitchMaterial>(R.id.switch_access)
+        switch.setOnCheckedChangeListener(onCheckedChangeListener)
 
         navigationView.setNavigationItemSelectedListener {menuItem ->
             when(menuItem.itemId) {
@@ -106,6 +121,10 @@ class QuizGameActivity: AppCompatActivity() {
 
     fun setOnButtonClickListener(listener: OnButtonClickListener) {
         onButtonClickListener = listener
+    }
+
+    fun setOnAccessChangeListener(listener: OnAccessChangeListener) {
+        onAccessChangeListener = listener
     }
 
     fun setQuestionNumberOnTopBar (text: String) {
@@ -168,12 +187,18 @@ class QuizGameActivity: AppCompatActivity() {
                 return false
             }
         })
+
         return true
     }
+
 }
 
 interface OnButtonClickListener {
     fun nextButtonClicked()
     fun completeButtonClicked()
     fun backButtonClicked()
+}
+
+interface OnAccessChangeListener {
+    fun accessChanged(access: String)
 }
