@@ -7,13 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.navGraphViewModels
 import com.example.quizzy.QuizGameActivity
 import com.example.quizzy.R
 import com.example.quizzy.ViewModelFactory
-import com.example.quizzy.domain.CachedQuiz
 import com.example.quizzy.databinding.FragmentPublishQuizBinding
 import com.example.quizzy.domain.Quiz
 import com.google.android.flexbox.FlexDirection
@@ -91,13 +89,14 @@ class PublishQuizFragment: Fragment() {
         }
 
         binding.buttonAddTags.setOnClickListener {
-            val tag = binding.tagInput.text.toString().trim()
-            if (tag.isNotEmpty()) {
-                viewModel.addTag(tag)
+            val tags = binding.tagInput.text.toString().trim().toLowerCase(Locale.ENGLISH).split(",")
+            if (tags.isNotEmpty()) {
+                viewModel.addTag(tags)
             }
             binding.tagInput.text.clear()
         }
 
+        binding.radioPublic.isChecked = true
         binding.radioPrivate.setOnClickListener { binding.radioPublic.isChecked = false }
         binding.radioPublic.setOnClickListener { binding.radioPrivate.isChecked = false }
 

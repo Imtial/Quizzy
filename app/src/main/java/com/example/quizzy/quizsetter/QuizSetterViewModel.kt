@@ -55,8 +55,9 @@ class QuizSetterViewModel(private val application: Application): ViewModel() {
     private val _tagList = MutableLiveData<MutableList<String>>()
     val tagList : LiveData<MutableList<String>> get() = _tagList
 
-    fun addTag(tag: String) {
-        _tags.add(tag)
+    fun addTag(tags: List<String>) {
+        tags.forEach { it.trim() }
+        _tags.addAll(tags)
         _tagList.value = _tags
     }
 

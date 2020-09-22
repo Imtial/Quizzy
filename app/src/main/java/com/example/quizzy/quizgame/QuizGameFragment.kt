@@ -38,12 +38,17 @@ class QuizGameFragment: Fragment() {
         val binding = FragmentQuizGameBinding.inflate(inflater, container, false)
         val parentActivity = requireActivity() as QuizGameActivity
         parentActivity.supportActionBar?.hide()
+
+        var timer: CountDownTimer? = null
+
         parentActivity.setOnButtonClickListener(object : OnButtonClickListener {
             override fun nextButtonClicked() {
                 submitChoices(binding)
                 gameViewModel.triggerNextQuestion()
             }
             override fun completeButtonClicked() {
+                timer?.cancel()
+                submitChoices(binding)
                 gameViewModel.disableQuiz()
                 binding.resultLoadingBar.visibility = View.VISIBLE
                 gameViewModel.fetchAnswers()
@@ -82,7 +87,7 @@ class QuizGameFragment: Fragment() {
                 gameViewModel.init()
                 if (quiz.duration == 0) binding.gameTimer.visibility = View.GONE
                 else {
-                    object : CountDownTimer(quiz.duration * 60000L, 1000) {
+                    timer = object : CountDownTimer(quiz.duration * 60000L, 1000) {
                         override fun onTick(millisUntilFinished: Long) {
                             val min = (millisUntilFinished / (60000)).toString()
                             val sec = String.format("%02d", (millisUntilFinished / 1000) % 60)
@@ -106,7 +111,7 @@ class QuizGameFragment: Fragment() {
 
         gameViewModel.question.observe(viewLifecycleOwner, {
             type = it.type!!
-            val questionCounter = "${gameViewModel.questionSerial+1}/${gameViewModel.totalQuestions}"
+            val questionCounter = "${gameViewModel.questionSerial + 1}/${gameViewModel.totalQuestions}"
             binding.questionCounter.text = questionCounter
             val unanswered = "Unanswered\n${gameViewModel.totalQuestions - gameViewModel.answerMap.size}"
             binding.unansweredCounter.text = unanswered

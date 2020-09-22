@@ -35,7 +35,7 @@
                 android:layout_marginTop="4dp"
                 android:textSize="14sp"
                 android:textColor="@color/red"
-                android:text="Don't pick a time if your quiz need to be always accessible!\nYou must select a time in future."/>
+                android:text="Don't pick a time if your quiz need to be always accessible!"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_start_time"

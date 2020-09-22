@@ -19,6 +19,7 @@ import com.example.quizzy.domain.NOPASSWORD
 import com.example.quizzy.domain.PRIVATE
 import com.example.quizzy.domain.QuizItem
 import com.google.android.material.button.MaterialButton
+import java.util.*
 
 class HomeFragment : Fragment() {
     private val TAG = "QUIZ-LIST"
@@ -77,6 +78,7 @@ class HomeFragment : Fragment() {
         parentActivity.setOnAccessChangeListener(object : OnAccessChangeListener {
             override fun accessChanged(access: String) {
                 viewModel.setQuizItemAccessType(access)
+                parentActivity.supportActionBar?.title = "${access.toLowerCase(Locale.ENGLISH).capitalize(Locale.ENGLISH)} Quizzes"
             }
         })
 

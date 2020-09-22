@@ -191,7 +191,7 @@ class QuestionSetterFragment: Fragment() {
             return null
         }
         if (typeViewId != R.id.radio_typed && optionViewList.size < 2) {
-            optionViewList[0].findViewById<EditText>(R.id.option_text).error = "Must provide multiple options!"
+            Toast.makeText(requireContext(), "Must provide multiple options!", Toast.LENGTH_SHORT).show()
             return null
         }
 

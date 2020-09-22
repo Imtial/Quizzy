@@ -31,6 +31,7 @@ class GameRepository(private val database: QuizDatabase, private val coroutineSc
     val submissionStatus : LiveData<Status> get() = _submissionStatus
 
     fun submitAndRequestForResult(quizId: String, submissions: List<Submission>) {
+        Log.i("FETCH-ANSWER", "submitAndRequestForResult: $submissions")
         coroutineScope.launch {
             withContext(Dispatchers.IO) {
                 val token = database.userDao.getUserToken()

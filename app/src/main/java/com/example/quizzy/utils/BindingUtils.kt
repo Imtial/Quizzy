@@ -1,5 +1,6 @@
 package com.example.quizzy.utils
 
+import android.annotation.SuppressLint
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -33,15 +34,16 @@ fun TextView.setTotalQuestions(count: Int?) {
 fun ImageView.setCreatorImage(imageUri: String?) {
     Glide.with(this)
             .load(imageUri)
-            .signature(ObjectKey(imageUri + System.currentTimeMillis().toString()))
             .apply(RequestOptions()
                     .placeholder(R.drawable.loading_animation)
                     .error(R.drawable.ic_player))
             .centerCrop()
-            .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+            .diskCacheStrategy(DiskCacheStrategy.NONE )
+            .skipMemoryCache(true)
             .into(this)
 }
 
+@SuppressLint("SetTextI18n")
 @BindingAdapter("startTime")
 fun TextView.setStartTime(timeInMillis: Long?) {
     if (timeInMillis == null || timeInMillis == 0L) this.visibility = View.GONE
@@ -49,7 +51,7 @@ fun TextView.setStartTime(timeInMillis: Long?) {
         this.visibility = View.VISIBLE
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = timeInMillis
-        this.text = SimpleDateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(calendar.time)
+        this.text = "Starts at ${SimpleDateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(calendar.time)}"
     }
 }
 
