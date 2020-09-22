@@ -93,6 +93,9 @@ interface QuizItemDao {
     @Query("SELECT * FROM table_quiz_item WHERE access LIKE 'PRIVATE'")
     fun getLivePrivateQuizItemList() : LiveData<List<QuizItem>>
 
+    @Query("SELECT * FROM table_quiz_item WHERE title LIKE :query")
+    fun getSearchedQuizItemList(query: String): LiveData<List<QuizItem>>
+
     @Query("SELECT COUNT(*) FROM table_quiz_item")
     fun getLiveCount() : LiveData<Int>
 }

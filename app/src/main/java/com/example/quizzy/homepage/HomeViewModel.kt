@@ -1,11 +1,11 @@
 package com.example.quizzy.homepage
 
 import android.app.Application
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import android.util.Log
+import androidx.lifecycle.*
 import com.example.quizzy.database.QuizDatabase
+import com.example.quizzy.domain.PRIVATE
+import com.example.quizzy.domain.PUBLIC
 import com.example.quizzy.repository.QuizRepository
 import com.example.quizzy.domain.QuizItem
 
@@ -37,5 +37,9 @@ class HomeViewModel(private val application: Application) : ViewModel() {
 
     fun setQuizItemAccessType(access: String) {
         repository.setQuizItemAccessType(access)
+    }
+
+    fun fetchSearchedQuizItems(query: String) {
+        repository.fetchQuizList(0, query)
     }
 }

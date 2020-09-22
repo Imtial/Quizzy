@@ -12,6 +12,7 @@ import com.example.quizzy.utils.ImageUtil.generateImageUrl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class QuizRepository (private val database: QuizDatabase, private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)) {
@@ -28,16 +29,22 @@ class QuizRepository (private val database: QuizDatabase, private val coroutineS
 
     private val livePublicQuizItemList = database.quizItemDao.getLivePublicQuizItemList()
     private val livePrivateQuizItemList = database.quizItemDao.getLivePrivateQuizItemList()
+    private val _searchedQuizItemList = MutableLiveData<List<QuizItem>>()
+    private val searchedQuizItemList: LiveData<List<QuizItem>> get() = _searchedQuizItemList
 
-    private var currentAccess = PUBLIC
+    var isSearchRequested = false
+    var currentAccess = PUBLIC
     val liveQuizItemList = MediatorLiveData<List<QuizItem>>()
-    
+
     init {
         liveQuizItemList.addSource(livePublicQuizItemList) {
-            if (currentAccess == PUBLIC) it?.let { liveQuizItemList.value = it }
+            if (currentAccess == PUBLIC && !isSearchRequested) it?.let { liveQuizItemList.value = it }
         }
         liveQuizItemList.addSource(livePrivateQuizItemList) {
-            if (currentAccess == PRIVATE) it?.let { liveQuizItemList.value = it }
+            if (currentAccess == PRIVATE  && !isSearchRequested) it?.let { liveQuizItemList.value = it }
+        }
+        liveQuizItemList.addSource(searchedQuizItemList) {
+            if (isSearchRequested) it?.let { liveQuizItemList.value = it }
         }
     }
 
@@ -55,13 +62,24 @@ class QuizRepository (private val database: QuizDatabase, private val coroutineS
     private val _endOfQuizList = MutableLiveData<Boolean>()
     val endOfQuizList: LiveData<Boolean> get() = _endOfQuizList
 
-    fun fetchQuizList(skip: Int = 0) {
+    fun fetchQuizList(skip: Int = 0, query: String? = null) {
         Log.i("FETCH-QUIZ", "fetchQuizList: enter")
+        val queryHash = hashMapOf<String, String>()
+        var limit = 5
+        if (query != null) {
+            isSearchRequested = true
+//            queryHash["tag"] = query
+            queryHash["title"] = query
+            limit = 10
+        }
+        else {
+            isSearchRequested = false
+        }
+        val page = skip * limit
+
         CoroutineScope(Dispatchers.IO).launch {
             val token = database.userDao.getUserToken()
-            val queryHash = hashMapOf<String, String>()
-            val limit = 5
-            val page = skip * limit
+
             networkQuizUtil.showTopFeedQuizzes(token, queryHash, page, limit, object : ShowFeedTask {
                 override fun showTopFeedQuizzes(feedList: MutableList<QuizFeed>) {
                     Log.i("FETCH-QUIZ", "showTopFeedQuizzes: $feedList")
@@ -74,14 +92,24 @@ class QuizRepository (private val database: QuizDatabase, private val coroutineS
                         QuizItem(it.quizId, it.title, it.questionCount, 0F, startTime, it.duration.toInt(),
                                 it.userCount, it.tags, it.difficulty.toFloat(), it.rating.toFloat(), it.access, it.ownerName, generateImageUrl(it.owner))
                     }
-                    Log.i("FETCH-QUIZ", "fetchQuizList: $quizItems")
-                    CoroutineScope(Dispatchers.IO).launch {
-                        insertQuizItem(*quizItems.toTypedArray())
+//                    Log.i("FETCH-QUIZ", "fetchQuizList: $quizItems")
+                    when(isSearchRequested) {
+                        false -> {
+                            CoroutineScope(Dispatchers.IO).launch {
+                                insertQuizItem(*quizItems.toTypedArray())
+                            }
+                        }
+                        true -> {
+                            _searchedQuizItemList.value = quizItems
+                        }
                     }
+                    isSearchRequested = false
                 }
 
                 override fun onFailure(msg: String?) {
                     Log.i("FETCH-QUIZ", "onFailure: $msg")
+//                    database.quizItemDao.getSearchedQuizItemList("%$query%").value?.let { searchedQuizItemList.value = it }
+                    isSearchRequested = false
                 }
             })
         }

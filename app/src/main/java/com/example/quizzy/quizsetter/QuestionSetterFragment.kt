@@ -81,6 +81,7 @@ class QuestionSetterFragment: Fragment() {
             override fun backButtonClicked() {
                 if (currentQuestionIndex > 0) {
                     val question = viewModel.questionType.value?.let { typeViewId -> extractQuestion(binding, typeViewId) }
+                    if (question == null) binding.question.error = null
                     question?.let { viewModel.setQuestion(currentQuestionIndex, it) }
                     currentQuestionIndex--
                     createViewFromData(binding, viewModel.questionList!![currentQuestionIndex])

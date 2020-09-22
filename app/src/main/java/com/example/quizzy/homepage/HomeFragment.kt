@@ -76,6 +76,7 @@ class HomeFragment : Fragment() {
             if (!it.isNullOrEmpty()) {
                 swipeContainer.isRefreshing = false
             }
+            Log.i("SEARCH", "onCreateView: $it")
             adapter.submitList(it)
             adapter.notifyDataSetChanged()
         })
@@ -85,6 +86,17 @@ class HomeFragment : Fragment() {
                 currentAccessLevel = access
                 viewModel.setQuizItemAccessType(access)
                 parentActivity.supportActionBar?.title = "${access.toLowerCase(Locale.ENGLISH).capitalize(Locale.ENGLISH)} Quizzes"
+            }
+        })
+
+        parentActivity.setOnSearchListener(object : OnSearchListener {
+            override fun search(query: String?) {
+                swipeContainer.isRefreshing = true
+                query?.let { viewModel.fetchSearchedQuizItems(it) }
+            }
+
+            override fun onSearchViewCollapsed() {
+                viewModel.setQuizItemAccessType(currentAccessLevel)
             }
         })
 
